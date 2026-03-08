@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>لوحة المذيع - NABD Live Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.18.2.js"></script>
+
+    <style>
+        :root { --primary: #F72585; --gold: #FFD700; --dark-bg: rgba(20, 20, 20, 0.95); }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { background: #000; color: #fff; margin: 0; overflow: hidden; height: 100vh; }
+
+        #local-player { position: absolute; inset: 0; z-index: 1; }
+        #local-player video { object-fit: cover !important; }
+
+        /* طبقة الواجهة */
+        .ui-layer { 
+            position: absolute; inset: 0; z-index: 10; padding: 15px; 
+            display: flex; flex-direction: column; justify-content: space-between; 
+            pointer-events: none;
+        }
+
+        /* --- 1. الشريط العلوي (بيانات المذيع + الأزرار) --- */
+        .top-section {
+            display: flex; flex-direction: column; gap: 10px; pointer-events: auto;
+        }
+
+        .header-row {
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .host-pill {
+            background: rgba(0,0,0,0.4); padding: 4px 12px 4px 4px; border-radius: 30px;
+            display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .host-img { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+        
+        .stats-pill {
+            background: rgba(0,0,0,0.4); padding: 5px 12px; border-radius: 20px; 
+            font-size: 12px; display: flex; align-items: center; gap: 8px; 
+            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); font-weight: bold;
+        }
+
+        /* أزرار التحكم العلوية */
+        .top-controls {
+            display: flex; gap: 10px; justify-content: flex-end; margin-top: 5px;
+        }
+        .control-btn {
+            width: 40px; height: 40px; border-radius: 50%; border: none; outline: none;
+            background: rgba(255,255,255,0.15); color: #fff; font-size: 16px;
+            display: grid; place-items: center; cursor: pointer; backdrop-filter: blur(5px);
+            transition: all 0.2s;
+        }
+        .control-btn:active { transform: scale(0.9); }
+        .control-btn.red { background: rgba(255, 59, 48, 0.8); }
+        .control-btn.gold { background: rgba(255, 215, 0, 0.2); color: var(--gold); border: 1px solid var(--gold); }
+        .control-btn.screen-active { background: #4CC9F0; color: #000; }
+
+        /* --- 2. المنطقة السفلية (الشات والكتابة) --- */
+        .bottom-section {
+            display: flex; flex-direction: column; gap: 10px; pointer-events: auto;
+            mask-image: linear-gradient(to top, black 90%, transparent 100%);
+        }
+
+        .chat-area {
+            height: 250px; overflow-y: auto; scrollbar-width: none;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            padding-bottom: 5px;
+        }
+        
+        .chat-msg {
+            background: rgba(0,0,0,0.3); padding: 6px 12px; border-radius: 16px;
+            margin-bottom: 6px; font-size: 13px; width: fit-content; max-width: 80%;
+            animation: slideIn 0.2s ease; text-shadow: 0 1px 2px #000;
+        }
+        .chat-user { color: #4CC9F0; font-weight: bold; margin-left: 5px; }
+
+        /* صندوق الكتابة */
+        .input-bar {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(0,0,0,0.6); padding: 8px; border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+        }
+        .chat-input {
+            flex: 1; background: transparent; border: none; color: #fff;
+            padding: 5px 10px; outline: none; font-size: 14px;
+        }
+
+        /* --- 3. النوافذ المنبثقة (Modals) --- */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999;
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-card {
+            background: #1a1a1a; width: 85%; max-width: 350px; padding: 25px;
+            border-radius: 25px; border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transform: translateY(20px); animation: slideUp 0.3s forwards;
+        }
+
+        /* نافذة الإحصائيات */
+        .stats-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin: -50px auto 15px; box-shadow: 0 5px 15px rgba(247,37,133,0.4); }
+        .stats-title { font-size: 22px; font-weight: bold; margin-bottom: 5px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .stat-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; }
+        .stat-val { font-size: 24px; font-weight: bold; color: var(--gold); }
+        .stat-label { font-size: 12px; color: #aaa; }
+
+        .btn-action {
+            width: 100%; padding: 12px; border-radius: 12px; border: none; cursor: pointer;
+            font-weight: bold; font-size: 16px; margin-top: 10px;
+        }
+        .btn-confirm { background: var(--primary); color: #fff; }
+        .btn-cancel { background: transparent; color: #aaa; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { to { transform: translateY(0); } }
+
+        /* تأثيرات القلوب */
+        .hearts-container { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 5; }
+    </style>
+</head>
+<body>
+
+    <div id="local-player"></div>
+    <div id="hearts-container" class="hearts-container"></div>
+
+    <div class="ui-layer">
+        
+        <div class="top-section">
+            <div class="header-row">
+                <div class="host-pill">
+                    <img id="host-pic" src="https://via.placeholder.com/50" class="host-img">
+                    <div style="display:flex; flex-direction:column; line-height:1;">
+                        <span id="host-name" style="font-size:12px; font-weight:bold;">..</span>
+                        <span style="font-size:9px; color:#ccc;">LIVE</span>
+                    </div>
+                </div>
+                
+                <div style="display:flex; gap:5px;">
+                    <div class="stats-pill"><i class="fa-solid fa-eye"></i> <span id="viewer-count">0</span></div>
+                    <div class="stats-pill" style="color:var(--primary);"><i class="fa-solid fa-heart"></i> <span id="total-hearts">0</span></div>
+                </div>
+            </div>
+
+            <div class="top-controls">
+                <button class="control-btn" onclick="toggleMic()" id="mic-btn"><i class="fa-solid fa-microphone"></i></button>
+                <button class="control-btn" onclick="toggleCam()" id="cam-btn"><i class="fa-solid fa-video"></i></button>
+                <button class="control-btn" onclick="toggleScreenShare()" id="screen-btn"><i class="fa-solid fa-mobile-screen"></i></button>
+                <button class="control-btn gold" onclick="playEffect('thankyou')"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+                <button class="control-btn red" onclick="confirmEndStream()"><i class="fa-solid fa-power-off"></i></button>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div id="chat-list" class="chat-area"></div>
+            
+            <div class="input-bar">
+                <input type="text" id="chat-input" class="chat-input" placeholder="اكتب تعليقاً..." onkeypress="if(event.key==='Enter') sendMsg()">
+                <button onclick="sendMsg()" style="background:var(--primary); border:none; width:35px; height:35px; border-radius:50%; color:#fff;"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-card">
+            <i class="fa-solid fa-circle-exclamation" style="font-size:40px; color:var(--primary); margin-bottom:15px;"></i>
+            <h3>إنهاء البث المباشر؟</h3>
+            <p style="color:#aaa; font-size:13px; margin-bottom:20px;">هل أنت متأكد من رغبتك في إنهاء البث؟ سيتم قطع الاتصال عن جميع المشاهدين.</p>
+            <button class="btn-action btn-confirm" onclick="finishStreamFinally()">نعم، إنهاء الآن</button>
+            <button class="btn-action btn-cancel" onclick="closeModal('confirm-modal')">إلغاء</button>
+        </div>
+    </div>
+
+    <div id="summary-modal" class="modal-overlay" style="background: rgba(0,0,0,0.95);">
+        <div class="modal-card" style="border-color: var(--primary);">
+            <img id="summary-img" src="" class="stats-avatar">
+            <div class="stats-title">انتهى البث</div>
+            <p style="color:#ccc;">شكراً لك يا <span id="summary-name" style="color:var(--primary);"></span>!</p>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-val" id="final-views">0</div>
+                    <div class="stat-label">مشاهدات</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val" id="final-hearts">0</div>
+                    <div class="stat-label">إعجابات</div>
+                </div>
+            </div>
+
+            <button class="btn-action btn-confirm" onclick="window.location.href='home.html'">العودة للرئيسية</button>
+        </div>
+    </div>
+
+    <script>
+        // إعدادات Firebase و Agora
+        const firebaseConfig = {
+            apiKey: "AIzaSyDpvqNAReChsHn5tFJSp7vV_EJHmtD2x4c",
+            authDomain: "pools-e4381.firebaseapp.com",
+            projectId: "pools-e4381",
+            storageBucket: "pools-e4381.firebasestorage.app",
+            messagingSenderId: "339799216046",
+            appId: "1:339799216046:web:26e437a7b7d5c24fe9023f"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        const APP_ID = "f311de5105eb4fa7869dfffd2bb7ac2d"; 
+        const TOKEN = "007eJxTYAhzudR3qz2pPGltsbPRlpOeUVtrJKfqaK/91357Nr/auQ0KDGnGhoYpqaaGBqapSSZpieYWZpYpaWlpKUZJSeaJyUYp23TbMxsCGRn2Ts5iZWSAQBCfh6EktbgkPjkjMS8vNYeBAQCioSQL"; 
+        
+        // المتغيرات
+        let client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+        let localTracks = { audio: null, video: null, screen: null };
+        let isScreenSharing = false;
+        let currentUser, userData;
+        let CHANNEL = null; // سيتم تعيينه لاحقاً
+
+        // بدء التشغيل
+        auth.onAuthStateChanged(async user => {
+            if(user) {
+                currentUser = user;
+                CHANNEL = user.uid; // القناة باسم المستخدم
+                
+                const doc = await db.collection('users').doc(user.uid).get();
+                userData = doc.exists ? doc.data() : { name: "مذيع", profilePic: "https://via.placeholder.com/50" };
+                
+                // تحديث الواجهة
+                document.getElementById('host-name').innerText = userData.name;
+                document.getElementById('host-pic').src = userData.profilePic;
+                document.getElementById('summary-img').src = userData.profilePic;
+                document.getElementById('summary-name').innerText = userData.name;
+
+                initStream();
+            } else {
+                alert("يرجى تسجيل الدخول");
+                window.location.href = 'home.html';
+            }
+        });
+
+        async function initStream() {
+            try {
+                // إعداد Agora
+                client.setClientRole("host");
+                await client.join(APP_ID, CHANNEL, TOKEN, null);
+                
+                // الكاميرا والمايك
+                [localTracks.audio, localTracks.video] = await AgoraRTC.createMicrophoneAndCameraTracks();
+                localTracks.video.play("local-player");
+                await client.publish([localTracks.audio, localTracks.video]);
+
+                // حفظ بيانات البث في Firebase
+                await db.collection('lives').doc(CHANNEL).set({
+                    hostUid: currentUser.uid,
+                    hostName: userData.name,
+                    hostPic: userData.profilePic,
+                    status: 'online',
+                    viewers: 0,
+                    hearts: 0,
+                    startedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                listenToStats();
+                listenToChat();
+
+            } catch (e) {
+                console.error("Error:", e);
+                alert("حدث خطأ في الاتصال: " + e.message);
+            }
+        }
+
+        // --- وظائف التحكم الجديدة ---
+
+        // 1. مشاركة الشاشة
+        async function toggleScreenShare() {
+            if (isScreenSharing) {
+                // إيقاف مشاركة الشاشة والعودة للكاميرا
+                await client.unpublish(localTracks.screen);
+                localTracks.screen.close();
+                
+                // إعادة تشغيل الكاميرا
+                localTracks.video = await AgoraRTC.createCameraVideoTrack();
+                localTracks.video.play("local-player");
+                await client.publish(localTracks.video);
+                
+                document.getElementById('screen-btn').classList.remove('screen-active');
+                isScreenSharing = false;
+            } else {
+                try {
+                    // بدء مشاركة الشاشة
+                    localTracks.screen = await AgoraRTC.createScreenVideoTrack();
+                    
+                    // إخفاء الكاميرا مؤقتاً
+                    await client.unpublish(localTracks.video);
+                    localTracks.video.close();
+                    
+                    // نشر الشاشة
+                    localTracks.screen.play("local-player");
+                    await client.publish(localTracks.screen);
+                    
+                    document.getElementById('screen-btn').classList.add('screen-active');
+                    isScreenSharing = true;
+
+                    // في حال أوقف المستخدم المشاركة من متصفح النظام
+                    localTracks.screen.on("track-ended", () => {
+                        toggleScreenShare(); 
+                    });
+
+                } catch (e) {
+                    console.error("Screen share failed", e);
+                    alert("مشاركة الشاشة غير مدعومة أو تم إلغاؤها.");
+                }
+            }
+        }
+
+        let isMic = true;
+        async function toggleMic() {
+            isMic = !isMic;
+            await localTracks.audio.setMuted(!isMic);
+            document.getElementById('mic-btn').innerHTML = isMic ? '<i class="fa-solid fa-microphone"></i>' : '<i class="fa-solid fa-microphone-slash"></i>';
+        }
+
+        let isCam = true;
+        async function toggleCam() {
+            isCam = !isCam;
+            await localTracks.video.setMuted(!isCam);
+            document.getElementById('cam-btn').innerHTML = isCam ? '<i class="fa-solid fa-video"></i>' : '<i class="fa-solid fa-video-slash"></i>';
+        }
+
+        // --- 2. نظام الإنهاء الجديد ---
+        
+        function confirmEndStream() {
+            document.getElementById('confirm-modal').style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        async function finishStreamFinally() {
+            closeModal('confirm-modal');
+            
+            // جلب الإحصائيات النهائية قبل قطع الاتصال
+            const viewers = document.getElementById('viewer-count').innerText;
+            const hearts = document.getElementById('total-hearts').innerText;
+
+            // تحديث واجهة الملخص
+            document.getElementById('final-views').innerText = viewers;
+            document.getElementById('final-hearts').innerText = hearts;
+
+            // إيقاف البث في قاعدة البيانات
+            await db.collection('lives').doc(CHANNEL).update({ status: 'offline' });
+
+            // إيقاف Agora
+            localTracks.audio.close();
+            localTracks.video.close();
+            if(localTracks.screen) localTracks.screen.close();
+            await client.leave();
+
+            // إظهار شاشة الملخص
+            document.getElementById('summary-modal').style.display = 'flex';
+        }
+
+        // --- 3. الشات والإحصائيات ---
+
+        function listenToStats() {
+            db.collection('lives').doc(CHANNEL).onSnapshot(doc => {
+                if(doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('viewer-count').innerText = data.viewers || 0;
+                    document.getElementById('total-hearts').innerText = data.hearts || 0;
+                }
+            });
+        }
+
+        function listenToChat() {
+            db.collection('lives').doc(CHANNEL).collection('messages')
+            .orderBy('timestamp', 'asc').limitToLast(50)
+            .onSnapshot(snap => {
+                snap.docChanges().forEach(change => {
+                    if(change.type === 'added') {
+                        const msg = change.doc.data();
+                        addChatMsg(msg);
+                    }
+                });
+            });
+        }
+
+        function addChatMsg(msg) {
+            const list = document.getElementById('chat-list');
+            const div = document.createElement('div');
+            div.className = 'chat-msg';
+            div.innerHTML = `<span class="chat-user">${msg.userName}:</span> ${msg.text}`;
+            list.appendChild(div);
+            list.scrollTop = list.scrollHeight;
+        }
+
+        async function sendMsg() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if(!text) return;
+
+            await db.collection('lives').doc(CHANNEL).collection('messages').add({
+                userName: userData.name,
+                text: text,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            input.value = '';
+        }
+
+        function playEffect(type) {
+            // كود الصوت (نفس القديم)
+            console.log("Playing effect:", type);
+        }
+
+    </script>
+</body>
+</html>
