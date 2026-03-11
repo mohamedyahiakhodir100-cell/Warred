@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -277,25 +277,7 @@
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     pointer-events: none; /* عشان ميعطلش الضغط على الزرار */
 }
-    /* --- تصميم اللوجو الجديد الاحترافي --- */
-.premium-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    font-size: 28px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    cursor: pointer;
-    background: linear-gradient(to bottom, #ffffff 0%, #a1a1a1 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
     
-    /* 🔥 السطر ده هو اللي هيعدل الترتيب 🔥 */
-    direction: ltr; 
-}
-
 
 /* حاوية القلب لضبط التوهج */
 .heart-container {
@@ -483,23 +465,6 @@
     justify-content: space-between;
 }
 
-.action-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border-radius: 20px;
-    color: #aaa;
-    transition: 0.3s;
-    background: transparent;
-}
-
-/* لما تلمس الزرار يظهر لون خفيف */
-.action-btn:active {
-    background: rgba(255,255,255,0.05);
-    color: #fff;
-}
-
 /* تمييز زر اللايك لما يكون نشط */
 .action-btn.liked {
     color: #ff3b30;
@@ -526,10 +491,7 @@
         .color-3 { --user-color: #ffb533; } .color-4 { --user-color: #bf5af2; } .color-5 { --user-color: #64d2ff; }
         .color-6 { --user-color: #ff9f0a; } .color-7 { --user-color: #ff375f; } .color-8 { --user-color: #ac8e68; } .color-9 { --user-color: #808080; }
 
-        .cm-bubble.colored-comment { position: relative; background: #1a1a1a; border: 1px solid var(--user-color); border-right-width: 4px; box-shadow: inset 0 0 10px -5px var(--user-color), 0 5px 15px -8px var(--user-color); border-radius: 12px; padding: 10px 14px; margin-bottom: 5px; }
-        .cm-bubble.colored-reply { position: relative; background: #1a1a1a; border: 1px solid var(--user-color); border-right-width: 4px; box-shadow: inset 0 0 10px -5px var(--user-color), 0 5px 15px -8px var(--user-color); border-radius: 12px; padding: 10px 14px; transition:0.2s; }
-        
-        .cm-bubble .cm-username { color: var(--user-color) !important; filter: brightness(1.3); font-weight: 800; font-size: 13px; margin-bottom: 5px; display: block; }
+      
         .cm-text { font-size: 15px; line-height: 1.6; color: #e0e0e0; white-space: pre-wrap; }
         .cm-bubble.highlight { background: rgba(93, 95, 239, 0.15); border-color: var(--primary-color); box-shadow: 0 0 15px rgba(93, 95, 239, 0.3); }
         .cm-bubble.owner-bubble { background: rgba(93, 95, 239, 0.15); border-color: var(--primary-color); }
@@ -1132,34 +1094,6 @@
     z-index: 9000 !important;
 }
 
-/* --- تصحيح الطبقات (Z-Index Fixes) --- */
-
-/* 1. صفحة البحث لازم تكون فوق الهيدر وكل حاجة */
-.search-page-overlay {
-    z-index: 9999 !important; /* أعلى من أي حاجة تانية */
-    background: var(--bg-color); /* تأكيد الخلفية عشان متبقاش شفافة */
-}
-
-/* 2. الخلفية الشفافة (Overlay) لازم تكون تحت القوائم المنبثقة */
-.overlay-bg {
-    z-index: 5000 !important; /* طبقة متوسطة */
-}
-
-/* 3. القوائم السفلية (Bottom Sheets) فوق الخلفية الشفافة */
-.bottom-sheet {
-    z-index: 5001 !important;
-}
-
-/* 4. النوافذ المنبثقة (Modals) مثل تبديل الحساب وتعديل المنشور */
-.custom-modal {
-    z-index: 6000 !important; /* أعلى من القوائم السفلية */
-    background: rgba(0,0,0,0.8); /* خلفية سوداء شفافة قوية للتركيز */
-}
-
-/* 5. القائمة الجانبية (Side Menu) */
-.side-menu {
-    z-index: 7500 !important;
-}
 
 .hashtag-link {
     color: #1da1f2; /* لون أزرق تويتر الشهير */
@@ -1707,25 +1641,6 @@ input[type="radio"] { accent-color: var(--primary-color); transform: scale(1.2);
     align-items: flex-start !important; /* يلغي التوسيط ويخليها تبدأ من فوق */
     padding-top: 80px; /* مسافة من سقف الشاشة */
 }
-.lightbox {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95); z-index: 10000;
-    display: none; align-items: center; justify-content: center;
-    backdrop-filter: blur(5px);
-    animation: fadeIn 0.2s;
-}
-.lb-img {
-    max-width: 95%; max-height: 90%;
-    border-radius: 8px;
-    box-shadow: 0 0 50px rgba(0,0,0,0.5);
-    transform: scale(0.9);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.lightbox.active .lb-img { transform: scale(1); }
-.lb-close {
-    position: absolute; top: 20px; right: 20px;
-    color: #fff; font-size: 40px; cursor: pointer;
-}
 /* تحديث كلاس الصورة في Lightbox */
 .lb-img {
     max-width: 95%; 
@@ -2255,15 +2170,6 @@ html {
     border-radius: 50%;
     z-index: -1;
 }
-.post {
-    background: #151515; /* لون مختلف سنة عن خلفية الصفحة */
-    border: 1px solid rgba(255, 255, 255, 0.05); /* حدود شفافة جداً */
-    border-radius: 24px; /* تدوير أكبر للحواف */
-    margin: 15px 10px; /* مسافات من الجوانب */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* ظل ناعم لرفع البوست */
-    overflow: hidden; /* عشان الصور مخرجش بره التدوير */
-    position: relative;
-}
 
 /* الهيدر بتاع البوست */
 .post-header {
@@ -2366,11 +2272,6 @@ html {
 .action-btn.liked i {
     animation: heartBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     color: #ff3b30; /* لون أحمر */
-}
-/* إخفاء السكرول بار من كل العناصر */
-::-webkit-scrollbar {
-    width: 0px;
-    background: transparent;
 }
 /* تنسيق العلامة */
 .fa-circle-check, .nabd-badge {
@@ -4077,26 +3978,6 @@ html {
 .orb-msg-bubble {
     z-index: 20001 !important;
 }
-/* استبدل الكود القديم لـ .premium-logo span بهذا */
-.premium-logo span {
-    font-family: 'Poppins', sans-serif; /* خط إنجليزي عريض */
-    font-size: 26px;
-    font-weight: 900; /* سميك جداً */
-    letter-spacing: 1.5px; /* تباعد بسيط بين الحروف */
-    text-transform: uppercase; /* يجعل الحروف كبيرة */
-    
-    /* تدرج لوني من الأبيض للأزرق السماوي */
-    background: linear-gradient(180deg, #FFFFFF 20%,var(--primary-color) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    
-    /* سر البروز: ظل صلب للعمق + ظل ناعم للتوهج */
-    filter: drop-shadow(0 2px 0px rgba(0, 114, 255, 0.8)) 
-            drop-shadow(0 0 20px rgba(0, 198, 255, 0.6));
-            
-    /* تحسين جودة الخط */
-    -webkit-font-smoothing: antialiased;
-}
 .premium-logo span {
     font-family: 'Poppins', sans-serif;
     font-size: 26px;
@@ -4846,67 +4727,7 @@ html {
 .archive-menu-item { padding: 8px; color: #fff; font-size: 11px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .archive-menu-item:last-child { border-bottom: none; }
 
-/* --- تنسيق كارت القصة (مهم جداً) --- */
-.story-card {
-    position: relative; /* ضروري عشان العناصر اللي جوه تترتب بالنسبة ليه */
-    width: 75px; 
-    height: 115px;
-    border-radius: 10px; 
-    overflow: hidden; /* عشان مفيش حاجة تخرج بره الحواف */
-    flex-shrink: 0; 
-    cursor: pointer;
-    background-color: #2a2a2a; 
-    margin-bottom: 5px; 
-    z-index: 1;
-}
 
-/* خلفية القصة (الفيديو أو الصورة) */
-.story-card-bg, .story-card video {
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-    border-radius: 10px; 
-    transition: 0.3s;
-    position: absolute; /* عشان تفرش الكارت كله */
-    top: 0; left: 0;
-    z-index: 1; /* دي الطبقة اللي تحت */
-}
-
-/* --- صورة الشخص (الدائرة الصغيرة فوق) --- */
-.story-card-avatar {
-    position: absolute; 
-    top: 4px; 
-    left: 4px; 
-    width: 24px; 
-    height: 24px;
-    border-radius: 50%; 
-    border: 2px solid #38bdf8; /* لون الإطار (أزرق سماوي) */
-    background-size: cover; 
-    background-position: center; 
-    z-index: 5; /* 🔥 رقم عالي عشان تظهر فوق الفيديو */
-    background-color: #333; /* لون احتياطي لو الصورة محملتش */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5); /* ظل عشان تبان */
-}
-
-/* --- اسم الشخص (في الأسفل) --- */
-.story-card-name {
-    position: absolute; 
-    bottom: 0; 
-    left: 0; 
-    width: 100%;
-    padding: 15px 4px 4px 4px; 
-    border-radius: 0 0 10px 10px;
-    /* تدرج لوني أسود شفاف عشان الكلام يبان بوضوح */
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-    color: #fff; 
-    font-size: 9px; 
-    font-weight: bold;
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    text-align: right; 
-    z-index: 5; /* 🔥 رقم عالي عشان يظهر فوق الفيديو */
-}
 /* ==================================================
    🔥 تنسيق تفاعلات المنشور (Reactions System) - النسخة النهائية
    ================================================== */
@@ -5987,45 +5808,6 @@ body:not(.light-mode) .sug-add-btn {
     min-width: 220px; /* ضمان حد أدنى لعرض البانر */
     max-width: 85%;  /* عدم الخروج عن حدود الشاشة */
     padding-right: 15px; /* مسافة إضافية في الجهة اليسرى */
-}
-/* --- تنسيق كبسولة المنشن (المحسّن) --- */
-.mention-chip {
-    display: inline-flex;
-    align-items: center;
-    background: rgba(93, 95, 239, 0.2); 
-    border: 1px solid rgba(93, 95, 239, 0.4);
-    border-radius: 50px;
-    padding: 2px 8px 2px 2px; 
-    margin: 0; /* مسحنا المارجن عشان نقلل المساحة */
-    cursor: pointer;
-    vertical-align: middle;
-    text-decoration: none;
-    direction: ltr; /* مهم عشان الصورة تفضل شمال والاسم يمين */
-    max-width: 100%; /* بدل 140px عشان يتمدد براحته بس ميكسرش الشاشة */
-    height: 24px; /* قللنا الارتفاع سنة عشان يكون مدمج أكتر */
-}
-
-/* تنسيق الصورة داخل المنشن */
-.mention-chip-img {
-    width: 18px; /* صغرنا الصورة سنة */
-    height: 18px;
-    border-radius: 50%;
-    margin-right: 6px; 
-    object-fit: cover;
-    background: #fff;
-    flex-shrink: 0; 
-    border: 1px solid rgba(255,255,255,0.3);
-}
-
-/* تنسيق الاسم داخل المنشن (يتمدد طبيعي) */
-.mention-chip-name {
-    font-size: 11px;
-    font-weight: 800;
-    color: #fff;
-    line-height: 1;
-    white-space: nowrap; /* يمنع نزول السطر */
-    display: block;
-    /* مسحنا الـ overflow والـ max-width عشان الاسم يظهر كامل */
 }
 
 /* ================================================= */
@@ -7148,62 +6930,6 @@ body.no-scroll #scrollTopBtn {
     background: var(--primary-color); 
 }
 
-/* ==================================================
-   ✨ تأثير التمدد الناعم للنصوص (Smooth Expand) ✨
-   ================================================== */
-
-/* --- 1. نعومة التعليقات والردود --- */
-.cm-text {
-    /* سرعة الأنيميشن ونعومته */
-    transition: max-height 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-}
-
-.cm-text.text-collapsed {
-    max-height: 130px; /* الارتفاع وقت القفل (حوالي 6 سطور) */
-    display: -webkit-box;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.cm-text.text-expanded {
-    max-height: 1500px !important; /* رقم كبير عشان النص ياخد راحته في الفتح */
-    display: block !important;
-    -webkit-line-clamp: unset !important;
-}
-
-/* --- 2. نعومة المنشورات الرئيسية من بره --- */
-.post-text {
-    transition: max-height 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-}
-
-.limit-media { 
-    max-height: 75px !important; /* ارتفاع وقت القفل (3 سطور) */
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.limit-text { 
-    max-height: 240px !important; /* ارتفاع وقت القفل (10 سطور) */
-    display: -webkit-box;
-    -webkit-line-clamp: 10;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.post-text.text-expanded {
-    max-height: 3000px !important; /* مساحة ضخمة للبوستات الطويلة */
-    display: block !important;
-    -webkit-line-clamp: unset !important;
-}
-
-/* --- إخفاء وظهور زر (عرض المزيد) بنعومة --- */
-.read-more-btn-comment, .read-more-btn {
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
 
 
 /* ==================================================
@@ -7380,46 +7106,6 @@ div[style*="align-items:flex-start"] {
     backdrop-filter: blur(5px);
 }
 
-/* ==================================================
-   🌟 التنسيق الاحترافي الشامل لكل نصوص التطبيق (الخط، المسافات، الألوان) 🌟
-   ================================================== */
-
-/* 1. توحيد نوع الخط (Font Family) والتباعد لكل النصوص (منشورات، تعليقات، خلفيات ملونة) */
-.post-text, 
-.cm-text,
-.colored-post-body {
-    font-family: 'Cairo', sans-serif !important; /* 🔥 تثبيت نوع النص (الخط) الاحترافي */
-    line-height: 1.8 !important;                 /* 🔥 تباعد مريح جداً للعين */
-    letter-spacing: 0.2px !important;            /* مسافة خفيفة تزيد من فخامة الكلمات */
-    direction: rtl !important;                   /* إجبار الاتجاه العربي */
-    white-space: pre-wrap !important;            /* يحترم زر (Enter) عند النزول لسطر */
-    word-wrap: break-word !important;            /* يمنع الكلمات الطويلة من تشويه الشاشة */
-    overflow-wrap: break-word !important;
-    width: 100% !important;
-    display: block !important;
-}
-
-/* 2. تخصيص الحجم واللون للمنشورات والتعليقات العادية */
-.post-text, 
-.cm-text {
-    font-size: 14.5px !important;                /* حجم مثالي للقراءة */
-    color: #E4E6EB !important;                   /* لون (أوف-وايت) مريح جداً لا يرهق العين */
-    text-align: right !important;                /* محاذاة لليمين */
-    margin-top: 4px !important;
-}
-
-/* 3. تخصيص هوامش المنشورات لتكون مرتبة داخل الكارت */
-.post-text {
-    padding: 5px 15px 10px 15px !important; 
-}
-
-/* 4. حماية نصوص الخلفيات الملونة (يجب أن تكون كبيرة وفي المنتصف ولونها أبيض ناصع) */
-.colored-post-body {
-    color: #FFFFFF !important;
-    font-size: 22px !important;                  /* حجم كبير ومناسب للخلفية */
-    text-align: center !important;               /* توسيط الكلام */
-    text-shadow: 0 2px 5px rgba(0,0,0,0.3) !important; /* ظل خفيف ليبرز النص */
-}
 
 /* حركة وميض الزر عند اللمس */
 .read-more-btn:active,
@@ -7980,20 +7666,6 @@ div[style*="align-items:flex-start"] {
 .cm-scroll-top-btn:active,
 .cm-scroll-bottom-btn:active {
     transform: scale(0.9);
-}
-body { 
-    background-color: var(--app-main-bg) !important; 
-    /* تم مسح سطر background-attachment: fixed لإلغاء الإحساس المزعج */
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    color: var(--text-color); 
-    overflow-x: hidden; 
-    padding-bottom: 90px !important; 
-    min-height: 100vh; 
-    overscroll-behavior-y: contain; 
-    user-select: none; 
-    transition: background-color 0.5s ease, color 0.3s;
 }
 
 body.no-scroll { 
@@ -8616,6 +8288,42 @@ body.light-mode .post-text {
 
 .lb-prev { right: 15px; } /* السهم الأيمن (السابق في العربي) */
 .lb-next { left: 15px; }  /* السهم الأيسر (التالي في العربي) */
+/* 1. توحيد نوع الخط (Font Family) والتباعد لكل النصوص (منشورات، تعليقات، خلفيات ملونة) */
+.post-text, 
+.cm-text,
+.colored-post-body {
+    font-family: 'Cairo', sans-serif !important; /* 🔥 تثبيت نوع النص (الخط) الاحترافي */
+    line-height: 1.8 !important;                 /* 🔥 تباعد مريح جداً للعين */
+    letter-spacing: 0.2px !important;            /* مسافة خفيفة تزيد من فخامة الكلمات */
+    direction: rtl !important;                   /* إجبار الاتجاه العربي */
+    white-space: pre-wrap !important;            /* يحترم زر (Enter) عند النزول لسطر */
+    word-wrap: break-word !important;            /* يمنع الكلمات الطويلة من تشويه الشاشة */
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+    display: block !important;
+}
+
+/* 2. تخصيص الحجم واللون للمنشورات والتعليقات العادية */
+.post-text, 
+.cm-text {
+    font-size: 14.5px !important;                /* حجم مثالي للقراءة */
+    color: #E4E6EB !important;                   /* لون (أوف-وايت) مريح جداً لا يرهق العين */
+    text-align: right !important;                /* محاذاة لليمين */
+    margin-top: 4px !important;
+}
+
+/* 3. تخصيص هوامش المنشورات لتكون مرتبة داخل الكارت */
+.post-text {
+    padding: 5px 15px 10px 15px !important; 
+}
+
+/* 4. حماية نصوص الخلفيات الملونة (يجب أن تكون كبيرة وفي المنتصف ولونها أبيض ناصع) */
+.colored-post-body {
+    color: #FFFFFF !important;
+    font-size: 22px !important;                  /* حجم كبير ومناسب للخلفية */
+    text-align: center !important;               /* توسيط الكلام */
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3) !important; /* ظل خفيف ليبرز النص */
+}
 
 
 body { 
@@ -8631,6 +8339,7 @@ body {
     overscroll-behavior-y: contain; 
     user-select: none; 
     transition: background-color 0.5s ease, color 0.3s;
+    overflow-anchor: auto !important;
 }
 
 /* 1. زر البحث الصوتي وتأثير التسجيل */
@@ -8875,6 +8584,47 @@ body {
 }
 .d-btn-add:active { background: rgba(255,255,255,0.1); }
 
+/* 🚀 الحل الجذري لمنع رعشة التحميل */
+#scrollSentinel {
+    min-height: 60px; /* يحجز مساحة ثابتة دائماً */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    overflow: hidden;
+    transition: opacity 0.3s ease;
+}
+
+/* تثبيت ارتفاع الصور والفيديوهات قبل ما تحمل عشان متزقش الشاشة */
+.media-item-wrapper {
+    min-height: 250px; 
+    background-color: #111; /* لون رمادي غامق لحد ما الميديا تظهر */
+}
+
+/* 🌟 شكل التحميل الاحترافي أسفل الصفحة */
+.bottom-loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 25px 0;
+    color: var(--primary-color);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.bottom-loader-container i {
+    font-size: 24px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 5px var(--primary-color));
+}
+
+.bottom-loader-container span {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-color);
+    letter-spacing: 0.5px;
+}
 
 </style>
     
@@ -9234,139 +8984,156 @@ body {
         </div>
     </div>
 
-    <div class="menu-items">
+<div class="menu-items">
         
-        <div style="display: flex; gap: 12px; grid-column: 1 / -1; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px;">
-            <div class="item" onclick="playSound('click'); location.href='wallet.html'" style="flex: 1; height: 90px; background: linear-gradient(145deg, #151515, #202020); border: 1px solid rgba(255, 215, 0, 0.4); border-radius: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
-                <i class="fa-solid fa-wallet" style="font-size: 28px; color: #FFD700; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); background: transparent;"></i> 
-                <span style="color: #FFD700; font-size: 14px; font-weight: 900;">محفظتي</span>
-            </div>
-            <div class="item" onclick="playSound('click'); location.href='marketplace.html'" style="flex: 1; height: 90px; background: linear-gradient(145deg, #151515, #202020); border: 1px solid rgba(255, 215, 0, 0.4); border-radius: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
-                <i class="fa-solid fa-store" style="font-size: 28px; color: #FFD700; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); background: transparent;"></i>
-                <span style="color: #FFD700; font-size: 14px; font-weight: 900;">المتجر</span>
-            </div>
+    <div style="display: flex; gap: 12px; grid-column: 1 / -1; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px;">
+        <div class="item" onclick="playSound('click'); location.href='wallet.html'" style="flex: 1; height: 90px; background: linear-gradient(145deg, #151515, #202020); border: 1px solid rgba(255, 215, 0, 0.4); border-radius: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
+            <i class="fa-solid fa-wallet" style="font-size: 28px; color: #FFD700; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); background: transparent;"></i> 
+            <span data-i18n="menu_wallet" style="color: #FFD700; font-size: 14px; font-weight: 900;">محفظتي</span>
         </div>
-
-        <div class="menu-separator">عالم وريد</div>
-
-        <div class="item" onclick="playSound('click'); location.href='magic_ball.html'" style="background: linear-gradient(135deg, #5b247a 0%, #1bcedf 100%); border: 1px solid #1bcedf;">
-            <i class="fa-solid fa-khanda" style="color: #fff; background: transparent;"></i> 
-            <span style="font-size: 11px; color: #fff;">البلورة السحرية</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='auction.html'" style="background: linear-gradient(135deg, #450a0a 0%, #b91c1c 100%); border:1px solid #ef4444;">
-            <i class="fa-solid fa-gavel" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">صالة المزاد</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='blackhole.html'" style="background: linear-gradient(135deg, #000 0%, #4b0082 100%); border:1px solid #8e44ad;">
-            <i class="fa-solid fa-meteor" style="color: #cd84f1; background: transparent;"></i> <span style="color: #fff;">الثقب الأسود</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='stockmarket.html'" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border:1px solid #2979ff;">
-            <i class="fa-solid fa-arrow-trend-up" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">البورصة</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='pulse.html'" style="background: linear-gradient(135deg, #000 0%, #1a0005 100%); border:1px solid #ff0055;">
-            <i class="fa-solid fa-heart-pulse" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">غرفة الإنعاش</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='voicetwin.html'" style="background: linear-gradient(135deg, #18181b 0%, #3f3f46 100%); border:1px solid #f43f5e;">
-            <i class="fa-solid fa-microphone-lines" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">توأم الصوت</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='capsules.html'" style="background: linear-gradient(135deg, #f12711 0%, #f5af19 100%); border:1px solid #f5af19;">
-            <i class="fa-solid fa-hourglass-half" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">كبسولة الزمن</span>
-        </div>
-        <div class="item c-radar" onclick="playSound('click'); location.href='radar.html'" style="background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%); border:1px solid #8E2DE2;">
-            <i class="fa-solid fa-satellite-dish" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">الرادار</span>
-        </div>
-        
-<div class="sheet-option" onclick="window.location.href='qr-text.html'">
-    <i class="fa-solid fa-qrcode" style="color: var(--primary-color); font-size: 20px; width: 30px; text-align: center;"></i>
-    <span style="flex: 1; text-align: right; font-weight: bold; color: var(--text-color);">رسائل QR مشفرة</span>
-    <i class="fa-solid fa-chevron-left" style="font-size: 14px; color: #888;"></i>
-</div>
-
-        <div class="menu-separator" style="margin-top: 15px;">الترفيه</div>
-
-        <div class="item" onclick="playSound('click'); location.href='games.html'" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border:1px solid #38ef7d;">
-            <i class="fa-solid fa-gamepad" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">العب واربح</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='gifts.html'" style="background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%); border:1px solid #FF416C;">
-            <i class="fa-solid fa-gift" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">الهدايا اليومية</span>
-        </div>
-
-        <div class="menu-separator" style="margin-top: 15px;">التواصل</div>
-
-        <div class="item" onclick="playSound('click'); location.href='messages.html'" style="background: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%); border:1px solid #00C6FF;">
-            <i class="fa-solid fa-comment-dots" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">الرسائل</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='friend_requests.html'" style="background: linear-gradient(135deg, #F2994A 0%, #F2C94C 100%); border:1px solid #F2C94C;">
-            <i class="fa-solid fa-user-plus" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">الطلبات</span>
-            <span id="requestsBadge" class="badge-count" style="background:#fff; color:#F2994A; border:none;">0</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='friends.html'" style="background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%); border:1px solid #8E54E9;">
-            <i class="fa-solid fa-users" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">الأصدقاء</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='notifications.html'" style="background: linear-gradient(135deg, #e52d27 0%, #b31217 100%); border:1px solid #e52d27;">
-            <i class="fa-solid fa-bell" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">الإشعارات</span>
-            <span id="mainNotifBadge" class="badge-count" style="background:#fff; color:#e52d27; border:none;">0</span>
-        </div>
-
-            <div class="menu-separator" style="margin-top: 15px;">أدواتي</div>
-
-        <div class="item" onclick="playSound('click'); location.href='saved_posts.html'" style="background: linear-gradient(135deg, #3E5151 0%, #DECBA4 100%); border:1px solid #DECBA4;">
-            <i class="fa-solid fa-bookmark" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">المحفوظات</span>
-        </div>
-        <div class="item" onclick="playSound('click'); location.href='settings.html'" style="background: linear-gradient(135deg, #232526 0%, #414345 100%); border:1px solid #555;">
-            <i class="fa-solid fa-gear" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">الإعدادات</span>
-        </div>
-
-<div class="sheet-option" onclick="openThemeModal()">
-    <i class="fa-solid fa-palette" style="color: var(--primary-color); font-size: 20px; width: 30px; text-align: center;"></i>
-    <span style="flex: 1; text-align: right; font-weight: bold; color: var(--text-color);">مظهر التطبيق</span>
-    <i class="fa-solid fa-chevron-left" style="font-size: 14px; color: #888;"></i>
-</div>
-
-        <div class="item" onclick="openLanguageModal()" style="background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">
-            <i class="fa-solid fa-earth-americas" style="color: #00C6FF; background: transparent;"></i> 
-            <span style="color: #fff;" data-i18n="settings_lang">لغة التطبيق</span>
-        </div>
-
-        <div class="item" onclick="playSound('click'); location.href='verification.html'" style="background: linear-gradient(135deg, #0061ff 0%, #60efff 100%); border: 1px solid rgba(255,255,255,0.3);">
-            <i class="fa-solid fa-certificate" style="color: #fff; background: transparent;"></i> 
-            <span style="color: #fff;" data-i18n="menu_verify">توثيق الحساب</span>
-        </div>
-
-        <div class="item" id="adminPanelBtn" style="display:none; background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%); border:1px solid #ff5e62;" onclick="playSound('click'); location.href='admin.html'">
-            <i class="fa-solid fa-shield-halved" style="color: #fff; background: transparent;"></i> 
-            <span style="color: #fff;" data-i18n="menu_admin">المشرف</span>
-        </div>
-        
-        <div class="item" onclick="openAccountSwitcher()" style="grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; height: 50px; background: rgba(255,255,255,0.05);">
-            <i class="fa-solid fa-repeat" style="margin: 0; color: #00C6FF; background: transparent; font-size: 16px;"></i> 
-            <span style="font-size: 13px;">تبديل الحساب</span>
-        </div>
-
-        <div class="item" onclick="toggleOrbPreference()" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-between; height: 50px; background: rgba(255,255,255,0.05); padding: 0 15px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <i class="fa-solid fa-circle-nodes" style="margin: 0; color: #aaa; background: transparent; font-size: 16px;"></i> 
-                <span style="font-size: 13px; color: #aaa;">كرة التنقل</span>
-            </div>
-            <div id="orbToggleSwitch" class="toggle-switch active">
-                <div class="toggle-knob"></div>
-            </div>
-        </div>
-
-        <div class="item" onclick="toggleAppSounds()" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-between; height: 50px; background: rgba(255,255,255,0.05); padding: 0 15px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <i id="soundIcon" class="fa-solid fa-volume-high" style="margin: 0; color: #aaa; background: transparent; font-size: 16px;"></i> 
-                <span style="font-size: 13px; color: #aaa;">الأصوات</span>
-            </div>
-            <div id="soundToggle" class="toggle-switch active">
-                <div class="toggle-knob"></div>
-            </div>
-        </div>
-
-        <div class="item danger" onclick="openLogoutModal()">
-            <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج
+        <div class="item" onclick="playSound('click'); location.href='marketplace.html'" style="flex: 1; height: 90px; background: linear-gradient(145deg, #151515, #202020); border: 1px solid rgba(255, 215, 0, 0.4); border-radius: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
+            <i class="fa-solid fa-store" style="font-size: 28px; color: #FFD700; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); background: transparent;"></i>
+            <span data-i18n="menu_store" style="color: #FFD700; font-size: 14px; font-weight: 900;">المتجر</span>
         </div>
     </div>
+
+    <div class="menu-separator" data-i18n="menu_world">عالم وريد</div>
+
+    <div class="item" onclick="playSound('click'); location.href='magic_ball.html'" style="background: linear-gradient(135deg, #5b247a 0%, #1bcedf 100%); border: 1px solid #1bcedf;">
+        <i class="fa-solid fa-khanda" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_magic" style="font-size: 11px; color: #fff;">البلورة السحرية</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='auction.html'" style="background: linear-gradient(135deg, #450a0a 0%, #b91c1c 100%); border:1px solid #ef4444;">
+        <i class="fa-solid fa-gavel" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_auction" style="color: #fff;">صالة المزاد</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='blackhole.html'" style="background: linear-gradient(135deg, #000 0%, #4b0082 100%); border:1px solid #8e44ad;">
+        <i class="fa-solid fa-meteor" style="color: #cd84f1; background: transparent;"></i> 
+        <span data-i18n="menu_blackhole" style="color: #fff;">الثقب الأسود</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='stockmarket.html'" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border:1px solid #2979ff;">
+        <i class="fa-solid fa-arrow-trend-up" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_stock" style="color: #fff;">البورصة</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='pulse.html'" style="background: linear-gradient(135deg, #000 0%, #1a0005 100%); border:1px solid #ff0055;">
+        <i class="fa-solid fa-heart-pulse" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_pulse" style="color: #fff;">غرفة الإنعاش</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='voicetwin.html'" style="background: linear-gradient(135deg, #18181b 0%, #3f3f46 100%); border:1px solid #f43f5e;">
+        <i class="fa-solid fa-microphone-lines" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_voice" style="color: #fff;">توأم الصوت</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='capsules.html'" style="background: linear-gradient(135deg, #f12711 0%, #f5af19 100%); border:1px solid #f5af19;">
+        <i class="fa-solid fa-hourglass-half" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_capsule" style="color: #fff;">كبسولة الزمن</span>
+    </div>
+    <div class="item c-radar" onclick="playSound('click'); location.href='radar.html'" style="background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%); border:1px solid #8E2DE2;">
+        <i class="fa-solid fa-satellite-dish" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_radar" style="color: #fff;">الرادار</span>
+    </div>
+    
+    <div class="sheet-option" onclick="window.location.href='qr-text.html'">
+        <i class="fa-solid fa-qrcode" style="color: var(--primary-color); font-size: 20px; width: 30px; text-align: center;"></i>
+        <span data-i18n="menu_qr_messages" style="flex: 1; text-align: right; font-weight: bold; color: var(--text-color);">رسائل QR مشفرة</span>
+        <i class="fa-solid fa-chevron-left" style="font-size: 14px; color: #888;"></i>
+    </div>
+
+    <div class="menu-separator" data-i18n="menu_entertainment" style="margin-top: 15px;">الترفيه</div>
+
+    <div class="item" onclick="playSound('click'); location.href='games.html'" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border:1px solid #38ef7d;">
+        <i class="fa-solid fa-gamepad" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_games" style="color: #fff;">العب واربح</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='gifts.html'" style="background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%); border:1px solid #FF416C;">
+        <i class="fa-solid fa-gift" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_gifts" style="color: #fff;">الهدايا اليومية</span>
+    </div>
+
+    <div class="menu-separator" data-i18n="menu_comm" style="margin-top: 15px;">التواصل</div>
+
+    <div class="item" onclick="playSound('click'); location.href='messages.html'" style="background: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%); border:1px solid #00C6FF;">
+        <i class="fa-solid fa-comment-dots" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_msg" style="color: #fff;">الرسائل</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='friend_requests.html'" style="background: linear-gradient(135deg, #F2994A 0%, #F2C94C 100%); border:1px solid #F2C94C;">
+        <i class="fa-solid fa-user-plus" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_req" style="color: #fff;">الطلبات</span>
+        <span id="requestsBadge" class="badge-count" style="background:#fff; color:#F2994A; border:none;">0</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='friends.html'" style="background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%); border:1px solid #8E54E9;">
+        <i class="fa-solid fa-users" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_friends" style="color: #fff;">الأصدقاء</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='notifications.html'" style="background: linear-gradient(135deg, #e52d27 0%, #b31217 100%); border:1px solid #e52d27;">
+        <i class="fa-solid fa-bell" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_notif" style="color: #fff;">الإشعارات</span>
+        <span id="mainNotifBadge" class="badge-count" style="background:#fff; color:#e52d27; border:none;">0</span>
+    </div>
+
+    <div class="menu-separator" data-i18n="menu_tools" style="margin-top: 15px;">أدواتي</div>
+
+    <div class="item" onclick="playSound('click'); location.href='saved_posts.html'" style="background: linear-gradient(135deg, #3E5151 0%, #DECBA4 100%); border:1px solid #DECBA4;">
+        <i class="fa-solid fa-bookmark" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_saved" style="color: #fff;">المحفوظات</span>
+    </div>
+    <div class="item" onclick="playSound('click'); location.href='settings.html'" style="background: linear-gradient(135deg, #232526 0%, #414345 100%); border:1px solid #555;">
+        <i class="fa-solid fa-gear" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_settings" style="color: #fff;">الإعدادات</span>
+    </div>
+
+    <div class="sheet-option" onclick="openThemeModal()">
+        <i class="fa-solid fa-palette" style="color: var(--primary-color); font-size: 20px; width: 30px; text-align: center;"></i>
+        <span data-i18n="menu_theme" style="flex: 1; text-align: right; font-weight: bold; color: var(--text-color);">مظهر التطبيق</span>
+        <i class="fa-solid fa-chevron-left" style="font-size: 14px; color: #888;"></i>
+    </div>
+
+    <div class="item" onclick="openLanguageModal()" style="background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">
+        <i class="fa-solid fa-earth-americas" style="color: #00C6FF; background: transparent;"></i> 
+        <span data-i18n="settings_lang" style="color: #fff;">لغة التطبيق</span>
+    </div>
+
+    <div class="item" onclick="playSound('click'); location.href='verification.html'" style="background: linear-gradient(135deg, #0061ff 0%, #60efff 100%); border: 1px solid rgba(255,255,255,0.3);">
+        <i class="fa-solid fa-certificate" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_verify" style="color: #fff;">توثيق الحساب</span>
+    </div>
+
+    <div class="item" id="adminPanelBtn" style="display:none; background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%); border:1px solid #ff5e62;" onclick="playSound('click'); location.href='admin.html'">
+        <i class="fa-solid fa-shield-halved" style="color: #fff; background: transparent;"></i> 
+        <span data-i18n="menu_admin" style="color: #fff;">المشرف</span>
+    </div>
+    
+    <div class="item" onclick="openAccountSwitcher()" style="grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; height: 50px; background: rgba(255,255,255,0.05);">
+        <i class="fa-solid fa-repeat" style="margin: 0; color: #00C6FF; background: transparent; font-size: 16px;"></i> 
+        <span data-i18n="menu_switch_acc" style="font-size: 13px;">تبديل الحساب</span>
+    </div>
+
+    <div class="item" onclick="toggleOrbPreference()" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-between; height: 50px; background: rgba(255,255,255,0.05); padding: 0 15px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <i class="fa-solid fa-circle-nodes" style="margin: 0; color: #aaa; background: transparent; font-size: 16px;"></i> 
+            <span data-i18n="menu_orb" style="font-size: 13px; color: #aaa;">كرة التنقل</span>
+        </div>
+        <div id="orbToggleSwitch" class="toggle-switch active">
+            <div class="toggle-knob"></div>
+        </div>
+    </div>
+
+    <div class="item" onclick="toggleAppSounds()" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-between; height: 50px; background: rgba(255,255,255,0.05); padding: 0 15px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <i id="soundIcon" class="fa-solid fa-volume-high" style="margin: 0; color: #aaa; background: transparent; font-size: 16px;"></i> 
+            <span data-i18n="menu_sounds" style="font-size: 13px; color: #aaa;">الأصوات</span>
+        </div>
+        <div id="soundToggle" class="toggle-switch active">
+            <div class="toggle-knob"></div>
+        </div>
+    </div>
+
+    <div class="item danger" onclick="openLogoutModal()">
+        <i class="fa-solid fa-right-from-bracket"></i> 
+        <span data-i18n="menu_logout">تسجيل الخروج</span>
+    </div>
 </div>
+</div>
+
     <div class="fb-header">
       <div class="fb-top">
     <i class="fa-solid fa-bars icon-btn" onclick="toggleMenu(true)"></i>
@@ -9410,7 +9177,7 @@ body {
     </div>
 <div id="top-progress-bar"></div>
 
-    <div id="toast"><i class="fa-solid fa-check-circle"></i> <span id="toast-msg">تم بنجاح</span></div>
+   
     
     <div id="floatingControls" class="floating-controls">
     <div class="float-btn" onclick="toggleMenu(true)">
@@ -9493,6 +9260,13 @@ if (typeof appTranslations === 'undefined' || !appTranslations[currentAppLang]) 
     currentAppLang = 'ar';
     localStorage.setItem('wareed_lang', 'ar');
 }
+
+// 🔥 هذا الكود يجبر المتصفح على ترجمة الشاشة فور تحميلها بناءً على اللغة المحفوظة 🔥
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof applyLanguage === 'function') {
+        applyLanguage(currentAppLang);
+    }
+});
 
 let currentUser = null, lastVisibleDoc = null, isLoading = false;
 let isGhost = false;
@@ -9698,11 +9472,13 @@ const badgeContainer = document.getElementById('userRankBadge'); // المكان
     }
     
 fetchBlockedUsersList().catch(console.error); 
+// تشغيل المحرك الذكي للمنشورات والاقتراحات
+FeedEngine.init();
 
 
     
     // 2. إعداد القائمة الجانبية (الاسم والصورة)
-    document.getElementById('menuName').innerText = d.name || "مستخدم";
+    document.getElementById('menuName').innerText = d.name || t('text_user_fallback');
     const menuAvatarElem = document.getElementById('menuAvatar');
     if(menuAvatarElem) {
         menuAvatarElem.style.backgroundImage = `url('${finalPic}')`;
@@ -9755,52 +9531,49 @@ const bottomAvatar = document.getElementById('bottomNavAvatar');
     if(typeof startPresenceSystem === 'function') startPresenceSystem(user.uid);
 
    
-    
-    loadPosts();
-
-    // تشغيل المراقبين (Scroller & Video)
-    const sentinel = document.getElementById('scrollSentinel');
-    if(sentinel) {
-        new IntersectionObserver(entries => {
-            if(entries[0].isIntersecting && !isLoading) loadPosts(true);
-        }).observe(sentinel);
-    }
-    // متغير عام للتحكم في التشغيل التلقائي
+       // متغير عام للتحكم في التشغيل التلقائي
 window.isGlobalAutoplay = false; 
 
-const videoObserver = new IntersectionObserver((entries) => {
+window.videoObserver = new IntersectionObserver((entries) => {
+    const isSheetOpen = document.getElementById('overlay') && document.getElementById('overlay').style.display === 'block';
+
     entries.forEach(entry => {
         const video = entry.target;
         const wrapper = video.closest('.media-item-wrapper') || video.closest('.repost-video-wrapper');
         let playIcon = wrapper ? wrapper.querySelector('div[id^="play_btn_"] i') : null;
+        
+        // 🔥 جلب الصوت المرفق بهذا الفيديو
+        let attachedAudio = wrapper ? wrapper.querySelector('audio[id^="vo_audio_"]') : null;
 
-        if (entry.isIntersecting) {
-            // لو الفيديوهات مسموح لها تشتغل تلقائي (لأنك شغلت واحد قبل كده)
+        // لو فاتح قائمة سفلية (زي التعليقات) وقّف كل حاجة
+        if (isSheetOpen) {
+            video.pause();
+            if (attachedAudio) attachedAudio.pause(); // 🔥 إيقاف الصوت
+            if(playIcon) playIcon.style.opacity = '1';
+            return;
+        }
+
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
             if (window.isGlobalAutoplay) {
                 video.play().then(() => {
                     if (playIcon) playIcon.style.opacity = '0';
+                    if (attachedAudio) attachedAudio.play(); // 🔥 تشغيل الصوت لو الفيديو اشتغل تلقائي
                 }).catch(() => {
-                    // لو المتصفح رفض يشغله عشان الصوت، نكتمه ونشغله غصب عنه
+                    // لو المتصفح منع التشغيل التلقائي بالصوت، نشغله صامت
                     video.muted = true;
-                    if (wrapper) {
-                        let muteBtn = wrapper.querySelector('.video-mute-btn i');
-                        if (muteBtn) muteBtn.className = 'fa-solid fa-volume-xmark';
-                    }
                     video.play().catch(()=>{});
                     if (playIcon) playIcon.style.opacity = '0';
                 });
-            } else {
-                // لو مش مسموح، خليه مقفول
-                video.pause();
-                if (playIcon) playIcon.style.opacity = '1';
             }
         } else {
-            // لو خرج بره الشاشة، دايماً وقفه
+            // 🔥 عندما تخرج الصورة/الفيديو من الشاشة (Scroll away)
             video.pause();
+            if (attachedAudio) attachedAudio.pause(); // 🔥 إيقاف الصوت إجبارياً
             if (playIcon) playIcon.style.opacity = '1';
         }
     });
 }, { threshold: 0.6 });
+
 window.videoObserver = videoObserver;
 
 
@@ -10446,164 +10219,6 @@ function getSkeletonHTML() {
     `.repeat(2); // يكرر الشكل مرتين
 }
 
-async function loadPosts(more = false) {
-    if (isLoading) return;
-    isLoading = true;
-    
-    if(typeof startLoadingBar === "function") startLoadingBar();
-
-    const list = document.getElementById('postsList');
-    const sentinel = document.getElementById('scrollSentinel');
-
-    // 1. تأكيد جلب قائمة المتابعين أولاً قبل أي شيء
-    if (typeof fetchMyFollowing === 'function') {
-        await fetchMyFollowing();
-    }
-    
-    // التأكد إن القائمة فيها رقمك على الأقل عشان تشوف بوستاتك
-    if (typeof myFollowingList === 'undefined') window.myFollowingList = [];
-    if (!myFollowingList.includes(currentUser.uid)) myFollowingList.push(currentUser.uid);
-
-    if (!more) {
-        list.innerHTML = getSkeletonHTML(); 
-        sentinel.style.display = 'none'; 
-    } else {
-        sentinel.style.display = 'flex';
-        sentinel.innerHTML = '<div class="skeleton sk-line" style="width:120px; height:10px; border-radius:10px; margin:auto; opacity:0.7"></div>'; 
-    }
-
-    // جلب كمية كبيرة (50 منشور)
-    let q = db.collection('posts').orderBy('createdAt', 'desc').limit(50);
-    if (more && lastVisibleDoc) q = q.startAfter(lastVisibleDoc);
-
-    let isTimeout = false;
-    const timeoutTimer = setTimeout(() => {
-        isTimeout = true; 
-        isLoading = false;
-        if(typeof finishLoadingBar === "function") finishLoadingBar();
-        
-        const errorHTML = `
-            <div class="empty-state-container" style="padding: 40px 10px; animation: fadeIn 0.3s;">
-                <div class="empty-icon-box" style="border-color: var(--danger-color); background: rgba(255, 59, 48, 0.1);">
-                    <i class="fa-solid fa-wifi" style="color: var(--danger-color);"></i>
-                </div>
-                <div class="empty-title">${typeof t === 'function' ? t('err_connection') : 'ضعف الاتصال'}</div>
-                <button class="empty-btn" onclick="loadPosts()" style="border-color: var(--danger-color); color: var(--danger-color);">
-                    <i class="fa-solid fa-rotate-right"></i> تحديث
-                </button>
-            </div>`;
-
-        if (!more) { list.innerHTML = errorHTML; } 
-        else { sentinel.innerHTML = `<button class="empty-btn" onclick="loadPosts(true)">تحديث 👇</button>`; }
-    }, 10000); 
-
-    try {
-        const snap = await q.get();
-
-        clearTimeout(timeoutTimer);
-        if (isTimeout) return;
-
-        if (!more) list.innerHTML = ""; 
-
-        // 🔥 واجهة الاستكشاف (الترحيب) الموحدة 🔥
-        const discoveryHTML = `
-            <div class="discovery-container" id="mainDiscoveryBox">
-                <div class="discovery-title" id="discTitle">مرحباً بك في وريد</div>
-                <div class="discovery-subtitle" id="discSubtitle">تابع أشخاصاً لبدء رؤية محتواهم</div>
-                <div class="discovery-carousel" id="discoveryCarousel" onscroll="handleDiscoveryScroll()"></div>
-            </div>
-        `;
-
-        // ==========================================
-        // الحالة الأولى: قاعدة البيانات لا تحتوي على أي منشورات إطلاقاً
-        // ==========================================
-        if (snap.empty) {
-            if (!more) { 
-                // المستخدم فتح التطبيق ومفيش أي بوستات خالص -> نعرض الاستكشاف الترحيبي
-                list.innerHTML = discoveryHTML;
-                sentinel.style.display = 'none'; 
-                if(typeof initDiscoverySystem === 'function') initDiscoverySystem();
-            } 
-            else { 
-                // المستخدم وصل لآخر بوست في السكرول -> نعرض الاستكشاف في الأسفل
-                sentinel.style.display = 'none'; 
-                if(!document.getElementById('mainDiscoveryBox')) {
-                    list.insertAdjacentHTML('beforeend', discoveryHTML);
-                    document.getElementById('discTitle').innerText = "نهاية المنشورات ✨";
-                    document.getElementById('discSubtitle').innerText = "اكتشف وتابع أشخاصاً جدد لرؤية المزيد";
-                    if(typeof initDiscoverySystem === 'function') initDiscoverySystem();
-                }
-            }
-            if(typeof finishLoadingBar === "function") finishLoadingBar();
-            isLoading = false;
-            return;
-        }
-
-        lastVisibleDoc = snap.docs[snap.docs.length - 1];
-        let renderedPostsCount = 0; 
-
-        // رسم المنشورات
-        for (const doc of snap.docs) {
-            const postData = doc.data();
-            
-            if (typeof blockedUsersSet !== 'undefined' && blockedUsersSet.has(postData.uid)) continue; 
-            
-            // 🔥 السر هنا: إخفاء أي شخص لست تتابعه 🔥
-            if (!myFollowingList.includes(postData.uid)) continue;
-
-            // يمكنك تفعيل هذا السطر إذا أردت إخفاء المنشورات التي مر عليها 24 ساعة
-            /*
-            if (postData.createdAt) {
-                const postTime = postData.createdAt.toDate().getTime();
-                const now = Date.now();
-                if ((now - postTime) / (1000 * 60 * 60) > 24) continue; 
-            }
-            */
-
-            await renderPost({ id: doc.id, ...postData });
-            renderedPostsCount++;
-        }
-
-        // ==========================================
-        // الحالة الثانية: تقييم ما تم رسمه بعد فلترة المتابعين
-        // ==========================================
-        if (!more && renderedPostsCount === 0) {
-            // جلبنا 50 بوست بس طلعوا كلهم لناس إنت مش متابعهم (حسابك جديد)
-            list.innerHTML = discoveryHTML;
-            sentinel.style.display = 'none';
-            if(typeof initDiscoverySystem === 'function') initDiscoverySystem();
-        } else {
-            // جلبنا بوستات لأصحابك بنجاح
-            if(more) {
-                sentinel.innerHTML = ''; 
-                sentinel.style.display = 'block'; 
-                sentinel.style.height = '20px'; 
-            } else {
-                sentinel.style.display = 'block';
-            }
-
-            // لو الدفعة اللي جات أقل من 50، معناها إن الداتابيز خلصت (نهاية الفيد)
-            if (snap.docs.length < 50) {
-                sentinel.style.display = 'none';
-                if(!document.getElementById('mainDiscoveryBox')) {
-                    list.insertAdjacentHTML('beforeend', discoveryHTML);
-                    document.getElementById('discTitle').innerText = "نهاية المنشورات ✨";
-                    document.getElementById('discSubtitle').innerText = "اكتشف وتابع أشخاصاً جدد لرؤية المزيد";
-                    if(typeof initDiscoverySystem === 'function') initDiscoverySystem();
-                }
-            }
-        }
-
-    } catch (e) {
-        clearTimeout(timeoutTimer);
-        console.error("Error loading posts:", e);
-    }
-
-    if(typeof finishLoadingBar === "function") finishLoadingBar();
-    isLoading = false;
-}
-
-
 
 // دالة لتحديد أيقونة الخصوصية بناءً على الحالة
         async function renderPost(p) {
@@ -10927,65 +10542,117 @@ async function loadPosts(more = false) {
             }
             
             // الميديا العادية (صور وفيديو)
-            if (p.media && p.media.length > 0) {
-                if (p.media.length === 1) {
-                    const m = p.media[0];
+                    // ============================================================
+        // 🎙️ تجهيز التعليق الصوتي (مخفي ومربوط بالميديا)
+        // ============================================================
+                // ============================================================
+        // 🎙️ تجهيز التعليق الصوتي (مخفي ومربوط بالميديا)
+        // ============================================================
+        let hasVoiceover = p.voiceoverUrl ? true : false;
+        let hiddenVoiceoverHtml = hasVoiceover ? `<audio id="vo_audio_${p.id}" src="${p.voiceoverUrl}" preload="none" style="display:none;"></audio>` : '';
+
+        // الميديا العادية (صور وفيديو)
+        if (p.media && p.media.length > 0) {
+            if (p.media.length === 1) {
+                const m = p.media[0];
+                if (m.type === 'video') {
+                    const uniqueVideoId = `vid-${p.id}-0`;
+                    // لو في تعليق صوتي نغير أيقونة الميوت لشكل المايك
+                    const muteIcon = hasVoiceover ? 'fa-microphone-lines' : (isGlobalMuted ? 'fa-volume-xmark' : 'fa-volume-high');
+                    const onMetaLoad = `this.classList.add(this.videoWidth > this.videoHeight ? 'video-landscape' : 'video-portrait')`;
+
+                    // 🔥 ربط تشغيل وإيقاف الفيديو بالتعليق الصوتي الخفي 🔥
+                    const syncEvents = hasVoiceover ? `
+                        onplay="document.getElementById('vo_audio_${p.id}').play()" 
+                        onpause="document.getElementById('vo_audio_${p.id}').pause()" 
+                        onseeking="document.getElementById('vo_audio_${p.id}').currentTime = this.currentTime" 
+                        onwaiting="document.getElementById('vo_audio_${p.id}').pause()" 
+                        onplaying="document.getElementById('vo_audio_${p.id}').play()"` : '';
+
+                    contentHtml += `
+                    <div class="media-item-wrapper" style="position:relative; width:100%; height:auto; background:#000; display:flex; justify-content:center; align-items:center; border-radius: 12px; overflow: hidden; margin-top: 8px;">
+                        ${hiddenVoiceoverHtml}
+                        <video src="${m.url}" id="${uniqueVideoId}" class="media-item" loop playsinline ${hasVoiceover ? 'muted' : (isGlobalMuted ? 'muted' : '')} onloadedmetadata="${onMetaLoad}" onclick="window.location.href = 'videos.html?openVideo=${p.id}'; event.stopPropagation();" onplay="incrementViewCount('${p.id}'); startLiveViews('${p.id}')" onpause="stopLiveViews()" ${syncEvents}></video>
+                        <div id="play_btn_${uniqueVideoId}" onclick="toggleFeedVideo('${uniqueVideoId}', event)" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10;">
+                             <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5)); transition:0.2s;"></i>
+                        </div>
+                        <div style="position:absolute; bottom:15px; left:15px; color:#fff; font-size:12px; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:20px; pointer-events:none; display:flex; align-items:center; gap:6px; z-index:20; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1);">
+                            <i class="fa-regular fa-eye"></i> <span id="vid-views-${p.id}">${formatNumber(p.views || 0)}</span>
+                        </div>
+                        <div class="video-mute-btn" onclick="event.stopPropagation(); ${hasVoiceover ? `showToast('هذا المقطع يحتوي على تعليق صوتي مدمج 🎙️')` : `toggleMute(event)`}" style="z-index:20;"><i class="fa-solid ${muteIcon}"></i></div>
+                    </div>`;
+                } else {
+                    // --- 📸 لو صورة ---
+                    if (hasVoiceover) {
+                        // 🌟 تحويل الصورة لمشغل صوتي مدمج (بدون مشكلة الترجمة) 🌟
+                        contentHtml += `
+                        <div class="media-item-wrapper" style="position:relative; background:#000; border-radius:12px; overflow:hidden; margin-top:8px; cursor: pointer;" onclick="window.event.stopPropagation(); window.toggleImageVoiceover('${p.id}')">
+                            ${hiddenVoiceoverHtml}
+                            <img src="${m.url}" class="media-item" loading="lazy" style="display:block; width:100%; height:auto; max-height:650px; object-fit:cover; opacity:0.85; transition: opacity 0.3s;">
+
+                            <div id="play_btn_imgvo_${p.id}" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; z-index:10; transition:0.3s; pointer-events:none;">
+                                 <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5));"></i>
+                            </div>
+                            
+                            <div style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.6); padding: 4px 12px; border-radius: 12px; color: #fff; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(4px); pointer-events:none;">
+                                <i class="fa-solid fa-microphone-lines" style="color: var(--primary-color); margin-left: 5px;"></i> تعليق صوتي
+                            </div>
+                        </div>`;
+                    } else {
+                        // صورة عادية بملء الشاشة
+                        contentHtml += `<div style="background:#000; border-radius:12px; overflow:hidden; margin-top:8px;"><img src="${m.url}" class="media-item" loading="lazy" style="display:block; width:100%; height:auto; max-height:650px; object-fit:cover;" onclick="viewImage('${m.url}', '${p.id}'); event.stopPropagation();"></div>`;
+                    }
+                }
+            } else {
+                // --- 🎬 لو أكثر من صورة/فيديو (سلايدر) ---
+                let slidesHtml = '';
+                let dotsHtml = '';
+                
+                p.media.forEach((m, idx) => {
+                    dotsHtml += `<div class="slider-dot ${idx === 0 ? 'active' : ''}" id="dot-${p.id}-${idx}"></div>`;
+                    
                     if (m.type === 'video') {
-                        const uniqueVideoId = `vid-${p.id}-0`;
-                        const muteIcon = isGlobalMuted ? 'fa-volume-xmark' : 'fa-volume-high';
+                        const uniqueVideoId = `vid-${p.id}-${idx}`;
+                        const muteIcon = hasVoiceover ? 'fa-microphone-lines' : (isGlobalMuted ? 'fa-volume-xmark' : 'fa-volume-high');
                         const onMetaLoad = `this.classList.add(this.videoWidth > this.videoHeight ? 'video-landscape' : 'video-portrait')`;
 
-                        contentHtml += `
-                        <div class="media-item-wrapper" style="position:relative; width:100%; height:auto; background:#000; display:flex; justify-content:center; align-items:center; border-radius: 12px; overflow: hidden; margin-top: 8px;">
-                            <video src="${m.url}" id="${uniqueVideoId}" class="media-item" loop playsinline ${isGlobalMuted ? 'muted' : ''} onloadedmetadata="${onMetaLoad}" onclick="window.location.href = 'videos.html?openVideo=${p.id}'; event.stopPropagation();" onplay="incrementViewCount('${p.id}'); startLiveViews('${p.id}')" onpause="stopLiveViews()"></video>
+                        const syncEventsSlider = hasVoiceover ? `
+                            onplay="document.getElementById('vo_audio_${p.id}').play()" 
+                            onpause="document.getElementById('vo_audio_${p.id}').pause()" 
+                            onseeking="document.getElementById('vo_audio_${p.id}').currentTime = this.currentTime" 
+                            onwaiting="document.getElementById('vo_audio_${p.id}').pause()" 
+                            onplaying="document.getElementById('vo_audio_${p.id}').play()"` : '';
+
+                        slidesHtml += `
+                        <div class="post-slide media-item-wrapper" style="position:relative; width:100%; height:100%; background:#000; display:flex; justify-content:center; align-items:center;">
+                            <video src="${m.url}" id="${uniqueVideoId}" class="media-item" loop playsinline ${hasVoiceover ? 'muted' : (isGlobalMuted ? 'muted' : '')} onloadedmetadata="${onMetaLoad}" onclick="window.location.href = 'videos.html?openVideo=${p.id}'; event.stopPropagation();" onplay="incrementViewCount('${p.id}'); startLiveViews('${p.id}')" onpause="stopLiveViews()" ${syncEventsSlider}></video>
                             <div id="play_btn_${uniqueVideoId}" onclick="toggleFeedVideo('${uniqueVideoId}', event)" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10;">
                                  <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5)); transition:0.2s;"></i>
                             </div>
-                            <div style="position:absolute; bottom:15px; left:15px; color:#fff; font-size:12px; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:20px; pointer-events:none; display:flex; align-items:center; gap:6px; z-index:20; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1);">
-                                <i class="fa-regular fa-eye"></i> <span id="vid-views-${p.id}">${formatNumber(p.views || 0)}</span>
-                            </div>
-                            <div class="video-mute-btn" onclick="toggleMute(event)" style="z-index:20;"><i class="fa-solid ${muteIcon}"></i></div>
+                            <div class="video-mute-btn" onclick="event.stopPropagation(); ${hasVoiceover ? `showToast('هذا المقطع يحتوي على تعليق صوتي مدمج 🎙️')` : `toggleMute(event)`}" style="z-index:20;"><i class="fa-solid ${muteIcon}"></i></div>
                         </div>`;
                     } else {
-                        contentHtml += `<div style="background:#000; border-radius:12px; overflow:hidden; margin-top:8px;"><img src="${m.url}" class="media-item video-portrait" loading="lazy" style="width:100%; object-fit:contain; display:block; max-height:500px;" onclick="viewImage('${m.url}', '${p.id}'); event.stopPropagation();"></div>`;
+                        // صور السلايدر تملأ الشاشة أيضاً
+                        slidesHtml += `<div class="post-slide"><img src="${m.url}" loading="lazy" style="display:block; width:100%; height:auto; max-height:650px; object-fit:cover;" onclick="viewImage('${m.url}', '${p.id}'); event.stopPropagation();"></div>`;
                     }
-                } else {
-                    let slidesHtml = '';
-                    let dotsHtml = '';
-                    
-                    p.media.forEach((m, idx) => {
-                        dotsHtml += `<div class="slider-dot ${idx === 0 ? 'active' : ''}" id="dot-${p.id}-${idx}"></div>`;
-                        
-                        if (m.type === 'video') {
-                            const uniqueVideoId = `vid-${p.id}-${idx}`;
-                            const muteIcon = isGlobalMuted ? 'fa-volume-xmark' : 'fa-volume-high';
-                            const onMetaLoad = `this.classList.add(this.videoWidth > this.videoHeight ? 'video-landscape' : 'video-portrait')`;
+                });
 
-                            slidesHtml += `
-                            <div class="post-slide media-item-wrapper" style="position:relative; width:100%; height:100%; background:#000; display:flex; justify-content:center; align-items:center;">
-                                <video src="${m.url}" id="${uniqueVideoId}" class="media-item" loop playsinline ${isGlobalMuted ? 'muted' : ''} onloadedmetadata="${onMetaLoad}" onclick="window.location.href = 'videos.html?openVideo=${p.id}'; event.stopPropagation();" onplay="incrementViewCount('${p.id}'); startLiveViews('${p.id}')" onpause="stopLiveViews()"></video>
-                                <div id="play_btn_${uniqueVideoId}" onclick="toggleFeedVideo('${uniqueVideoId}', event)" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10;">
-                                     <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5)); transition:0.2s;"></i>
-                                </div>
-                                <div class="video-mute-btn" onclick="toggleMute(event)" style="z-index:20;"><i class="fa-solid ${muteIcon}"></i></div>
-                            </div>`;
-                        } else {
-                            slidesHtml += `<div class="post-slide"><img src="${m.url}" loading="lazy" style="width:100%; object-fit:contain; max-height:500px;" onclick="viewImage('${m.url}', '${p.id}'); event.stopPropagation();"></div>`;
-                        }
-                    });
-
-                    contentHtml += `
-                    <div class="post-slider-wrapper">
-                        <div class="slider-counter"><span id="counter-current-${p.id}">1</span>/${p.media.length}</div>
-                        <div class="post-slider-container" id="slider-${p.id}" onscroll="handleSliderScroll('${p.id}', ${p.media.length})">
-                            ${slidesHtml}
-                        </div>
-                        <div class="slider-dots">
-                            ${dotsHtml}
-                        </div>
-                    </div>`;
-                }
+                contentHtml += `
+                <div class="post-slider-wrapper">
+                    ${hiddenVoiceoverHtml}
+                    ${hasVoiceover ? `<div style="position:absolute; top:10px; right:10px; z-index:20; background:var(--primary-color); padding:4px 10px; border-radius:12px; color:#000; font-size:10px; font-weight:bold;"><i class="fa-solid fa-microphone-lines"></i> يحتوي على صوت</div>` : ''}
+                    <div class="slider-counter"><span id="counter-current-${p.id}">1</span>/${p.media.length}</div>
+                    <div class="post-slider-container" id="slider-${p.id}" onscroll="handleSliderScroll('${p.id}', ${p.media.length})">
+                        ${slidesHtml}
+                    </div>
+                    <div class="slider-dots">
+                        ${dotsHtml}
+                    </div>
+                </div>`;
             }
+        }
+
+
         }
     
         const safeTextForBtn = encodeURIComponent(p.text || '');
@@ -11226,7 +10893,7 @@ function deletePost() {
     
     // التأكد إن فيه منشور متحدد
     if (!currentPostId && !window.currentPostId) {
-        showToast("❌ خطأ: لم يتم تحديد المنشور!");
+        showToast(t('toast_no_post_selected'));
         return;
     }
 
@@ -14933,55 +14600,103 @@ function renderUserCardInSearch(doc) {
         }
 
         // الميديا (صور وفيديو)
+                // ============================================================
+        // 🎙️ تجهيز التعليق الصوتي (مخفي ومربوط بالميديا)
+        // ============================================================
+        let hasVoiceover = p.voiceoverUrl ? true : false;
+        let hiddenVoiceoverHtml = hasVoiceover ? `<audio id="vo_audio_${p.id}" src="${p.voiceoverUrl}" preload="none" style="display:none;"></audio>` : '';
+
+        // الميديا العادية (صور وفيديو)
         if (p.media && p.media.length > 0) {
             if (p.media.length === 1) {
                 const m = p.media[0];
                 if (m.type === 'video') {
-                    const uniqueVideoId = `search-vid-${p.id}-0`;
-                    const muteIcon = isGlobalMuted ? 'fa-volume-xmark' : 'fa-volume-high';
+                    const uniqueVideoId = `vid-${p.id}-0`;
+                    // تغيير الأيقونة لمايكروفون إذا كان هناك تعليق صوتي
+                    const muteIcon = hasVoiceover ? 'fa-microphone-lines' : (isGlobalMuted ? 'fa-volume-xmark' : 'fa-volume-high');
                     const onMetaLoad = `this.classList.add(this.videoWidth > this.videoHeight ? 'video-landscape' : 'video-portrait')`;
+
+                    // 🔥 ربط تشغيل وإيقاف الفيديو بالتعليق الصوتي الخفي 🔥
+                    const syncEvents = hasVoiceover ? `
+                        onplay="document.getElementById('vo_audio_${p.id}').play()" 
+                        onpause="document.getElementById('vo_audio_${p.id}').pause()" 
+                        onseeking="document.getElementById('vo_audio_${p.id}').currentTime = this.currentTime" 
+                        onwaiting="document.getElementById('vo_audio_${p.id}').pause()" 
+                        onplaying="document.getElementById('vo_audio_${p.id}').play()"` : '';
 
                     contentHtml += `
                     <div class="media-item-wrapper" style="position:relative; width:100%; height:auto; background:#000; display:flex; justify-content:center; align-items:center; border-radius: 12px; overflow: hidden; margin-top: 8px;">
-                        <video src="${m.url}" id="${uniqueVideoId}" class="media-item" loop playsinline ${isGlobalMuted ? 'muted' : ''} onloadedmetadata="${onMetaLoad}" onclick="window.location.href = 'videos.html?openVideo=${p.id}'; event.stopPropagation();" onplay="incrementViewCount('${p.id}'); startLiveViews('${p.id}')" onpause="stopLiveViews()"></video>
+                        ${hiddenVoiceoverHtml}
+                        <video src="${m.url}" id="${uniqueVideoId}" class="media-item" loop playsinline ${hasVoiceover ? 'muted' : (isGlobalMuted ? 'muted' : '')} onloadedmetadata="${onMetaLoad}" onclick="window.location.href = 'videos.html?openVideo=${p.id}'; event.stopPropagation();" onplay="incrementViewCount('${p.id}'); startLiveViews('${p.id}')" onpause="stopLiveViews()" ${syncEvents}></video>
                         <div id="play_btn_${uniqueVideoId}" onclick="toggleFeedVideo('${uniqueVideoId}', event)" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10;">
                              <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5)); transition:0.2s;"></i>
                         </div>
                         <div style="position:absolute; bottom:15px; left:15px; color:#fff; font-size:12px; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:20px; pointer-events:none; display:flex; align-items:center; gap:6px; z-index:20; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1);">
                             <i class="fa-regular fa-eye"></i> <span id="vid-views-${p.id}">${formatNumber(p.views || 0)}</span>
                         </div>
-                        <div class="video-mute-btn" onclick="toggleMute(event)" style="z-index:20;"><i class="fa-solid ${muteIcon}"></i></div>
+                        <div class="video-mute-btn" onclick="event.stopPropagation(); ${hasVoiceover ? `showToast(typeof t === 'function' ? t('toast_has_voiceover') : 'هذا المقطع يحتوي على تعليق صوتي مدمج 🎙️')` : `toggleMute(event)`}" style="z-index:20;"><i class="fa-solid ${muteIcon}"></i></div>
                     </div>`;
                 } else {
-                    contentHtml += `<div style="background:#000; border-radius:12px; overflow:hidden; margin-top:8px;"><img src="${m.url}" class="media-item video-portrait" loading="lazy" style="width:100%; object-fit:contain; display:block; max-height:500px;" onclick="viewImage('${m.url}', '${p.id}'); event.stopPropagation();"></div>`;
+                    // --- 📸 لو صورة ---
+                    if (hasVoiceover) {
+                        // 🌟 تحويل الصورة لمشغل صوتي مدمج وملء الشاشة 🌟
+                        contentHtml += `
+                        <div class="media-item-wrapper" style="position:relative; background:#000; border-radius:12px; overflow:hidden; margin-top:8px; cursor: pointer;" onclick="window.event.stopPropagation(); window.toggleImageVoiceover('${p.id}')">
+                            ${hiddenVoiceoverHtml}
+                            <img src="${m.url}" class="media-item" loading="lazy" style="display:block; width:100%; height:auto; max-height:650px; object-fit:cover; opacity:0.85; transition: opacity 0.3s;">
+
+                            <div id="play_btn_imgvo_${p.id}" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; z-index:10; transition:0.3s; pointer-events:none;">
+                                 <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5));"></i>
+                            </div>
+                            
+                            <div style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); padding: 4px 12px; border-radius: 12px; color: #fff; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(4px); pointer-events:none;">
+                                <i class="fa-solid fa-microphone-lines" style="color: var(--primary-solid); margin-left: 5px;"></i> ${typeof t === 'function' ? t('text_voiceover') : 'تعليق صوتي'}
+                            </div>
+                        </div>`;
+                    } else {
+                        // صورة عادية بملء الشاشة
+                        contentHtml += `<div style="background:#000; border-radius:12px; overflow:hidden; margin-top:8px;"><img src="${m.url}" class="media-item" loading="lazy" style="display:block; width:100%; height:auto; max-height:650px; object-fit:cover;" onclick="viewImage('${m.url}', '${p.id}'); event.stopPropagation();"></div>`;
+                    }
                 }
             } else {
                 let slidesHtml = '';
                 let dotsHtml = '';
+                
                 p.media.forEach((m, idx) => {
-                    dotsHtml += `<div class="slider-dot ${idx === 0 ? 'active' : ''}" id="search-dot-${p.id}-${idx}"></div>`;
+                    dotsHtml += `<div class="slider-dot ${idx === 0 ? 'active' : ''}" id="dot-${p.id}-${idx}"></div>`;
+                    
                     if (m.type === 'video') {
-                        const uniqueVideoId = `search-vid-${p.id}-${idx}`;
-                        const muteIcon = isGlobalMuted ? 'fa-volume-xmark' : 'fa-volume-high';
+                        const uniqueVideoId = `vid-${p.id}-${idx}`;
+                        const muteIcon = hasVoiceover ? 'fa-microphone-lines' : (isGlobalMuted ? 'fa-volume-xmark' : 'fa-volume-high');
                         const onMetaLoad = `this.classList.add(this.videoWidth > this.videoHeight ? 'video-landscape' : 'video-portrait')`;
+
+                        const syncEventsSlider = hasVoiceover ? `
+                            onplay="document.getElementById('vo_audio_${p.id}').play()" 
+                            onpause="document.getElementById('vo_audio_${p.id}').pause()" 
+                            onseeking="document.getElementById('vo_audio_${p.id}').currentTime = this.currentTime" 
+                            onwaiting="document.getElementById('vo_audio_${p.id}').pause()" 
+                            onplaying="document.getElementById('vo_audio_${p.id}').play()"` : '';
 
                         slidesHtml += `
                         <div class="post-slide media-item-wrapper" style="position:relative; width:100%; height:100%; background:#000; display:flex; justify-content:center; align-items:center;">
-                            <video src="${m.url}" id="${uniqueVideoId}" class="media-item" loop playsinline ${isGlobalMuted ? 'muted' : ''} onloadedmetadata="${onMetaLoad}" onclick="window.location.href = 'videos.html?openVideo=${p.id}'; event.stopPropagation();" onplay="incrementViewCount('${p.id}'); startLiveViews('${p.id}')" onpause="stopLiveViews()"></video>
+                            <video src="${m.url}" id="${uniqueVideoId}" class="media-item" loop playsinline ${hasVoiceover ? 'muted' : (isGlobalMuted ? 'muted' : '')} onloadedmetadata="${onMetaLoad}" onclick="window.location.href = 'videos.html?openVideo=${p.id}'; event.stopPropagation();" onplay="incrementViewCount('${p.id}'); startLiveViews('${p.id}')" onpause="stopLiveViews()" ${syncEventsSlider}></video>
                             <div id="play_btn_${uniqueVideoId}" onclick="toggleFeedVideo('${uniqueVideoId}', event)" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10;">
                                  <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5)); transition:0.2s;"></i>
                             </div>
-                            <div class="video-mute-btn" onclick="toggleMute(event)" style="z-index:20;"><i class="fa-solid ${muteIcon}"></i></div>
+                            <div class="video-mute-btn" onclick="event.stopPropagation(); ${hasVoiceover ? `showToast(typeof t === 'function' ? t('toast_has_voiceover') : 'هذا المقطع يحتوي على تعليق صوتي مدمج 🎙️')` : `toggleMute(event)`}" style="z-index:20;"><i class="fa-solid ${muteIcon}"></i></div>
                         </div>`;
                     } else {
-                        slidesHtml += `<div class="post-slide"><img src="${m.url}" loading="lazy" style="width:100%; object-fit:contain; max-height:500px;" onclick="viewImage('${m.url}', '${p.id}'); event.stopPropagation();"></div>`;
+                        // صور السلايدر تملأ الشاشة أيضاً
+                        slidesHtml += `<div class="post-slide"><img src="${m.url}" loading="lazy" style="display:block; width:100%; height:auto; max-height:650px; object-fit:cover;" onclick="viewImage('${m.url}', '${p.id}'); event.stopPropagation();"></div>`;
                     }
                 });
 
                 contentHtml += `
                 <div class="post-slider-wrapper">
-                    <div class="slider-counter"><span id="search-counter-current-${p.id}">1</span>/${p.media.length}</div>
-                    <div class="post-slider-container" id="search-slider-${p.id}" onscroll="handleSliderScroll('${p.id}', ${p.media.length})">
+                    ${hiddenVoiceoverHtml}
+                    ${hasVoiceover ? `<div style="position:absolute; top:10px; right:10px; z-index:20; background:var(--primary-color); padding:4px 10px; border-radius:12px; color:#000; font-size:10px; font-weight:bold;"><i class="fa-solid fa-microphone-lines"></i> ${typeof t === 'function' ? t('text_has_voice') : 'يحتوي على صوت'}</div>` : ''}
+                    <div class="slider-counter"><span id="counter-current-${p.id}">1</span>/${p.media.length}</div>
+                    <div class="post-slider-container" id="slider-${p.id}" onscroll="handleSliderScroll('${p.id}', ${p.media.length})">
                         ${slidesHtml}
                     </div>
                     <div class="slider-dots">
@@ -14990,6 +14705,7 @@ function renderUserCardInSearch(doc) {
                 </div>`;
             }
         }
+
     }
 
     const safeTextForBtn = encodeURIComponent(p.text || '');
@@ -17162,24 +16878,27 @@ updatePostCommentCountUI(currentPostId, 1); // 👈 التحديث الفوري
         showToast(t('err_upload_firebase')); 
     }
 }
-
 // ==================================================
-// 🟢 نظام تحديث التواجد (يوضع في نهاية السكريبت)
+// 🟢 نظام تحديث التواجد (النسخة الآمنة بدون أخطاء)
 // ==================================================
 function startPresenceSystem(uid) {
     if (!uid) return;
 
     // دالة التحديث في الداتابيز
     const updateStatus = () => {
-        db.collection('users').doc(uid).update({
+        // 🔥 التعديل هنا: استخدمنا set مع merge بدل update
+        db.collection('users').doc(uid).set({
             lastSeen: firebase.firestore.FieldValue.serverTimestamp() // وقت السيرفر
-        }).catch(err => console.log("Presence Error:", err));
+        }, { merge: true }).catch(err => {
+            // كتمنا الخطأ في الكونسول عشان ميزعجكش لو النت فصل ثانية
+            // console.log("Presence Error:", err); 
+        });
     };
 
     // 1. تحديث فوري أول ما يفتح
     updateStatus();
 
-    // 2. تحديث كل دقيقة (عشان لو قفل، بعد 5 دقايق وقته يبقى قديم)
+    // 2. تحديث كل دقيقة 
     setInterval(updateStatus, 60000); 
 
     // 3. تحديث لو خرج ورجع للتبويب
@@ -19056,10 +18775,11 @@ document.addEventListener('touchend', async function(e) {
         try {
             // لو إحنا في صفحة البروفايل ممكن يكون اسمها loadProfile() ثم loadPosts()
             // نستخدم loadPosts() كدالة أساسية لأنها مشتركة
-            if (typeof loadPosts === 'function') {
-                await loadPosts(); 
-            }
-        } catch (error) {
+            if (typeof FeedEngine !== 'undefined') {
+    FeedEngine.reset();
+    await FeedEngine.loadFeed(); 
+}
+  } catch (error) {
             console.error("Refresh Error:", error);
         } finally {
             // 3. 🔥 الـ finally بتضمن إن اللودر يختفي دايماً سواء نجح أو فشل
@@ -20643,61 +20363,6 @@ async function fetchMyFollowing() {
     myFollowingList.push(currentUser.uid); // ضيف نفسك عشان متشوفش اقتراح لنفسك
 }
 
-// 2. دالة جلب وعرض الاقتراحات
-async function injectSuggestedPosts() {
-    const list = document.getElementById('postsList');
-    
-    // تأكد إننا جبنا قائمة المتابعين الأول
-    if(myFollowingList.length === 0) await fetchMyFollowing();
-
-    // هنجيب المنشورات اللي عليها تفاعل عالي (أكثر من 5 لايكات مثلاً)
-    // ملاحظة: لترتيب معقد، تحتاج Index في Firebase، هنا بنعمل محاكاة بسيطة
-    const snap = await db.collection('posts')
-        .orderBy('likesCount', 'desc') // الأقوى تفاعلاً
-        .limit(20)
-        .get();
-
-    let suggestedAdded = 0;
-
-    for (const doc of snap.docs) {
-        const p = doc.data();
-        
-        // 🛑 الفلتر الذكي:
-        // 1. لو الشخص ده أنا متابعه -> تجاهل
-        // 2. لو البوست ده معروض أصلاً في الصفحة -> تجاهل
-        // 3. لو الشخص محظور -> تجاهل
-        if (myFollowingList.includes(p.uid)) continue;
-        if (document.getElementById(`post-${doc.id}`)) continue;
-        if (blockedUsersSet.has(p.uid)) continue;
-
-        // ✅ عرض البوست كـ "مقترح"
-        const postElement = await renderPost({ id: doc.id, ...p, isSuggested: true }, false);
-        
-        // نضيف شارة "مقترح لك"
-        setTimeout(() => {
-            const postDiv = document.getElementById(`unit-${doc.id}`); // أو post-{id} حسب الحاوية
-            if(postDiv) {
-                // إضافة الشارة في الهيدر
-                const header = postDiv.querySelector('.post-header');
-                const badge = document.createElement('div');
-                badge.className = 'suggested-badge';
-                badge.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> مقترح لك`;
-                header.appendChild(badge);
-                
-                // تمييز البوست بلون مختلف قليلاً (اختياري)
-                const postCard = postDiv.querySelector('.post');
-                postCard.style.border = "1px solid rgba(0, 198, 255, 0.3)"; // برواز سماوي خفيف
-            }
-        }, 100);
-
-        suggestedAdded++;
-        if(suggestedAdded >= 3) break; // كفاية 3 اقتراحات عشان منزحمش الدنيا
-    }
-}
-
-// ⚠️ استدعاء الدالة:
-// ضيف injectSuggestedPosts() في نهاية دالة loadPosts()
-// عشان تظهر الاقتراحات بعد تحميل البوستات الأساسية.
 // دالة لجلب وعرض الاقتراحات
 // دالة لجلب وعرض الاقتراحات
 // دالة لجلب وعرض الاقتراحات (الكود الناقص)
@@ -22677,66 +22342,55 @@ async function saveEditedComment() {
         saveBtn.style.pointerEvents = 'auto';
     }
 }
-
-// دالة تشغيل/إيقاف الفيديوهات من منتصف الشاشة
-// دالة تشغيل/إيقاف الفيديوهات من منتصف الشاشة
-// دالة تشغيل/إيقاف الفيديوهات من منتصف الشاشة
-// دالة تشغيل/إيقاف الفيديوهات من منتصف الشاشة
-// دالة تشغيل/إيقاف الفيديوهات من منتصف الشاشة
-function toggleFeedVideo(vidId, e) {
-    e.stopPropagation(); 
-    e.preventDefault();
+window.toggleFeedVideo = function(vidId, e) {
+    if (e) { e.stopPropagation(); e.preventDefault(); }
 
     const video = document.getElementById(vidId);
     if(!video) return;
 
     const wrapper = video.closest('.media-item-wrapper') || video.closest('.repost-video-wrapper');
     let playIcon = wrapper ? wrapper.querySelector('div[id^="play_btn_"] i') : null;
+    
+    // 🔥 السطر السحري: البحث عن التعليق الصوتي المرفق بهذا الفيديو تحديداً
+    let attachedAudio = wrapper ? wrapper.querySelector('audio[id^="vo_audio_"]') : null;
 
     if (video.paused) {
-        // 1. تفعيل التشغيل التلقائي لكل الفيديوهات الجاية
         window.isGlobalAutoplay = true;
 
-        // 2. فتح الصوت في أول مرة فقط
         if (!video.dataset.firstPlayDone) {
             video.muted = false;       
-            isGlobalMuted = false;     
+            window.isGlobalMuted = false;     
             document.querySelectorAll('.video-mute-btn i').forEach(icon => {
                 icon.className = 'fa-solid fa-volume-high';
             });
             video.dataset.firstPlayDone = 'true';
         }
 
-        // 3. تشغيل الفيديو الحالي
         video.play().then(() => {
             if (playIcon) playIcon.style.opacity = '0';
+            // 🔥 تشغيل التعليق الصوتي مع الفيديو فوراً
+            if (attachedAudio) attachedAudio.play(); 
         }).catch(()=>{});
 
-        // 4. تشغيل أي فيديو تاني ظاهر في الشاشة دلوقتي
-        document.querySelectorAll('video').forEach(v => {
-            if (v !== video && typeof isVideoInViewport === 'function' && isVideoInViewport(v)) {
-                v.play().catch(()=>{});
-                let vIcon = document.querySelector(`#play_btn_${v.id} i`);
-                if(vIcon) vIcon.style.opacity = '0';
+        // إيقاف أي فيديو أو صوت آخر شغال في الصفحة عشان ميتداخلش
+        document.querySelectorAll('video, audio').forEach(v => {
+            if (v !== video && v !== attachedAudio && !v.paused && !v.closest('#storyViewer')) {
+                v.pause();
+                if (v.tagName === 'VIDEO') {
+                    let vIcon = document.querySelector(`#play_btn_${v.id} i`);
+                    if(vIcon) vIcon.style.opacity = '1';
+                }
             }
         });
 
     } else {
-        // 1. إيقاف التشغيل التلقائي (لأن المستخدم قرر يوقف الفيديو بإيده)
         window.isGlobalAutoplay = false;
-
-        // 2. إيقاف الفيديو الحالي
         video.pause();
+        // 🔥 إيقاف التعليق الصوتي فوراً عند إيقاف الفيديو
+        if (attachedAudio) attachedAudio.pause(); 
         if (playIcon) playIcon.style.opacity = '1';
-
-        // 3. إيقاف أي فيديو شغال في الشاشة
-        document.querySelectorAll('video').forEach(v => {
-            v.pause();
-            let vIcon = document.querySelector(`#play_btn_${v.id} i`);
-            if(vIcon) vIcon.style.opacity = '1';
-        });
     }
-}
+};
 
     // دالة نقل الكرة وقت التعليقات (إضافة جديدة)
     // دالة نقل الكرة وقت التعليقات (النسخة الآمنة والمستقلة)
@@ -22764,13 +22418,7 @@ window.moveOrbForComments = function(isOpen) {
 };
 
 
-// ==================================================
-// 📝 نظام النسخ بالضغط المطول (Long Press to Copy)
-// ==================================================
-// ==================================================
-// 📝 نظام النسخ بالضغط المطول (Long Press to Copy) - النسخة الكاملة
-// ==================================================
-// ==================================================
+
 // 📝 نظام النسخ بالضغط المطول (Long Press to Copy) - النسخة المحصنة
 // ==================================================
 function setupLongPressToCopy(element, textToCopy) {
@@ -23419,7 +23067,7 @@ function openOptions(pid, uid, txt, privacy) {
             db.collection("posts").doc(pid).get().then(doc => {
                 if (doc.exists && doc.data().commentsDisabled) {
                     toggleIcon.className = "fa-solid fa-comment";
-                    toggleText.innerText = "فتح التعليقات";
+                    toggleText.innerText = t('opt_open_comments');
                 } else {
                     toggleIcon.className = "fa-solid fa-comment-slash";
                     toggleText.innerText = "إغلاق التعليقات";
@@ -23569,8 +23217,7 @@ async function initDiscoverySystem() {
     const carousel = document.getElementById('discoveryCarousel');
     if (!carousel) return;
 
-    carousel.innerHTML = '<div style="width:100%; text-align:center; padding:40px; color:#aaa;"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري البحث عن المميزين...</div>';
-
+    carousel.innerHTML = '<div...><i...></i> ' + t('text_finding_creators') + '</div>';
     try {
         // نأخذ عينة كبيرة (مثلاً 50 مستخدم) لترتيبهم محلياً
         const snap = await db.collection('users').limit(50).get();
@@ -23691,6 +23338,53 @@ function handleDiscoveryScroll() {
     }
 }
 
+// ==================================================
+// 🎙️ دالة تشغيل التعليق الصوتي المدمج مع الصور (الرئيسية)
+// ==================================================
+window.toggleImageVoiceover = function(postId) {
+    const audio = document.getElementById(`vo_audio_${postId}`);
+    const playIcon = document.getElementById(`play_btn_imgvo_${postId}`);
+
+    if (!audio) return;
+
+    if (audio.paused) {
+        // إيقاف أي صوت أو فيديو آخر في الصفحة (عشان الأصوات متدخلش في بعض)
+        document.querySelectorAll('audio, video').forEach(media => {
+            if (media !== audio && !media.paused) media.pause();
+        });
+        
+        // إرجاع أزرار التشغيل للصور الأخرى
+        document.querySelectorAll('[id^="play_btn_imgvo_"]').forEach(icon => {
+            icon.style.opacity = '1';
+        });
+
+        audio.play();
+        if (playIcon) playIcon.style.opacity = '0'; // إخفاء زر التشغيل أثناء الاستماع
+        
+        // إرجاع زر التشغيل عندما ينتهي الصوت
+        audio.onended = () => {
+            if (playIcon) playIcon.style.opacity = '1';
+        };
+
+    } else {
+        audio.pause();
+        if (playIcon) playIcon.style.opacity = '1'; // إظهار زر التشغيل
+    }
+};
+
+// 🚀 الحل السحري: مراقب السحب اليدوي لضمان عدم توقف تحميل المنشورات
+window.addEventListener('scroll', () => {
+    // لو المستخدم نزل لحد قبل آخر الصفحة بـ 600 بيكسل
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 600) {
+        const sentinel = document.getElementById('scrollSentinel');
+        
+        // نتأكد إننا مش بنحمل أصلاً، وإن الداتابيز لسه فيها بوستات (يعني اللودر مش مخفي)
+        if (!isLoading && sentinel && sentinel.style.display !== 'none') {
+            console.log("استدعاء التحميل بواسطة حارس السحب الاحتياطي!");
+            loadPosts(true);
+        }
+    }
+}, {passive: true});
 
     </script>
        <div class="custom-modal" id="accountSwitcherModal">
@@ -24540,6 +24234,7 @@ placeholder="${typeof t === 'function' ? t('replies_placeholder') : 'اكتب ر
     </div>
 </div>
 <script src="theme-manager.js"></script>
+<script src="feed-engine.js"></script>
 
 </body>
 </html>
