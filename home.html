@@ -9525,30 +9525,36 @@ auth.onAuthStateChanged(async user => {
     if(!user) { location.href="index.html"; return; }
     currentUser = user;
 
-    // 👇👇 ضيف الكود ده هنا لرفع التوكن المتأخر 👇👇
+    // ========================================================
+    // 1. 🔥 الإضافة الجديدة: رفع توكن الإشعارات المتأخر 🔥
+    // ========================================================
     let savedToken = localStorage.getItem('pending_fcm_token');
     if (savedToken) {
         db.collection('users').doc(user.uid).update({
             fcmToken: savedToken
         }).then(() => {
-            localStorage.removeItem('pending_fcm_token');
+            localStorage.removeItem('pending_fcm_token'); // مسحه بعد الرفع
             console.log("تم رفع التوكن المؤجل بنجاح!");
-        }).catch(e => console.log(e));
+        }).catch(e => console.log("خطأ في رفع التوكن: ", e));
     }
-    // 👆👆 نهاية الكود الجديد 👆👆
+    // ========================================================
 
-    // 🔥 الحارس الأول: لو أنا اللي فاتح وحسابي محذوف، اطردني لصفحة الدخول فوراً
+    // 2. 🔥 الحارس الأول: جلب بيانات المستخدم وفحص حالة الحساب (محذوف أم لا) 🔥
+    let userData = {};
     try {
         const myCheckDoc = await db.collection('users').doc(user.uid).get();
-        // ... باقي الكود
-
-        if (myCheckDoc.exists && myCheckDoc.data().accountStatus === 'deleted') {
-            window.location.replace("index.html"); // هيرجعه للدخول عشان يشوف شاشة الاسترجاع
-            return; // 🛑 إيقاف تحميل أي شيء في الصفحة الرئيسية
+        if (myCheckDoc.exists) {
+            userData = myCheckDoc.data() || {};
+            
+            // لو الحساب محذوف، اطرده لصفحة الدخول فوراً ووقف أي تحميل
+            if (userData.accountStatus === 'deleted') {
+                window.location.replace("index.html"); 
+                return; 
+            }
         }
-    } catch(e) { console.error(e); }
+    } catch(e) { console.error("Error fetching user data:", e); }
 
-    // --- تحديث ترتيب الحسابات ليكون حسابك الحالي في القمة دائماً ---
+    // 3. --- تحديث ترتيب الحسابات ليكون حسابك الحالي في القمة دائماً ---
     let localAccs = JSON.parse(localStorage.getItem('nabd_accounts') || '[]');
     const myAccIndex = localAccs.findIndex(a => a.uid === user.uid);
     if (myAccIndex > 0) { 
@@ -9556,106 +9562,91 @@ auth.onAuthStateChanged(async user => {
         localAccs.unshift(myAcc);
         localStorage.setItem('nabd_accounts', JSON.stringify(localAccs));
     }
-    // -----------------------------------------------------------------
 
+    // =========================================================
+    // 4. --- تشغيل باقي وظائف التطبيق الأساسية (المنشورات والقصص) ---
+    // =========================================================
     
-    // ... (باقي كود الدالة زي ما هو عندك بدون تغيير)
+    if(typeof fetchMySavedPostsInit === 'function') fetchMySavedPostsInit(); 
+    if(typeof fetchMyConnections === 'function') await fetchMyConnections();
 
-// -----------------------------------------------------------------
+    window.currentUserLocation = userData.location || "";
 
-    fetchMySavedPostsInit(); // أضفها هنا بدون await
-
-    await fetchMyConnections();
-
-    const doc = await db.collection('users').doc(user.uid).get();
-    const d = doc.data() || {};
-    
-        // 🔥 تعريف موقع المستخدم عالمياً عشان خوارزمية الاقتراحات تستخدمه فوراً
-    window.currentUserLocation = d.location || "";
-
-    // ✅✅✅ (1) ضيف السطور دي هنا لاسترجاع حالة الشبح ✅✅✅
-    isGhost = d.isGhost || false; 
+    // استرجاع حالة الشبح
+    isGhost = userData.isGhost || false; 
     const ghostBtn = document.getElementById('ghostBtn');
     if(ghostBtn && isGhost) {
         ghostBtn.style.background = "#ff0000";
         ghostBtn.style.boxShadow = "0 0 20px #ff0000";
     }
-    // ✅✅✅ (نهاية الكود الجديد) ✅✅✅
 
-    const finalPic = d.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png"; 
+    const finalPic = userData.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png"; 
 
-const badgeContainer = document.getElementById('userRankBadge'); // المكان اللي هنحط فيه اللقب
-    
-    // نفحص لو عنده لقب (specialBadge) وتاريخه لسه مخلصش
-    if (d.specialBadge) {
-        const now = new Date();
-        const expiry = d.specialBadge.expiresAt ? d.specialBadge.expiresAt.toDate() : new Date(now.getTime() + 100000); // لو مفيش تاريخ نعتبره شغال
-
-        if (now < expiry) {
-            // اللقب ساري -> اعرضه
-            badgeContainer.innerHTML = `
-                <div class="vip-badge-container" style="border-color: ${d.specialBadge.color};">
-                    <i class="fa-solid ${d.specialBadge.icon} vip-badge-icon" style="color: ${d.specialBadge.color};"></i>
-                    <span class="vip-badge-text">${d.specialBadge.text}</span>
-                </div>
-            `;
+    // الألقاب والرتب (VIP)
+    const badgeContainer = document.getElementById('userRankBadge');
+    if (badgeContainer) {
+        if (userData.specialBadge) {
+            const now = new Date();
+            const expiry = userData.specialBadge.expiresAt ? userData.specialBadge.expiresAt.toDate() : new Date(now.getTime() + 100000); 
+            if (now < expiry) {
+                badgeContainer.innerHTML = `
+                    <div class="vip-badge-container" style="border-color: ${userData.specialBadge.color};">
+                        <i class="fa-solid ${userData.specialBadge.icon} vip-badge-icon" style="color: ${userData.specialBadge.color};"></i>
+                        <span class="vip-badge-text">${userData.specialBadge.text}</span>
+                    </div>
+                `;
+            } else {
+                if(typeof loadUserBadgeInMenu === 'function') loadUserBadgeInMenu(user.uid); 
+            }
         } else {
-            // اللقب انتهى -> اعرض الرتبة العادية (مبتدئ، صانع، إلخ)
-            loadUserBadgeInMenu(user.uid); 
+            if(typeof loadUserBadgeInMenu === 'function') loadUserBadgeInMenu(user.uid);
         }
-    } else {
-        // معندوش لقب -> اعرض الرتبة العادية
-        loadUserBadgeInMenu(user.uid);
     }
 
-    // 1. إعداد صورة الهيدر (المربع اللي بتضغط عليه عشان تكتب بوست)
+    // إعداد الصور (الهيدر والقائمة الجانبية والشريط السفلي)
     const myAvatarElem = document.getElementById('myAvatar');
     if(myAvatarElem) {
         myAvatarElem.style.backgroundImage = `url('${finalPic}')`;
         myAvatarElem.innerText = "";
     }
     
-fetchBlockedUsersList().catch(console.error); 
-// تشغيل المحرك الذكي للمنشورات والاقتراحات
-FeedEngine.init();
-
-
+    const menuNameElem = document.getElementById('menuName');
+    if(menuNameElem) menuNameElem.innerText = userData.name || (typeof t === 'function' ? t('text_user_fallback') : 'مستخدم');
     
-    // 2. إعداد القائمة الجانبية (الاسم والصورة)
-    document.getElementById('menuName').innerText = d.name || t('text_user_fallback');
     const menuAvatarElem = document.getElementById('menuAvatar');
     if(menuAvatarElem) {
         menuAvatarElem.style.backgroundImage = `url('${finalPic}')`;
         menuAvatarElem.innerText = ""; 
-const bottomAvatar = document.getElementById('bottomNavAvatar');
+        if (window.isOnlineFeatureEnabled) {
+            menuAvatarElem.classList.add('online');
+        } else {
+            menuAvatarElem.classList.remove('online');
+        }
+    }
+
+    const bottomAvatar = document.getElementById('bottomNavAvatar');
     if(bottomAvatar) {
         bottomAvatar.style.backgroundImage = `url('${finalPic}')`;
     }
 
+    // جلب المحظورين وتشغيل محرك المنشورات
+    if(typeof fetchBlockedUsersList === 'function') fetchBlockedUsersList().catch(console.error); 
+    if(typeof FeedEngine !== 'undefined') FeedEngine.init();
 
-        // 🔥🔥🔥 هنا كود اللمبة اللي بيشغلها في القائمة بناءً على الزرار 🔥🔥🔥
-        // المتغير window.isOnlineFeatureEnabled احنا عرفناه فوق خلاص
-        if (window.isOnlineFeatureEnabled) {
-            menuAvatarElem.classList.add('online'); // نور اللمبة
-        } else {
-            menuAvatarElem.classList.remove('online'); // طفيها
-        }
-    }
-
-    // 3. لو أنت الأدمن (الإيميل ده)، اظهر زرار المشرف
+    // إظهار زر المشرف للإدمن
     if (user.email === 'yahiakhodir114@gmail.com') {
         const adminBtn = document.getElementById('adminPanelBtn');
         if(adminBtn) adminBtn.style.display = 'flex';
     }
 
-    // 4. مراقبة طلبات الصداقة
+    // مراقبة طلبات الصداقة
     db.collection('users').doc(user.uid).collection('friendRequests').onSnapshot(snap => {
         const badge = document.getElementById('requestsBadge');
         if(badge) {
             if (snap.size > 0) {
                 badge.style.display = 'inline-block'; 
                 badge.innerText = snap.size;
-                if(snap.size > lastReqCount) playSound('notification');
+                if(snap.size > lastReqCount && typeof playSound === 'function') playSound('notification');
             } else { 
                 badge.style.display = 'none'; 
             }
@@ -9663,63 +9654,49 @@ const bottomAvatar = document.getElementById('bottomNavAvatar');
         }
     });
 
-    // تشغيل باقي الدوال الضرورية
-    updateHeaderBadges();
-    monitorIncomingMessages();
-    monitorMessageCount();
-    renderStories(); 
-    // 🔥 تشغيل حالة الزرار عشان يبقى متناسق مع اللمبة
+    // تشغيل دوال المراقبة والتحديث (الإشعارات، الرسائل، القصص، التواجد)
+    if(typeof updateHeaderBadges === 'function') updateHeaderBadges();
+    if(typeof monitorIncomingMessages === 'function') monitorIncomingMessages();
+    if(typeof monitorMessageCount === 'function') monitorMessageCount();
+    if(typeof renderStories === 'function') renderStories(); 
     if(typeof updateOnlineToggleUI === 'function') updateOnlineToggleUI();
-
-    // 🔥 تشغيل نظام "أنا موجود" عشان السيرفر يعرف إنك فاتح
     if(typeof startPresenceSystem === 'function') startPresenceSystem(user.uid);
 
-   
-       // متغير عام للتحكم في التشغيل التلقائي
-window.isGlobalAutoplay = false; 
+    // مراقب الفيديوهات (التشغيل التلقائي عند التمرير)
+    window.isGlobalAutoplay = false; 
+    window.videoObserver = new IntersectionObserver((entries) => {
+        const isSheetOpen = document.getElementById('overlay') && document.getElementById('overlay').style.display === 'block';
+        entries.forEach(entry => {
+            const video = entry.target;
+            const wrapper = video.closest('.media-item-wrapper') || video.closest('.repost-video-wrapper');
+            let playIcon = wrapper ? wrapper.querySelector('div[id^="play_btn_"] i') : null;
+            let attachedAudio = wrapper ? wrapper.querySelector('audio[id^="vo_audio_"]') : null;
 
-window.videoObserver = new IntersectionObserver((entries) => {
-    const isSheetOpen = document.getElementById('overlay') && document.getElementById('overlay').style.display === 'block';
-
-    entries.forEach(entry => {
-        const video = entry.target;
-        const wrapper = video.closest('.media-item-wrapper') || video.closest('.repost-video-wrapper');
-        let playIcon = wrapper ? wrapper.querySelector('div[id^="play_btn_"] i') : null;
-        
-        // 🔥 جلب الصوت المرفق بهذا الفيديو
-        let attachedAudio = wrapper ? wrapper.querySelector('audio[id^="vo_audio_"]') : null;
-
-        // لو فاتح قائمة سفلية (زي التعليقات) وقّف كل حاجة
-        if (isSheetOpen) {
-            video.pause();
-            if (attachedAudio) attachedAudio.pause(); // 🔥 إيقاف الصوت
-            if(playIcon) playIcon.style.opacity = '1';
-            return;
-        }
-
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
-            if (window.isGlobalAutoplay) {
-                video.play().then(() => {
-                    if (playIcon) playIcon.style.opacity = '0';
-                    if (attachedAudio) attachedAudio.play(); // 🔥 تشغيل الصوت لو الفيديو اشتغل تلقائي
-                }).catch(() => {
-                    // لو المتصفح منع التشغيل التلقائي بالصوت، نشغله صامت
-                    video.muted = true;
-                    video.play().catch(()=>{});
-                    if (playIcon) playIcon.style.opacity = '0';
-                });
+            if (isSheetOpen) {
+                video.pause();
+                if (attachedAudio) attachedAudio.pause();
+                if(playIcon) playIcon.style.opacity = '1';
+                return;
             }
-        } else {
-            // 🔥 عندما تخرج الصورة/الفيديو من الشاشة (Scroll away)
-            video.pause();
-            if (attachedAudio) attachedAudio.pause(); // 🔥 إيقاف الصوت إجبارياً
-            if (playIcon) playIcon.style.opacity = '1';
-        }
-    });
-}, { threshold: 0.6 });
 
-window.videoObserver = videoObserver;
-
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+                if (window.isGlobalAutoplay) {
+                    video.play().then(() => {
+                        if (playIcon) playIcon.style.opacity = '0';
+                        if (attachedAudio) attachedAudio.play();
+                    }).catch(() => {
+                        video.muted = true;
+                        video.play().catch(()=>{});
+                        if (playIcon) playIcon.style.opacity = '0';
+                    });
+                }
+            } else {
+                video.pause();
+                if (attachedAudio) attachedAudio.pause();
+                if (playIcon) playIcon.style.opacity = '1';
+            }
+        });
+    }, { threshold: 0.6 });
 
 });
 
