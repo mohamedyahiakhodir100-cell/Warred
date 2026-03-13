@@ -4787,10 +4787,11 @@ body.creator-mode .about-item {
 }
 
 /* الأزرار بجانب الصورة */
+/* الأزرار بجانب الصورة */
 body.creator-mode .buttons {
     position: absolute !important;
     left: 20px !important;
-    top: 200px !important; 
+    top: 250px !important; /* 🔥 كبرنا الرقم ده عشان تنزل لتحت شوية 🔥 */
     margin: 0 !important;
     padding: 0 !important;
     width: auto !important;
@@ -4884,42 +4885,98 @@ body.creator-mode #socialHubBtn {
     margin-top: 10px;
     flex-direction: row-reverse; 
 }
+/* ========================================= */
+/* 🌟 أزرار وضع المبدع (لوحة المعلومات والإنشاء) */
+/* ========================================= */
+
+/* 1. زر لوحة المعلومات (فخامة داكنة) */
 .btn-creator-dashboard {
-    background: #333334; 
-    color: #e4e6eb;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 14px;
+    background: linear-gradient(145deg, #1e1e24, #2a2a32); /* تدرج داكن فخم */
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* برواز زجاجي خفيف */
+    padding: 12px;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 13px;
     display: flex;
     align-items: center;
     gap: 8px;
-    flex: 2; 
+    flex: 1.2; /* حجم متناسق */
     justify-content: center;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
+
+.btn-creator-dashboard i {
+    color: #00c6ff; /* لون الأيقونة سماوي */
+    font-size: 16px;
+}
+
+.btn-creator-dashboard:hover {
+    border-color: rgba(0, 198, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+/* 2. زر الإنشاء الاحترافي (اللمعان السحري) */
 .btn-creator-create {
-    background: #333334;
-    color: #e4e6eb;
+    background: linear-gradient(45deg, var(--primary-solid), #00c6ff); /* تدرج ألوان التطبيق */
+    color: #fff;
     border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 14px;
+    padding: 12px;
+    border-radius: 16px;
+    font-weight: 900;
+    font-size: 13px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    flex: 1; 
+    gap: 6px;
+    flex: 1;
     justify-content: center;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden; /* مهم جداً عشان اللمعة متخرجش بره الزرار */
+    box-shadow: 0 5px 20px rgba(93, 95, 239, 0.5); /* ظل مضيء */
 }
+
+/* حركة اللمعة (Shine Animation) */
+.btn-creator-create::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform: skewX(-20deg);
+    animation: creatorBtnShine 3s infinite; /* بتلمع كل 3 ثواني */
+}
+
+@keyframes creatorBtnShine {
+    0% { left: -150%; }
+    20% { left: 200%; } /* اللمعة بتعدي بسرعة */
+    100% { left: 200%; } /* بتستنى شوية قبل ما تلف تاني */
+}
+
+.btn-creator-create:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(93, 95, 239, 0.7);
+}
+
+/* تأثير الضغط على الزرارين */
 .btn-creator-dashboard:active, .btn-creator-create:active {
-    transform: scale(0.96);
-    background: #444445;
+    transform: scale(0.94);
 }
+
+/* 3. تعديلات الوضع النهاري للأزرار (لو المستخدم مشغل الوضع الفاتح) */
+body.light-mode .btn-creator-dashboard {
+    background: #ffffff !important;
+    color: #333 !important;
+    border-color: #ddd !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
+}
+body.light-mode .btn-creator-dashboard i { color: var(--primary-solid) !important; }
+
 
 #creatorActionBar { display: none; }
 #createPostWrapper { display: flex; }
@@ -5269,6 +5326,49 @@ body.creator-mode #friendsSeparator {
     box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
+/* ========================================= */
+/* 🌟 شارة التوثيق الاحترافية (نبض + لمعان) 🌟 */
+/* ========================================= */
+.nabd-badge {
+    color: #1da1f2; /* الأزرق السماوي المميز */
+    text-shadow: 0 0 8px rgba(29, 161, 242, 0.4); 
+    display: inline-block;
+    margin-right: 5px;
+    margin-left: 2px;
+    vertical-align: middle;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    animation: heartbeat 2.5s infinite ease-in-out; /* حركة النبض */
+}
+
+/* تأثير اللمعة اللي بتعدي على العلامة */
+.nabd-badge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    animation: shineBadge 3s infinite;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(29,161,242,0.4)); }
+    15% { transform: scale(1.2); filter: drop-shadow(0 0 10px rgba(29,161,242,0.8)); }
+    30% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(29,161,242,0.4)); }
+    45% { transform: scale(1.2); filter: drop-shadow(0 0 10px rgba(29,161,242,0.8)); }
+    60% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(29,161,242,0.4)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(29,161,242,0.4)); }
+}
+
+@keyframes shineBadge {
+    0% { left: -100%; }
+    20% { left: 100%; } 
+    100% { left: 100%; } 
+}
+
 </style>
 
 
@@ -5374,12 +5474,26 @@ body.creator-mode #friendsSeparator {
             <i class="fa-solid fa-khanda" style="color: #fff; background: transparent;"></i> 
             <span style="font-size: 11px; color: #fff;">البلورة السحرية</span>
         </div>
+        
         <div class="item" onclick="playSound('click'); location.href='auction.html'" style="background: linear-gradient(135deg, #450a0a 0%, #b91c1c 100%); border:1px solid #ef4444;">
             <i class="fa-solid fa-gavel" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">صالة المزاد</span>
         </div>
         <div class="item" onclick="playSound('click'); location.href='blackhole.html'" style="background: linear-gradient(135deg, #000 0%, #4b0082 100%); border:1px solid #8e44ad;">
             <i class="fa-solid fa-meteor" style="color: #cd84f1; background: transparent;"></i> <span style="color: #fff;">الثقب الأسود</span>
         </div>
+        
+            <div class="item" onclick="playSound('click'); openPage('galaxy.html')" style="background: linear-gradient(135deg, #0b0726 0%, #3a1c71 100%); border: 1px solid #d76d77; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); animation: rotate 4s linear infinite; pointer-events: none;"></div>
+        <i class="fa-brands fa-space-awesome" style="color: #fff; font-size: 28px; filter: drop-shadow(0 0 10px #d76d77); z-index: 1;"></i> 
+        <span style="color: #fff; font-weight: 900; z-index: 1; text-shadow: 0 2px 5px rgba(0,0,0,0.8);">مجرّة وريد</span>
+    </div>
+<div class="item" onclick="playSound('click'); openPage('compass.html')" style="background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%); border: 1px solid #ff9a9e; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.3) 100%); animation: rotate 3s linear infinite; pointer-events: none;"></div>
+    
+    <i class="fa-regular fa-compass" style="color: #fff; font-size: 28px; filter: drop-shadow(0 0 10px #FFD700); z-index: 1;"></i> 
+    <span data-i18n="menu_compass" style="color: #fff; font-weight: 900; z-index: 1; text-shadow: 0 2px 5px rgba(0,0,0,0.8);">البوصلة العاطفية</span>
+</div>
+
         <div class="item" onclick="playSound('click'); location.href='stockmarket.html'" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border:1px solid #2979ff;">
             <i class="fa-solid fa-arrow-trend-up" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">البورصة</span>
         </div>
@@ -5396,11 +5510,10 @@ body.creator-mode #friendsSeparator {
             <i class="fa-solid fa-satellite-dish" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">الرادار</span>
         </div>
 
-<div class="sheet-option" onclick="window.location.href='qr-text.html'">
-    <i class="fa-solid fa-qrcode" style="color: var(--primary-color); font-size: 20px; width: 30px; text-align: center;"></i>
-    <span style="flex: 1; text-align: right; font-weight: bold; color: var(--text-color);">رسائل QR مشفرة</span>
-    <i class="fa-solid fa-chevron-left" style="font-size: 14px; color: #888;"></i>
-</div>
+    <div class="item" onclick="playSound('click'); window.location.href='qr-text.html'" style="background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); border:1px solid #2c5364;">
+        <i class="fa-solid fa-qrcode" style="color: #fff; background: transparent;"></i>
+        <span data-i18n="menu_qr_messages" style="color: #fff; font-size: 11px;">رسائل QR</span>
+    </div>
 
         <div class="menu-separator" style="margin-top: 15px;">الترفيه</div>
 
@@ -5437,11 +5550,11 @@ body.creator-mode #friendsSeparator {
             <i class="fa-solid fa-gear" style="color: #fff; background: transparent;"></i> <span style="color: #fff;">الإعدادات</span>
         </div>
 
-<div class="sheet-option" onclick="openThemeModal()">
-    <i class="fa-solid fa-palette" style="color: var(--primary-color); font-size: 20px; width: 30px; text-align: center;"></i>
-    <span style="flex: 1; text-align: right; font-weight: bold; color: var(--text-color);">مظهر التطبيق</span>
-    <i class="fa-solid fa-chevron-left" style="font-size: 14px; color: #888;"></i>
-</div>
+ <div class="item" onclick="openThemeModal()" style="background: linear-gradient(135deg, #8A2387 0%, #E94057 50%, #F27121 100%); border:1px solid #F27121;">
+        <i class="fa-solid fa-palette" style="color: #fff; background: transparent;"></i>
+        <span data-i18n="menu_theme" style="color: #fff;">المظهر</span>
+    </div>
+
 
         <div class="item" onclick="openLanguageModal()" style="background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">
             <i class="fa-solid fa-earth-americas" style="color: #00C6FF; background: transparent;"></i> 
@@ -6473,7 +6586,8 @@ const videoObserver = new IntersectionObserver((entries) => {
         
         // --- تحديث بيانات القائمة الجانبية (الاسم والصورة) للتصميم الجديد ---
         const menuBadge = currentUserVerified ? 
-            '<i class="fa-solid fa-circle-check" style="color:#1da1f2; margin-right:4px; font-size:13px; vertical-align: middle;"></i>' : '';
+    '<i class="fa-solid fa-heart-circle-check nabd-badge" style="font-size:14px; vertical-align: middle;"></i>' : '';
+
         
         const menuNameEl = document.getElementById('menuName');
         if (menuNameEl) {
@@ -6598,11 +6712,30 @@ const videoObserver = new IntersectionObserver((entries) => {
 
         // --- الدوال الرئيسية ---
                 // --- الدوال الرئيسية ---
-        async function loadProfile() {
+                async function loadProfile() {
             try {
                 const doc = await db.collection("users").doc(profileUid).get();
-                if (!doc.exists) return;
+                
+                // 🔥 التعديل 1: لو الحساب محذوف نهائياً من الداتابيز
+                if (!doc.exists) {
+                    if (typeof renderDeletedAccountState === 'function') renderDeletedAccountState();
+                    return;
+                }
+                
                 profileData = doc.data(); // هنا إحنا جبنا البيانات خلاص
+
+                // 🔥 التعديل 2 السحري: فحص حالة الحذف (Soft Delete) قبل تحميل أي حاجة 🔥
+                if (profileData.accountStatus === 'deleted') {
+                    if (currentUser && currentUser.uid === profileUid) {
+                        // لو ده صاحب الحساب، نرجعه لصفحة الدخول عشان تظهرله رسالة الاسترجاع
+                        window.location.replace("index.html");
+                        return;
+                    } else {
+                        // لو ده زائر، نخفي البروفايل ونظهر شاشة "الحساب محذوف"
+                        if (typeof renderDeletedAccountState === 'function') renderDeletedAccountState();
+                        return; // 🛑 نوقف الدالة هنا عشان ميرسمش البوستات ولا التفاصيل
+                    }
+                }
 
                 // 🔥 الحل السحري: وضع شرط الستايل هنا بعد جلب البيانات 🔥
                 if (profileData.isCreatorMode) {
@@ -6786,12 +6919,12 @@ const videoObserver = new IntersectionObserver((entries) => {
                 }
 
                 // تحديث صورة البروفايل الأساسية
-const av = document.getElementById('avatar');
-if (av) {
-    av.style.backgroundImage = `url('${d.profilePic || defaultAvatar}')`;
-    av.innerText = "";
-    av.style.backgroundColor = "var(--card-color)";
-}
+                const av = document.getElementById('avatar');
+                if (av) {
+                    av.style.backgroundImage = `url('${d.profilePic || defaultAvatar}')`;
+                    av.innerText = "";
+                    av.style.backgroundColor = "var(--card-color)";
+                }
 
                 // ==================================================
                 // 📸 تفعيل الضغط الذكي على الصورة الشخصية
@@ -6876,7 +7009,7 @@ if (av) {
                     document.getElementById('likesCount').innerText = formatNumber(totalLikes);
                 }));
 
-                                                if(profileUid === currentUser.uid) {
+                if(profileUid === currentUser.uid) {
                     document.getElementById('editCoverBtn').style.display = 'flex';
                     
                     // 🔥 التحكم في أشرطة النشر حسب وضع الحساب 🔥
@@ -6907,7 +7040,7 @@ if (av) {
            monitorUserStories(); // تشغيل مراقب القصص
 
             loadAboutTabWidgets();
-}
+        }
 
 // 🖼️ نظام الغلاف المزدوج (ألوان + صور)
 // =========================================
@@ -7552,25 +7685,40 @@ window.addToVideoGrid = function(url, title, viewsCount, postId) {
             </div>`;
 
         }
+        // ============================================================
+        // 🎙️🎵 تجهيز التعليق الصوتي أو الموسيقى (مخفي ومربوط بالميديا)
+        // ============================================================
+        let hasVoiceover = p.voiceoverUrl ? true : false;
+        let hasMusic = p.musicUrl ? true : false;
+        
+        // لو في تعليق صوتي، نديله الأولوية، لو مفيش نشوف الموسيقى
+        let activeAudioUrl = p.voiceoverUrl || p.musicUrl;
+        let isAudioAttached = hasVoiceover || hasMusic;
+        
+        let hiddenVoiceoverHtml = isAudioAttached ? `<audio id="vo_audio_${p.id}" src="${activeAudioUrl}" preload="auto" style="display:none;"></audio>` : '';
+        let audioBadgeText = hasVoiceover ? 'تعليق صوتي 🎙️' : (p.musicName || 'موسيقى 🎵');
 
-        // ب) إضافة الميديا بنظام السلايدر الجديد (اترك هذا الجزء كما هو عندك)
-        // ... (باقي كود الميديا الخاص بك)
-
-        // ب) إضافة الميديا بنظام السلايدر الجديد
+        // ب) إضافة الميديا 
         if (p.media && p.media.length > 0) {
             if (p.media.length === 1) {
                 // --- 🎬 لو صورة أو فيديو واحد ---
                 const m = p.media[0];
                 if (m.type === 'video') {
                     const uniqueVideoId = `vid-${p.id}-0`;
-                    const muteIcon = window.isGlobalMuted ? 'fa-volume-xmark' : 'fa-volume-high';
+                    const muteIcon = isAudioAttached ? 'fa-music' : (window.isGlobalMuted ? 'fa-volume-xmark' : 'fa-volume-high');
+
+                    // 🔥 ربط تشغيل وإيقاف الفيديو بالصوت الخفي 🔥
+                    const syncEvents = isAudioAttached ? `
+                        onplay="document.getElementById('vo_audio_${p.id}').play()" 
+                        onpause="document.getElementById('vo_audio_${p.id}').pause()" 
+                        onseeking="document.getElementById('vo_audio_${p.id}').currentTime = this.currentTime" 
+                        onwaiting="document.getElementById('vo_audio_${p.id}').pause()" 
+                        onplaying="document.getElementById('vo_audio_${p.id}').play()"` : '';
 
                     contentHtml += `
-                    <div class="media-item-wrapper" style="position:relative; background:#000; border-radius:12px; overflow:hidden; margin-top:8px; cursor: pointer;"
-                         onclick="window.location.href='videos.html?openVideo=${p.id}'"> 
-                        
-                        <video src="${m.url}" id="${uniqueVideoId}" class="media-item video-portrait" loop playsinline ${window.isGlobalMuted ? 'muted' : ''} loading="lazy" 
-                            onplay="incrementViewCount('${p.id}')" style="object-fit:contain; max-height:500px; width:100%;"></video>
+                    <div class="media-item-wrapper" style="position:relative; background:#000; border-radius:12px; overflow:hidden; margin-top:8px; cursor: pointer;"> 
+                        ${hiddenVoiceoverHtml} <video src="${m.url}" id="${uniqueVideoId}" class="media-item video-portrait" loop playsinline ${isAudioAttached ? 'muted' : (window.isGlobalMuted ? 'muted' : '')} loading="lazy" 
+                            onplay="incrementViewCount('${p.id}')" ${syncEvents} style="object-fit:contain; max-height:500px; width:100%;" onclick="window.location.href='videos.html?openVideo=${p.id}'"></video>
                         
                         <div id="play_btn_${uniqueVideoId}" 
                              onclick="window.event.preventDefault(); window.event.stopPropagation(); window.toggleFeedVideo('${uniqueVideoId}')"
@@ -7578,13 +7726,30 @@ window.addToVideoGrid = function(url, title, viewsCount, postId) {
                              <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5)); transition:0.2s;"></i>
                         </div>
 
-                        <div class="video-mute-btn" onclick="window.event.preventDefault(); window.event.stopPropagation(); window.toggleMute('${uniqueVideoId}')" 
+                        <div class="video-mute-btn" onclick="window.event.preventDefault(); window.event.stopPropagation(); ${isAudioAttached ? `showToast('هذا المقطع يحتوي على ${audioBadgeText}')` : `window.toggleMute('${uniqueVideoId}')`}" 
                              style="position: absolute; bottom: 10px; right: 10px; width: 32px; height: 32px; background: rgba(0, 0, 0, 0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; z-index: 20; backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.1);">
                             <i class="fa-solid ${muteIcon}"></i>
                         </div>
                     </div>`;
                 } else {
-                    contentHtml += `<div style="background:#000; border-radius:12px; overflow:hidden; margin-top:8px;"><img src="${m.url}" class="media-item smooth-image-load" loading="lazy" onload="this.style.opacity='1'" onclick="window.event.stopPropagation(); viewImage('${m.url}', '${p.id}')" style="object-fit:contain; max-height:500px; width:100%;"></div>`;
+                    // --- 📸 لو صورة ---
+                    if (isAudioAttached) {
+                        contentHtml += `
+                        <div class="media-item-wrapper" style="position:relative; background:#000; border-radius:12px; overflow:hidden; margin-top:8px; cursor: pointer;" onclick="window.event.stopPropagation(); window.toggleImageVoiceover('${p.id}')">
+                            ${hiddenVoiceoverHtml}
+                            <img src="${m.url}" class="media-item" loading="lazy" style="display:block; width:100%; height:auto; max-height:650px; object-fit:cover; opacity:0.85; transition: opacity 0.3s;">
+
+                            <div id="play_btn_imgvo_${p.id}" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; z-index:10; transition:0.3s; pointer-events:none;">
+                                 <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5));"></i>
+                            </div>
+                            
+                            <div style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); padding: 4px 12px; border-radius: 12px; color: #fff; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(4px); pointer-events:none;">
+                                <i class="fa-solid ${hasMusic ? 'fa-music' : 'fa-microphone-lines'}" style="color: var(--primary-solid); margin-left: 5px;"></i> ${audioBadgeText}
+                            </div>
+                        </div>`;
+                    } else {
+                        contentHtml += `<div style="background:#000; border-radius:12px; overflow:hidden; margin-top:8px;"><img src="${m.url}" class="media-item smooth-image-load" loading="lazy" onload="this.style.opacity='1'" onclick="window.event.stopPropagation(); viewImage('${m.url}', '${p.id}')" style="display:block; width:100%; height:auto; max-height:650px; object-fit:cover;"></div>`;
+                    }
                 }
             } else {
                 // --- 🎬 لو أكثر من صورة/فيديو (سلايدر) ---
@@ -7601,71 +7766,56 @@ window.addToVideoGrid = function(url, title, viewsCount, postId) {
                         slidesHtml += `
                         <div class="post-slide media-item-wrapper" style="position:relative; background:#000; cursor: pointer;"
                              onclick="window.location.href='videos.html?openVideo=${p.id}'">
-                            
                             <video src="${m.url}" id="${uniqueVideoId}" class="media-item video-portrait" loop playsinline ${window.isGlobalMuted ? 'muted' : ''} loading="lazy" style="object-fit:contain; max-height:500px; width:100%;"></video>
-                            
-                            <div id="play_btn_${uniqueVideoId}" 
-                                 onclick="window.event.preventDefault(); window.event.stopPropagation(); window.toggleFeedVideo('${uniqueVideoId}')"
-                                 style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10;">
+                            <div id="play_btn_${uniqueVideoId}" onclick="window.event.preventDefault(); window.event.stopPropagation(); window.toggleFeedVideo('${uniqueVideoId}')" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10;">
                                  <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5)); transition:0.2s;"></i>
                             </div>
-
-                            <div class="video-mute-btn" onclick="window.event.preventDefault(); window.event.stopPropagation(); window.toggleMute('${uniqueVideoId}')" 
-                                 style="position: absolute; bottom: 10px; right: 10px; width: 32px; height: 32px; background: rgba(0, 0, 0, 0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; z-index: 20; backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.1);">
-                                <i class="fa-solid ${muteIcon}"></i>
-                            </div>
+                            <div class="video-mute-btn" onclick="window.event.preventDefault(); window.event.stopPropagation(); window.toggleMute('${uniqueVideoId}')" style="position: absolute; bottom: 10px; right: 10px; width: 32px; height: 32px; background: rgba(0, 0, 0, 0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; z-index: 20; backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.1);"><i class="fa-solid ${muteIcon}"></i></div>
                         </div>`;
                     } else {
                         slidesHtml += `
-<div class="post-slide">
-    <img src="${m.url}" class="smooth-image-load" loading="lazy" onload="this.style.opacity='1'" onclick="window.event.stopPropagation(); viewImage('${m.url}', '${p.id}')" style="object-fit:contain; max-height:500px; width:100%;">
-</div>`;
-
+                        <div class="post-slide">
+                            <img src="${m.url}" class="smooth-image-load" loading="lazy" onload="this.style.opacity='1'" onclick="window.event.stopPropagation(); viewImage('${m.url}', '${p.id}')" style="width:100%; height:auto; max-height:650px; object-fit:cover;">
+                        </div>`;
                     }
                 });
 
                 contentHtml += `
                 <div class="post-slider-wrapper">
+                    ${hiddenVoiceoverHtml}
+                    ${isAudioAttached ? `<div style="position:absolute; top:10px; left:10px; z-index:20; background:var(--primary-solid); padding:4px 10px; border-radius:12px; color:#fff; font-size:10px; font-weight:bold;"><i class="fa-solid ${hasMusic ? 'fa-music' : 'fa-microphone-lines'}"></i> يحتوي على صوت</div>` : ''}
                     <div class="slider-counter"><span id="counter-current-${p.id}">1</span>/${p.media.length}</div>
                     <div class="post-slider-container" id="slider-${p.id}" onscroll="handleSliderScroll('${p.id}', ${p.media.length})">
                         ${slidesHtml}
                     </div>
-                    <div class="slider-dots">
-                        ${dotsHtml}
-                    </div>
+                    <div class="slider-dots">${dotsHtml}</div>
                 </div>`;
             }
         } else if (p.imageUrl) {
-    contentHtml += `<div style="background:#000; border-radius:12px; overflow:hidden; margin-top:8px;"><img src="${p.imageUrl}" class="media-item smooth-image-load" loading="lazy" onload="this.style.opacity='1'" onclick="window.event.stopPropagation(); viewImage('${p.imageUrl}', '${p.id}')" style="object-fit:contain; max-height:500px; width:100%;"></div>`;
-}
+            // (الصور القديمة)
+            if (isAudioAttached) {
+                contentHtml += `
+                <div class="media-item-wrapper" style="position:relative; background:#000; border-radius:12px; overflow:hidden; margin-top:8px; cursor: pointer;" onclick="window.event.stopPropagation(); window.toggleImageVoiceover('${p.id}')">
+                    ${hiddenVoiceoverHtml}
+                    <img src="${p.imageUrl}" class="media-item" loading="lazy" style="display:block; object-fit:contain; max-height:500px; width:100%; opacity:0.85; transition: opacity 0.3s;">
+
+                    <div id="play_btn_imgvo_${p.id}" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80px; height:80px; display:flex; align-items:center; justify-content:center; z-index:10; transition:0.3s; pointer-events:none;">
+                         <i class="fa-solid fa-circle-play" style="color:rgba(255,255,255,0.9); font-size:45px; filter:drop-shadow(0 0 10px rgba(0,0,0,0.5));"></i>
+                    </div>
+                    
+                    <div style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); padding: 4px 12px; border-radius: 12px; color: #fff; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(4px); pointer-events:none;">
+                        <i class="fa-solid ${hasMusic ? 'fa-music' : 'fa-microphone-lines'}" style="color: var(--primary-solid); margin-left: 5px;"></i> ${audioBadgeText}
+                    </div>
+                </div>`;
+            } else {
+                contentHtml += `<div style="background:#000; border-radius:12px; overflow:hidden; margin-top:8px;"><img src="${p.imageUrl}" class="media-item smooth-image-load" loading="lazy" onload="this.style.opacity='1'" onclick="window.event.stopPropagation(); viewImage('${p.imageUrl}', '${p.id}')" style="object-fit:contain; max-height:500px; width:100%;"></div>`;
+            }
+        }
 
     }
 
     // ============================================================
-    // 🎙️ التحقق من وجود تعليق صوتي (Voiceover) ورسم المشغل
-    // ============================================================
-    let voiceoverHtml = "";
-    if (p.voiceoverUrl) {
-        const uniqueAudioId = `vo_${p.id}`;
-        voiceoverHtml = `
-        <div class="post-voiceover-container" onclick="event.stopPropagation()">
-            <button class="vo-play-btn" onclick="window.togglePostVoiceover('${uniqueAudioId}', this)">
-                <i class="fa-solid fa-play"></i>
-            </button>
-            <div class="vo-slider-wrapper">
-                <div class="vo-title">تعليق صوتي للمبدع <i class="fa-solid fa-microphone-lines"></i></div>
-                <input type="range" class="vo-slider" id="vo_slider_${uniqueAudioId}" value="0" min="0" max="100" step="0.1" oninput="window.seekPostVoiceover('${uniqueAudioId}', this)">
-            </div>
-            <span id="vo_time_${uniqueAudioId}" style="font-size: 12px; font-weight: bold; color: #aaa; min-width: 40px; text-align: center;">00:00</span>
-            <audio id="${uniqueAudioId}" src="${p.voiceoverUrl}" preload="metadata" ontimeupdate="window.updatePostVoiceoverProgress('${uniqueAudioId}')" onended="window.resetPostVoiceover('${uniqueAudioId}')"></audio>
-        </div>`;
-    }
-
-    // ============================================================
-    // بناء الكارت النهائي (The Final Post Element)
-    // ============================================================
-        // ============================================================
-    // بناء الكارت النهائي (The Final Post Element)
+    // بناء الكارت النهائي (The Final Post Element) - لاحظ تم إزالة ${voiceoverHtml} المزعجة
     // ============================================================
     const div = document.createElement('div');
     const isMyPost = (typeof currentUser !== 'undefined' && p.uid === currentUser.uid);
@@ -7680,7 +7830,7 @@ window.addToVideoGrid = function(url, title, viewsCount, postId) {
             <div class="user-info" onclick="location.href='profile.html?uid=${p.uid}'" style="cursor:pointer;">
                 <div class="post-avatar" style="background-image:url('${profileData.profilePic || defaultAvatar}');"></div>
                 <div class="user-details">
-                    <h4>${profileData.name || 'مستخدم'} ${profileData.isVerified ? '<i class="fa-solid fa-circle-check" style="color:#3897f0;font-size:14px;"></i>' : ''}</h4>
+                    <h4>${profileData.name || 'مستخدم'} ${profileData.isVerified ? '<i class="fa-solid fa-heart-circle-check nabd-badge" style="font-size:14px;"></i>' : ''}</h4>
                     
                     <div style="display:flex; align-items:center; gap:6px; color:var(--secondary-text); font-size:11px; margin-top:2px;">
                         <span>${p.createdAt ? moment(p.createdAt.toDate()).fromNow() : 'الآن'}</span>
@@ -7696,8 +7846,6 @@ window.addToVideoGrid = function(url, title, viewsCount, postId) {
         </div>
         
         ${contentHtml}
-
-        ${voiceoverHtml}
 
         <div class="post-insights-btn" onclick="openPostInsights('${p.id}')">
             <i class="fa-solid fa-chart-simple"></i> عرض الرؤى والأداء
@@ -8339,7 +8487,7 @@ logActivity('like', 'أعجبت بمنشور', pid, postOwnerUid);
                     let bubbleResetStyle = isMediaComment ? 'style="background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important;"' : '';
                     let textClass = isMediaComment ? "" : "cm-text";
                    
-                    const verifiedIcon = verifiedDisplay ? '<i class="fa-solid fa-circle-check" style="color:#3897f0; margin-right:4px; font-size:12px; display:inline-block; vertical-align:middle;"></i>' : '';
+                    const verifiedIcon = verifiedDisplay ? '<i class="fa-solid fa-heart-circle-check nabd-badge" style="font-size:12px; margin-right:4px; display:inline-block; vertical-align:middle;"></i>' : '';
                     const isOwner = (typeof currentPostOwnerUid !== 'undefined' && c.uid === currentPostOwnerUid);
 
 // 2. كود الشارة والتاج
@@ -9040,7 +9188,7 @@ function closeAllSheets(keepComments = false, keepEditMode = false, isBackBtn = 
             
             accounts.forEach((acc, idx) => {
                 const isCurrent = (currentUser && acc.uid === currentUser.uid);
-                const verifiedBadge = acc.isVerified ? '<i class="fa-solid fa-circle-check" style="color:#3897f0; margin-right:5px; font-size:14px;"></i>' : '';
+                const verifiedBadge = acc.isVerified ? '<i class="fa-solid fa-heart-circle-check nabd-badge" style="font-size:14px; margin-right:5px;"></i>' : '';
                 const avatarStyle = acc.pic ? `background-image:url('${acc.pic}')` : `background:${generateColor(acc.uid)}`;
                 const avatarContent = acc.pic ? '' : (acc.name ? acc.name[0] : 'U');
 
@@ -10034,7 +10182,7 @@ function loadRealtimeReplies(commentId) {
             let finalReplyPic = displayPic || defaultAvatar;
             let avatarContent = '';
             let avatarStyle = `background-image:url('${finalReplyPic}'); background-size: cover; background-position: center;`;
-            let verifiedIcon = r.isVerified ? '<i class="fa-solid fa-circle-check" style="color:#3897f0; font-size:10px; margin-right:3px;"></i>' : '';
+            let verifiedIcon = r.isVerified ? '<i class="fa-solid fa-heart-circle-check nabd-badge" style="font-size:11px; margin-right:3px;"></i>' : '';
             let nameStyle = ""; 
 
             if (r.isGhost) {
@@ -10918,9 +11066,8 @@ async function fetchSuggestions(type, term, drop, inp, fullWord) {
                 <div class="mention-suggest-item" onclick="${clickAction}">
                     <div style="width:35px; height:35px; border-radius:50%; background-image:url('${rawPic}'); background-size:cover; background-position:center; background-color:#333; border: 1px solid #444;"></div>
                     <div>
-                        <div style="font-weight:bold; font-size:14px; color:#fff; display:flex; align-items:center; gap:6px;">
-                            ${d.name} ${d.isVerified ? '<i class="fa-solid fa-heart-circle-check nabd-badge" style="color:#20D5EC; font-size:12px;"></i>' : ''}
-                        </div>
+                        <div style="font-weight:bold;font-size:13px;color:#fff">${d.name} ${d.isVerified ? '<i class="fa-solid fa-heart-circle-check nabd-badge" style="font-size:11px; margin-right:4px;"></i>' : ''}</div>
+
                         <div style="font-size:11px; color:#aaa; direction:ltr; text-align:right;">
                             @${doc.id.substring(0,6)}
                         </div>
@@ -14989,8 +15136,8 @@ async function filterReactions(selectedType) {
                 <span class="re-icon-badge" style="position:absolute; bottom:-2px; right:-2px; background:#1a1a1a; border-radius:50%; font-size:14px;">${icons[item.type]}</span>
             </div>
             <div style="flex:1;" onclick="goToProfile('${item.uid}')" style="cursor:pointer;">
-                <div style="font-weight:bold; color:#fff; font-size:14px;">${uName} ${uVerified ? '<i class="fa-solid fa-circle-check" style="color:#20D5EC; font-size:12px;"></i>' : ''}</div>
-            </div>
+             <div style="font-weight:bold; color:#fff; font-size:14px;">${u.name} ${u.isVerified ? '<i class="fa-solid fa-heart-circle-check nabd-badge" style="font-size:12px;"></i>' : ''}</div>
+
             <button class="res-btn-follow" onclick="goToProfile('${item.uid}')" style="padding:6px 15px; border-radius:8px; background:rgba(255,255,255,0.1); color:#fff; border:none; cursor:pointer; font-weight:bold;">عرض</button>
         `;
         container.appendChild(div);
@@ -19721,8 +19868,9 @@ async function loadAboutTabWidgets() {
         // 🔥 عرض تاريخ الميلاد
         const birthDateRow = document.getElementById('birthDateRow');
         const infoBirthDate = document.getElementById('infoBirthDate');
-        if (birthDateRow && infoBirthDate && profileData.birthDate) {
-            infoBirthDate.innerText = "تاريخ الميلاد: " + profileData.birthDate;
+        // 👇 التعديل هنا: غيرنا birthDate لـ dob
+        if (birthDateRow && infoBirthDate && profileData.dob) {
+            infoBirthDate.innerText = "تاريخ الميلاد: " + profileData.dob;
             birthDateRow.style.display = 'flex';
         }
         
@@ -20121,6 +20269,23 @@ window.closeInsightsSheet = function() {
     }
 };
 
+// ==========================================
+// 🗑️ شاشة الحساب المحذوف (Deleted Account)
+// ==========================================
+function renderDeletedAccountState() {
+    // إخفاء كل محتويات الصفحة وإظهار رسالة الحساب المحذوف
+    document.body.innerHTML = `
+        <div style="height:100vh; background:var(--bg-color); color:var(--text-color); display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:20px;">
+            <div style="width:100px; height:100px; background:rgba(255,255,255,0.05); border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:20px; border: 2px dashed var(--secondary-text);">
+                <i class="fa-solid fa-ghost" style="font-size:45px; color:var(--secondary-text);"></i>
+            </div>
+            <h2 style="font-weight:800; margin-bottom:10px;">مستخدم غير موجود</h2>
+            <p style="color:var(--secondary-text); max-width:300px; line-height:1.6;">هذا الحساب غير متاح حالياً. ربما قام المستخدم بإغلاق حسابه أو تم حذفه من المنصة.</p>
+            <button onclick="location.href='home.html'" style="margin-top:30px; padding:12px 30px; border-radius:15px; background:var(--primary-gradient); color:#fff; border:none; font-weight:bold; cursor:pointer;">العودة للرئيسية</button>
+        </div>
+    `;
+}
+
 </script>
 
 <script>
@@ -20499,6 +20664,42 @@ window.resetPostVoiceover = function(audioId) {
     const timeDisplay = document.getElementById(`vo_time_${audioId}`);
     if (timeDisplay) timeDisplay.innerText = "00:00";
 };
+
+// ==================================================
+// 🎙️ دالة تشغيل التعليق الصوتي المدمج مع الصور
+// ==================================================
+window.toggleImageVoiceover = function(postId) {
+    const audio = document.getElementById(`vo_audio_${postId}`);
+    const playIcon = document.getElementById(`play_btn_imgvo_${postId}`);
+
+    if (!audio) return;
+
+    if (audio.paused) {
+        // إيقاف أي صوت أو فيديو آخر في الصفحة
+        document.querySelectorAll('audio, video').forEach(media => {
+            if (media !== audio && !media.paused) media.pause();
+        });
+        
+        // إرجاع أزرار التشغيل للصور الأخرى
+        document.querySelectorAll('[id^="play_btn_imgvo_"]').forEach(icon => {
+            icon.style.opacity = '1';
+        });
+
+        audio.play();
+        if (playIcon) playIcon.style.opacity = '0'; // إخفاء زر التشغيل أثناء الاستماع
+        
+        // إرجاع زر التشغيل عندما ينتهي الصوت
+        audio.onended = () => {
+            if (playIcon) playIcon.style.opacity = '1';
+        };
+
+    } else {
+        audio.pause();
+        if (playIcon) playIcon.style.opacity = '1'; // إظهار زر التشغيل
+    }
+};
+
+
 </script>
 
 <div id="blockedScreen" style="display:none; flex-direction:column; align-items:center; justify-content:center; height:80vh; text-align:center; padding:20px;">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NABD - الإشعارات</title>
+    <title>NABD - Notifications</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -19,155 +19,398 @@
             --border-color: #2a2a2a;
             --unread-bg: rgba(93, 95, 239, 0.15);
             --uranium: #3fff00;
-            --vip-gold: #f59e0b; /* لون ذهبي للتوثيق */
+            --vip-gold: #f59e0b; 
         }
         body { background: var(--bg-color); color: var(--text-color); margin: 0; font-family: "Cairo", sans-serif; padding-bottom: 80px; }
         
-        .header { display: flex; align-items: center; padding: 15px 20px; background: rgba(22, 22, 22, 0.95); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-        
-        .mark-all-btn {
-            background: transparent;
-            border: 1px solid var(--primary-solid);
-            color: var(--primary-solid);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-family: "Cairo", sans-serif;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex; align-items: center; gap: 5px;
-        }
+        /* التابات العلوية */
+        .top-tabs-container { display: flex; border-bottom: 1px solid var(--border-color); background: var(--bg-color); position: sticky; top: 0; z-index: 100; }
+        .top-tab { flex: 1; text-align: center; padding: 15px; font-weight: bold; color: var(--secondary-text); cursor: pointer; transition: 0.3s; position: relative; }
+        .top-tab.active { color: #fff; }
+        .top-tab.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 3px; background: #fff; border-radius: 3px 3px 0 0; }
+
+        /* شريط الفلاتر */
+        .filters-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 15px 10px; background: var(--bg-color); position: sticky; top: 52px; z-index: 99; border-bottom: 1px solid var(--border-color); }
+        .filters-scroll::-webkit-scrollbar { display: none; }
+        .filter-chip { background: var(--card-color); border: 1px solid var(--border-color); color: var(--text-color); padding: 8px 16px; border-radius: 20px; font-family: "Cairo"; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+        .filter-chip.active { background: #fff; color: #000; border-color: #fff; }
+
+        .header-actions { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; }
+        .mark-all-btn { background: transparent; border: 1px solid var(--primary-solid); color: var(--primary-solid); padding: 5px 12px; border-radius: 20px; font-family: "Cairo", sans-serif; font-size: 12px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
         .mark-all-btn:hover { background: var(--primary-solid); color: #fff; }
 
-        .header h2 { margin: 0; font-size: 20px; flex: 1; text-align: center; }
-        .back-btn { font-size: 20px; cursor: pointer; color: var(--uranium); }
-
-        .notif-list { padding: 10px; }
+        .time-group-header { padding: 15px 15px 5px 15px; font-size: 16px; font-weight: 800; color: #fff; }
         
+        .notif-list { padding: 0 10px; }
         .notif-item { display: flex; gap: 12px; padding: 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; position: relative; border-radius: 12px; margin-bottom: 8px; background: var(--card-color); border: 1px solid transparent; }
-        
-        .notif-item.unopened { 
-            background: var(--unread-bg); 
-            border-color: rgba(93, 95, 239, 0.3); 
-            border-right: 4px solid var(--primary-solid); 
-        }
-        
-        /* ستايل خاص لرسائل النظام */
-        .notif-item.system-msg {
-            background: rgba(245, 158, 11, 0.1) !important;
-            border-right: 4px solid var(--vip-gold) !important;
-            border-color: rgba(245, 158, 11, 0.2);
-        }
-        
+        .notif-item.unopened { background: var(--unread-bg); border-color: rgba(93, 95, 239, 0.3); border-right: 4px solid var(--primary-solid); }
+        .notif-item.system-msg { background: rgba(245, 158, 11, 0.1) !important; border-right: 4px solid var(--vip-gold) !important; border-color: rgba(245, 158, 11, 0.2); }
+        .notif-item.security-alert { background: rgba(255, 59, 48, 0.1) !important; border-right: 4px solid #ff3b30 !important; border-color: rgba(255, 59, 48, 0.2); }
         .notif-item.opened { opacity: 0.7; background: transparent; }
+        /* لعكس الشريط الجانبي في اللغات الأجنبية */
+        html[dir="ltr"] .notif-item.unopened { border-right: none; border-left: 4px solid var(--primary-solid); }
+        html[dir="ltr"] .notif-item.system-msg { border-right: none !important; border-left: 4px solid var(--vip-gold) !important; }
+        html[dir="ltr"] .notif-item.security-alert { border-right: none !important; border-left: 4px solid #ff3b30 !important; }
+        html[dir="ltr"] .notif-item.gift-premium { border-right: none !important; border-left: 5px solid #FFD700 !important; }
 
         .notif-avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; background-size: cover; background-position: center; display: grid; place-items: center; font-weight: bold; font-size: 18px; flex-shrink: 0; position: relative; border: 1px solid var(--border-color); }
         .notif-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .notif-text { font-size: 14px; line-height: 1.4; color: var(--text-color); }
-        .notif-text b { color: #fff; margin-left: 3px; }
+        .notif-text b { color: #fff; margin-inline-end: 3px; }
         .notif-time { font-size: 11px; color: var(--secondary-text); margin-top: 5px; }
         .notif-icon { width: 30px; height: 30px; display: grid; place-items: center; font-size: 18px; }
-        
-        .verified-badge { 
-            color: #3897f0; 
-            margin-right: 4px; 
-            font-size: 13px; 
-            vertical-align: -2px;
-            display: inline-block;
-        }
+        .verified-badge { color: #3897f0; margin-inline-end: 4px; font-size: 13px; vertical-align: -2px; display: inline-block; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--card-color); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border-color); z-index: 99; }
-        .nav-item { font-size: 22px; color: var(--secondary-text); cursor: pointer; }
-        .nav-item.active { color: var(--primary-solid); }
-
-        .empty-state { text-align: center; padding: 50px 20px; color: var(--secondary-text); }
-        .empty-state i { font-size: 50px; margin-bottom: 15px; opacity: 0.5; }
-        /* إشعار الهدية يكون له لمعة بسيطة */
-/* --- ستايل إشعار الهدية الفاخر (Premium Gift) --- */
-.notif-item.gift-premium {
-    background: linear-gradient(135deg, #2b2000 0%, #1a1a1a 100%) !important; /* خلفية ذهبية مسودة */
-    border: 1px solid rgba(255, 215, 0, 0.5) !important; /* حدود ذهبية */
-    border-right: 5px solid #FFD700 !important; /* خط سميك يمين */
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.15) !important;
-    position: relative;
-    overflow: hidden;
-    padding: 15px;
+        /* ========================================= */
+/* شريط التنقل السفلي المطور (Glassmorphism) */
+/* ========================================= */
+.fb-icons {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90% !important;
+    max-width: 400px !important;
+    height: 60px !important;
+    background: rgba(22, 22, 22, 0.95) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 50px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+    z-index: 4000 !important; 
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 5px !important;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s !important;
 }
 
-/* تأثير اللمعة المتحركة (Shine Effect) */
-.notif-item.gift-premium::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -150%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
-    transform: skewX(-20deg);
-    animation: goldShine 3s infinite linear;
+.fb-icons.hide-nav {
+    transform: translate(-50%, 150px) !important; 
+    opacity: 0 !important;
     pointer-events: none;
 }
 
-@keyframes goldShine {
-    0% { left: -150%; }
-    100% { left: 150%; }
+.nav-item {
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer;
+    position: relative;
 }
 
-/* النص الذهبي */
-.gold-text {
-    color: #FFD700 !important;
-    font-weight: 800;
-    font-size: 14px;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
-    display: block;
-    margin-top: 4px;
+.nav-item i {
+    font-size: 22px !important;
+    color: #888 !important;
+    transition: 0.2s;
 }
 
-/* أيقونة الهدية الكبيرة */
-.gift-big-icon {
-    font-size: 35px;
-    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
-    animation: bounceGift 2s infinite ease-in-out;
+.nav-item.active i {
+    color: var(--primary-solid) !important;
+    text-shadow: 0 0 10px rgba(93, 95, 239, 0.4);
 }
 
-@keyframes bounceGift {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+.nav-avatar-small {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background-size: cover; background-position: center;
+    background-color: #333;
+    border: 2px solid transparent;
+    transition: 0.2s;
 }
 
-/* إطار ذهبي لصورة الراسل */
-.gift-avatar-border {
-    border: 2px solid #FFD700 !important;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+.nav-item.active .nav-avatar-small {
+    border-color: var(--primary-solid);
+    transform: scale(1.1);
 }
 
+.nav-badge-count {
+    position: absolute; top: 10px; right: 25%;
+    background: #ff3b30; color: #fff;
+    min-width: 18px; height: 18px; border-radius: 50%;
+    font-size: 10px; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--bg-color);
+    z-index: 10; opacity: 0; transform: scale(0);
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-badge-count.visible { opacity: 1; transform: scale(1); }
+
+
+        .empty-state { text-align: center; padding: 50px 20px; color: var(--secondary-text); }
+        .empty-state i { font-size: 50px; margin-bottom: 15px; opacity: 0.5; }
+
+        /* ستايلات طلبات الصداقة */
+        .request-actions { display: flex; gap: 8px; margin-top: 10px; }
+        .btn-accept { background: var(--primary-solid); color: #fff; border: none; padding: 8px 15px; border-radius: 8px; font-family: "Cairo"; font-size: 13px; cursor: pointer; font-weight: bold; flex: 1; transition: 0.2s; }
+        .btn-accept:active { transform: scale(0.95); }
+        .btn-reject { background: rgba(255,255,255,0.1); color: var(--text-color); border: none; padding: 8px 15px; border-radius: 8px; font-family: "Cairo"; font-size: 13px; cursor: pointer; flex: 1; transition: 0.2s; }
+        .btn-reject:active { transform: scale(0.95); }
+        .action-result { font-size: 13px; font-weight: bold; margin-top: 8px; animation: popIn 0.3s ease; }
+        @keyframes popIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* الهدية */
+        .notif-item.gift-premium { background: linear-gradient(135deg, #2b2000 0%, #1a1a1a 100%) !important; border: 1px solid rgba(255, 215, 0, 0.5) !important; border-right: 5px solid #FFD700 !important; box-shadow: 0 0 15px rgba(255, 215, 0, 0.15) !important; position: relative; overflow: hidden; padding: 15px; }
+        .notif-item.gift-premium::before { content: ''; position: absolute; top: 0; left: -150%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent); transform: skewX(-20deg); animation: goldShine 3s infinite linear; pointer-events: none; }
+        @keyframes goldShine { 0% { left: -150%; } 100% { left: 150%; } }
+        .gold-text { color: #FFD700 !important; font-weight: 800; font-size: 14px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.4); display: block; margin-top: 4px; }
+        .gift-big-icon { font-size: 35px; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); animation: bounceGift 2s infinite ease-in-out; }
+        @keyframes bounceGift { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        .gift-avatar-border { border: 2px solid #FFD700 !important; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
+
+        /* الخريطة */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .map-modal { background: var(--card-color); width: 90%; max-width: 350px; border-radius: 20px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 10px 40px rgba(0,0,0,0.5); animation: popUp 0.3s ease; }
+        .map-header { background: rgba(255, 59, 48, 0.1); color: #ff3b30; padding: 15px; text-align: center; font-weight: bold; font-size: 18px; border-bottom: 1px solid rgba(255, 59, 48, 0.2); }
+        .map-visual { height: 150px; background: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(135deg, #1a1a2e, #16213e); position: relative; display: grid; place-items: center; }
+        .map-radar { width: 80px; height: 80px; background: rgba(255, 59, 48, 0.2); border-radius: 50%; position: absolute; animation: radarPulse 2s infinite; }
+        @keyframes radarPulse { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+        .map-pin { font-size: 40px; color: #ff3b30; position: relative; z-index: 2; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); }
+        .map-details { padding: 20px; }
+        .map-detail-item { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; color: var(--text-color); font-size: 14px; }
+        .map-detail-item i { width: 25px; color: var(--secondary-text); font-size: 18px; text-align: center; }
+        .map-close-btn { width: calc(100% - 40px); margin: 0 20px 20px; padding: 12px; border: none; background: #333; color: #fff; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: 'Cairo'; transition: 0.2s; }
+        /* ========================================= */
+/* 🌟 شارة التوثيق الاحترافية (نبض + لمعان) 🌟 */
+/* ========================================= */
+.nabd-badge {
+    color: #1da1f2; /* الأزرق السماوي المميز */
+    text-shadow: 0 0 8px rgba(29, 161, 242, 0.4); 
+    display: inline-block;
+    margin-right: 4px;
+    vertical-align: middle;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    animation: heartbeat 2.5s infinite ease-in-out; /* حركة النبض */
+}
+
+/* تأثير اللمعة اللي بتعدي على العلامة */
+.nabd-badge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    animation: shineBadge 3s infinite;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(29,161,242,0.4)); }
+    15% { transform: scale(1.2); filter: drop-shadow(0 0 10px rgba(29,161,242,0.8)); }
+    30% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(29,161,242,0.4)); }
+    45% { transform: scale(1.2); filter: drop-shadow(0 0 10px rgba(29,161,242,0.8)); }
+    60% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(29,161,242,0.4)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(29,161,242,0.4)); }
+}
+
+@keyframes shineBadge {
+    0% { left: -100%; }
+    20% { left: 100%; } 
+    100% { left: 100%; } 
+}
+/* --- ستايل الصور المتداخلة (Stacked Avatars) --- */
+.stacked-avatars { position: relative; width: 50px; height: 50px; flex-shrink: 0; }
+.avatar-mini { width: 35px; height: 35px; border-radius: 50%; background-size: cover; background-position: center; position: absolute; border: 2px solid var(--card-color); background-color: #333; }
+.avatar-mini.main { top: 0; right: 0; z-index: 2; } /* اليمين ليدعم العربي */
+.avatar-mini.second { bottom: 0; left: 0; z-index: 1; opacity: 0.8; }
+
+/* --- ستايل الرد السريع (Quick Reply) --- */
+.quick-reply-btn { background: transparent; border: none; color: var(--primary-solid); font-size: 12px; font-weight: bold; cursor: pointer; margin-top: 5px; display: inline-flex; align-items: center; gap: 5px; padding: 0; }
+.quick-reply-box { display: none; margin-top: 10px; background: rgba(0,0,0,0.4); border-radius: 12px; padding: 10px; border: 1px solid var(--border-color); cursor: default; }
+.quick-reply-input { width: 100%; background: transparent; border: none; color: #fff; outline: none; font-family: "Cairo"; font-size: 13px; resize: none; }
+.quick-reply-send { background: var(--primary-solid); color: #fff; border: none; border-radius: 8px; padding: 6px 20px; font-weight: bold; cursor: pointer; margin-top: 5px; float: left; transition: 0.2s; }
+.quick-reply-send:active { transform: scale(0.95); }
+
+/* --- ستايل زر وضع الهدوء --- */
+.mute-btn-header { background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-color); padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
+.mute-btn-header.muted { background: rgba(255, 59, 48, 0.1); color: #ff3b30; border-color: rgba(255, 59, 48, 0.3); }
+
+        /* --- ستايل القائمة المنبثقة السفلية --- */
+        .bottom-sheet-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 99998; display: none; backdrop-filter: blur(2px); }
+        .bottom-sheet-overlay.active { display: block; animation: fadeIn 0.3s; }
+        .bottom-sheet { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-color); border-radius: 24px 24px 0 0; z-index: 99999; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
+        .bottom-sheet.active { transform: translateY(0); }
+        .sheet-handle { width: 40px; height: 5px; background: var(--border-color); border-radius: 10px; margin: 15px auto; }
+        .sheet-option { padding: 15px 20px; display: flex; align-items: center; gap: 15px; font-size: 15px; font-weight: bold; color: var(--text-color); cursor: pointer; border-bottom: 1px solid var(--border-color); transition: 0.2s; }
+        .sheet-option:last-child { border-bottom: none; }
+        .sheet-option:active { background: rgba(255,255,255,0.05); }
+
+        /* --- ستايل رسالة التنبيه (Toast) --- */
+        #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(10px); color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100000; }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* --- ستايل الخيار النشط في وضع الهدوء --- */
+        .quiet-opt.active-opt { color: var(--primary-solid) !important; }
+        /* استثناء لزر إلغاء الكتم ليظل أحمر */
+        .quiet-opt.active-opt[data-duration="0"] { color: #ff3b30 !important; }
+        .quiet-opt.active-opt .check-icon { display: block !important; animation: popIn 0.3s ease; }
+
+        /* --- ستايل زر الرجوع --- */
+        .back-btn-container {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: transform 0.2s, color 0.2s;
+            font-size: 20px;
+            z-index: 101;
+        }
+        .back-btn-container:active {
+            transform: scale(0.85);
+            color: var(--primary-solid);
+        }
+        /* قلب السهم تلقائياً في اللغات الأجنبية (LTR) */
+        html[dir="ltr"] .back-icon {
+            transform: rotate(180deg);
+        }
 
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <i class="fa-solid fa-arrow-right back-btn" onclick="history.back()"></i>
-        <h2>الإشعارات</h2>
-        <button class="mark-all-btn" onclick="markAllAsOpened()">
-            <i class="fa-solid fa-check-double"></i> تحديد الكل كمقروء
+    <div class="top-tabs-container">
+    <div class="back-btn-container" onclick="smartGoBack()">
+        <i class="fa-solid fa-arrow-right back-icon"></i>
+    </div>
+
+    <div class="top-tab active" id="tab-notifs" onclick="switchMainTab('notifs')">
+        <span data-i18n="tab_notifs">الإشعارات</span>
+        <span id="unreadNotifsCount" style="display:none; background:red; color:white; border-radius:50%; padding:2px 6px; font-size:10px; margin-right:5px;">0</span>
+    </div>
+    <div class="top-tab" id="tab-requests" onclick="switchMainTab('requests')">
+        <span data-i18n="tab_requests">طلبات الصداقة</span>
+        <span id="pendingReqsCount" style="display:none; background:red; color:white; border-radius:50%; padding:2px 6px; font-size:10px; margin-right:5px;">0</span>
+    </div>
+</div>
+
+    <div id="notificationsView">
+        <div class="filters-scroll">
+            <button class="filter-chip active" onclick="setFilter('all', this)" data-i18n="filter_all">الكل</button>
+            <button class="filter-chip" onclick="setFilter('like', this)" data-i18n="filter_likes">إعجابات</button>
+            <button class="filter-chip" onclick="setFilter('comment', this)" data-i18n="filter_comments">تعليقات</button>
+            <button class="filter-chip" onclick="setFilter('mention', this)" data-i18n="filter_mentions">الذكر@</button>
+            <button class="filter-chip" onclick="setFilter('login_alert', this)"><span data-i18n="filter_security">حماية وأمان</span> <i class="fa-solid fa-shield-halved"></i></button>
+        </div>
+
+        <div class="header-actions">
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <span style="font-size: 13px; color: var(--secondary-text);" data-i18n="latest_alerts">أحدث التنبيهات</span>
+        <button id="quietModeBtn" class="mute-btn-header" onclick="toggleQuietMenu()">
+            <i class="fa-solid fa-bell"></i> <span data-i18n="quiet_mode">وضع الهدوء</span>
         </button>
     </div>
+    <button class="mark-all-btn" onclick="markAllAsOpened()">
+        <i class="fa-solid fa-check-double"></i> <span data-i18n="btn_mark_read">مقروء</span>
+    </button>
+</div>
+<div id="quietModeOverlay" class="bottom-sheet-overlay" onclick="closeQuietMenu()"></div>
 
-    <div class="notif-list" id="notifList">
-        <div style="text-align: center; padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري التحميل...</div>
+
+<div class="bottom-sheet" id="quietModeSheet" style="height: auto; z-index: 99999;">
+    <div class="sheet-handle"></div>
+    <div style="padding: 15px;">
+        <h3 style="text-align: center; color: #fff; margin-bottom: 15px;"><i class="fa-solid fa-moon"></i> وضع الهدوء</h3>
+        
+        <div class="sheet-option quiet-opt" data-duration="1" onclick="setQuietMode(1)">
+            <div style="flex:1;"><i class="fa-regular fa-clock"></i> <span data-i18n="quiet_1h">كتم لمدة ساعة</span></div>
+            <i class="fa-solid fa-check check-icon" style="display:none; color:var(--primary-solid);"></i>
+        </div>
+        
+        <div class="sheet-option quiet-opt" data-duration="8" onclick="setQuietMode(8)">
+            <div style="flex:1;"><i class="fa-solid fa-bed"></i> <span data-i18n="quiet_8h">كتم لـ 8 ساعات</span></div>
+            <i class="fa-solid fa-check check-icon" style="display:none; color:var(--primary-solid);"></i>
+        </div>
+        
+        <div class="sheet-option quiet-opt" data-duration="24" onclick="setQuietMode(24)">
+            <div style="flex:1;"><i class="fa-solid fa-calendar-day"></i> <span data-i18n="quiet_24h">كتم لـ 24 ساعة</span></div>
+            <i class="fa-solid fa-check check-icon" style="display:none; color:var(--primary-solid);"></i>
+        </div>
+        
+        <div class="sheet-option quiet-opt" data-duration="0" onclick="setQuietMode(0)" style="color: #ff3b30;">
+            <div style="flex:1;"><i class="fa-solid fa-bell-slash"></i> <span data-i18n="quiet_off">إلغاء الكتم</span></div>
+            <i class="fa-solid fa-check check-icon" style="display:none; color:#ff3b30;"></i>
+        </div>
+    </div>
+</div>
+
+
+        <div class="notif-list" id="notifList">
+            <div style="text-align: center; padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> <span data-i18n="status_loading">جاري التحميل...</span></div>
+        </div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item" onclick="location.href='home.html'"><i class="fa-solid fa-house"></i></div>
-        <div class="nav-item" onclick="location.href='friends.html'"><i class="fa-solid fa-users"></i></div>
-        <div class="nav-item" onclick="location.href='create_post.html'"><i class="fa-solid fa-plus-circle"></i></div>
-        <div class="nav-item active"><i class="fa-solid fa-bell"></i></div>
-        <div class="nav-item" onclick="location.href='profile.html'"><i class="fa-regular fa-user"></i></div>
+    <div id="requestsView" style="display: none;">
+        <div class="header-actions">
+            <span style="font-size: 13px; color: var(--secondary-text);" data-i18n="pending_requests">طلبات الصداقة المعلقة</span>
+        </div>
+        
+        <div class="notif-list" id="requestsList"></div>
     </div>
 
+<div class="fb-icons" id="bottomNavBar">
+    <div class="nav-item" onclick="location.href='home.html'">
+        <i class="fa-solid fa-house"></i>
+    </div>
+
+    <div class="nav-item" onclick="location.href='Friend_requests.html'">
+        <i class="fa-solid fa-user-plus"></i>
+        <div id="topReqCount" class="nav-badge-count">0</div>
+    </div>
+
+    <div class="nav-item" onclick="location.href='messages.html'">
+        <i class="fa-solid fa-comment-dots"></i>
+        <div id="topMsgCount" class="nav-badge-count">0</div> 
+    </div>
+    
+    <div class="nav-item" onclick="location.href='videos.html'">
+        <i class="fa-solid fa-circle-play"></i>
+    </div>
+    
+    <div class="nav-item active" onclick="location.reload();">
+        <i class="fa-solid fa-bell"></i>
+        <div id="topNotifCount" class="nav-badge-count">0</div>
+    </div>
+
+    <div class="nav-item" onclick="location.href='profile.html'">
+        <div id="bottomNavAvatar" class="nav-avatar-small" style="background-color: #333;"></div>
+    </div>
+</div>
+
+
+    <div class="modal-overlay" id="locationModal">
+        <div class="map-modal">
+            <div class="map-header"><i class="fa-solid fa-triangle-exclamation"></i> <span data-i18n="sec_title">تنبيه أمني: تسجيل دخول</span></div>
+            <div class="map-visual">
+                <div class="map-radar"></div>
+                <i class="fa-solid fa-location-dot map-pin"></i>
+            </div>
+            <div class="map-details">
+                <div class="map-detail-item"><i class="fa-solid fa-globe"></i><div><div style="font-size: 11px; color: var(--secondary-text);" data-i18n="sec_location">الموقع التقريبي</div><div id="modal-loc" style="font-weight: bold;"></div></div></div>
+                <div class="map-detail-item"><i class="fa-solid fa-mobile-screen"></i><div><div style="font-size: 11px; color: var(--secondary-text);" data-i18n="sec_device">الجهاز المتصل</div><div id="modal-device" style="font-weight: bold;"></div></div></div>
+                <div class="map-detail-item"><i class="fa-solid fa-wifi"></i><div><div style="font-size: 11px; color: var(--secondary-text);" data-i18n="sec_ip">عنوان الـ IP</div><div id="modal-ip" style="font-weight: bold; font-family: monospace;"></div></div></div>
+                <div class="map-detail-item"><i class="fa-regular fa-clock"></i><div><div style="font-size: 11px; color: var(--secondary-text);" data-i18n="sec_time">الوقت</div><div id="modal-time" style="font-weight: bold;"></div></div></div>
+            </div>
+            <button class="map-close-btn" onclick="document.getElementById('locationModal').style.display='none'" data-i18n="btn_close_confirm">إغلاق وتأكيد هويتي</button>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <script src="translations.js"></script>
+   
 
     <script>
         const firebaseConfig = {
@@ -184,6 +427,159 @@
         const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
         const ghostColors = ["#ff0000", "#00ff00", "#0099ff", "#ffff00", "#ff00ff", "#00ffff", "#ff9900", "#9900ff", "#ffffff", "#00ff99"];
 
+        let globalNotifications = []; 
+        let currentFilter = 'all';
+        let requestsLoaded = false;
+
+        // دالة مساعدة للحصول على النصوص المترجمة برمجياً
+        function getT(key) {
+            const currentLang = localStorage.getItem('wareed_lang') || 'ar';
+            if(appTranslations && appTranslations[currentLang] && appTranslations[currentLang][key]) {
+                return appTranslations[currentLang][key];
+            }
+            // Fallback للعربي لو ملقاش
+            return appTranslations['ar'][key] || key; 
+        }
+
+        function switchMainTab(tabName) {
+            document.getElementById('tab-notifs').classList.toggle('active', tabName === 'notifs');
+            document.getElementById('tab-requests').classList.toggle('active', tabName === 'requests');
+            document.getElementById('notificationsView').style.display = tabName === 'notifs' ? 'block' : 'none';
+            document.getElementById('requestsView').style.display = tabName === 'requests' ? 'block' : 'none';
+
+            if (tabName === 'requests' && !requestsLoaded) {
+                loadFriendRequests();
+                requestsLoaded = true;
+            }
+        }
+
+                auth.onAuthStateChanged(user => {
+            if (user) { 
+                
+                // 👇👇 ضيف الكود ده هنا لرفع التوكن المتأخر 👇👇
+                let savedToken = localStorage.getItem('pending_fcm_token');
+                if (savedToken) {
+                    db.collection('users').doc(user.uid).update({
+                        fcmToken: savedToken
+                    }).then(() => {
+                        localStorage.removeItem('pending_fcm_token');
+                        console.log("تم رفع التوكن المؤجل بنجاح!");
+                    }).catch(e => console.log(e));
+                }
+                // 👆👆 نهاية الكود الجديد 👆👆
+
+                if (typeof initBlockSystem === 'function') initBlockSystem(user);
+                loadNotifications(user.uid);
+                clearHomeBadgeOnly();
+                                // 🔥 كود جلب صورة البروفايل ووضعها في الشريط السفلي 🔥
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    // ... باقي الكود
+
+                    if(doc.exists) {
+                        const pic = doc.data().profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                        const bottomAvatar = document.getElementById('bottomNavAvatar');
+                        if(bottomAvatar) {
+                            bottomAvatar.style.backgroundImage = `url('${pic}')`;
+                        }
+                    }
+                });
+
+            } else { 
+                window.location.href = "index.html"; 
+            }
+        });
+
+        // ==========================================
+        // 🚀 نظام طلبات الصداقة 🚀
+        // ==========================================
+        function loadFriendRequests() {
+            const user = auth.currentUser;
+            if(!user) return;
+
+            const reqList = document.getElementById('requestsList');
+            reqList.innerHTML = `<div style="text-align: center; padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> ${getT('status_loading_requests')}</div>`;
+
+            db.collection('users').doc(user.uid).collection('friendRequests')
+              .onSnapshot(async snapshot => {
+                  reqList.innerHTML = '';
+                  if (snapshot.empty) {
+                      reqList.innerHTML = `<div class="empty-state"><i class="fa-solid fa-user-plus"></i><p>${getT('empty_requests')}</p></div>`;
+                      return;
+                  }
+
+                  for (const docSnap of snapshot.docs) {
+                      const senderUid = docSnap.id;
+                      try {
+                          const senderDoc = await db.collection('users').doc(senderUid).get();
+                          if (senderDoc.exists) {
+                              const senderInfo = senderDoc.data();
+                              let senderName = senderInfo.name || senderInfo.username || getT('name_user');
+                              let senderPic = senderInfo.profilePic || senderInfo.pic || '';
+
+                              const div = document.createElement('div');
+                              div.className = 'notif-item unopened';
+                              div.style.cursor = 'default'; 
+                              
+                              div.innerHTML = `
+                                  <div class="notif-avatar" style="${senderPic ? `background-image: url('${senderPic}')` : `background-color: #444`}">${!senderPic ? senderName[0] : ''}</div>
+                                  <div class="notif-content">
+                                      <div class="notif-text" style="cursor: pointer;" onclick="window.location.href='profile.html?uid=${senderUid}'">
+                                        <b>${senderName}</b> ${getT('text_sent_request')}
+                                      </div>
+                                      <div class="request-actions">
+                                          <button class="btn-accept" onclick="acceptRequest('${senderUid}', this)">${getT('btn_accept')}</button>
+                                          <button class="btn-reject" onclick="rejectRequest('${senderUid}', this)">${getT('btn_delete')}</button>
+                                      </div>
+                                  </div>
+                              `;
+                              reqList.appendChild(div);
+                          }
+                      } catch(e) { console.error("Error", e); }
+                  }
+              });
+        }
+
+        async function acceptRequest(senderUid, btnElement) {
+            const user = auth.currentUser;
+            if(!user) return;
+            
+            const container = btnElement.closest('.request-actions');
+            container.innerHTML = `<div class="action-result" style="color: var(--primary-solid);"><i class="fa-solid fa-check-circle"></i> ${getT('text_request_accepted')}</div>`;
+
+            const batch = db.batch();
+            const myFriendRef = db.collection('users').doc(user.uid).collection('friends').doc(senderUid);
+            batch.set(myFriendRef, { addedAt: firebase.firestore.FieldValue.serverTimestamp() });
+
+            const senderFriendRef = db.collection('users').doc(senderUid).collection('friends').doc(user.uid);
+            batch.set(senderFriendRef, { addedAt: firebase.firestore.FieldValue.serverTimestamp() });
+
+            const reqRef = db.collection('users').doc(user.uid).collection('friendRequests').doc(senderUid);
+            batch.delete(reqRef);
+
+            const notifRef = db.collection('notifications').doc();
+            batch.set(notifRef, {
+                recipientId: senderUid,
+                senderUid: user.uid,
+                type: 'follow', 
+                text: getT('text_approved_yours'),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                opened: false, read: false
+            });
+
+            await batch.commit();
+        }
+
+        async function rejectRequest(senderUid, btnElement) {
+            const user = auth.currentUser;
+            if(!user) return;
+            const container = btnElement.closest('.request-actions');
+            container.innerHTML = `<div class="action-result" style="color: var(--secondary-text);"><i class="fa-solid fa-trash"></i> ${getT('text_request_deleted')}</div>`;
+            await db.collection('users').doc(user.uid).collection('friendRequests').doc(senderUid).delete();
+        }
+
+        // ==========================================
+        // باقي أكواد الإشعارات العادية
+        // ==========================================
         function getGhostIdentity(uid) {
             if (!uid) return { id: '0000', color: '#ff0000' };
             let hash = 0;
@@ -194,251 +590,618 @@
             return { id: ghostID, color: ghostColors[colorIndex] };
         }
 
-        auth.onAuthStateChanged(user => {
-            if (user) { 
-                // 🛡️ تهيئة نظام الحظر أولاً
-                if (typeof initBlockSystem === 'function') {
-                    initBlockSystem(user);
-                }
-                loadNotifications(user.uid);
-                clearHomeBadgeOnly();
-            } else { 
-                window.location.href = "index.html"; 
-            }
-        });
-
-        // === تفعيل دالة تحديث حالة القراءة لتنظيف العلامة الخارجية ===
         async function clearHomeBadgeOnly() {
             const user = auth.currentUser;
             if (!user) return;
-            
-            // جلب الإشعارات غير المقروءة
-            const snapshot = await db.collection('notifications')
-                .where('recipientId', '==', user.uid)
-                .where('read', '==', false)
-                .get();
-
+            const snapshot = await db.collection('notifications').where('recipientId', '==', user.uid).where('read', '==', false).get();
             if (snapshot.empty) return;
-
-            // تحديث الحقل read فقط ليختفي التنبيه من الخارج
             const batch = db.batch();
-            snapshot.docs.forEach(doc => {
-                batch.update(doc.ref, { read: true }); 
-            });
-            
+            snapshot.docs.forEach(doc => { batch.update(doc.ref, { read: true }); });
             await batch.commit();
         }
 
-        let unsubscribeNotifications = null; 
+        function setFilter(type, btnElement) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            renderNotifications(); 
+        }
 
+                // المتغيرات الجديدة للتحكم في التحميل
+let unsubscribeNotifications = null; 
+let lastVisibleNotif = null; // ده المتغير السحري اللي هنبدأ من بعده
+let isNotifLoading = false; 
+
+// 1. دالة تحميل أول دفعة (والاستماع للجديد)
 function loadNotifications(uid) {
-    // 1. إيقاف المستمع القديم إذا كان موجوداً
-    if (unsubscribeNotifications) {
-        unsubscribeNotifications();
-        unsubscribeNotifications = null;
-    }
-
-    let isFirstLoad = true;
-    const list = document.getElementById('notifList');
+    if (unsubscribeNotifications) { unsubscribeNotifications(); }
     
-    // تنظيف القائمة قبل البدء
-    list.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري التحميل...</div>';
-
-    // 2. تشغيل المستمع الجديد وتخزينه في المتغير
+    // هنجيب أول 10 بس ونراقبهم
     unsubscribeNotifications = db.collection('notifications')
         .where('recipientId', '==', uid)
         .orderBy('createdAt', 'desc')
-        .limit(50)
+        .limit(10) 
         .onSnapshot(snapshot => {
-            // ... (باقي كود الدالة كما هو تماماً بدون تغيير) ...
-            // فقط تأكد أنك مسحت السطرين: const list = ... و list.innerHTML = ... من داخل الـ onSnapshot
-            // لأننا عرفناهم بره خلاص، بس مش مشكلة لو سبتهم
             
-            // هام: تنظيف القائمة مرة واحدة عند وصول البيانات
-            list.innerHTML = ""; 
-            
-            if (snapshot.empty) {
-                list.innerHTML = `<div class="empty-state"><i class="fa-regular fa-bell-slash"></i><p>لا توجد إشعارات جديدة</p></div>`;
-                return;
+            // تفريغ القائمة لأول مرة فقط
+            if(snapshot.docChanges().some(change => change.type === "added" || change.type === "removed")){
+                 globalNotifications = []; 
             }
 
-            // تشغيل صوت للإشعارات الجديدة
+            // حفظ آخر إشعار عشان نبدأ من بعده لما ننزل لتحت
+            if (!snapshot.empty) {
+                lastVisibleNotif = snapshot.docs[snapshot.docs.length - 1];
+            }
+
+            snapshot.forEach(doc => {
+                const notif = doc.data();
+                notif.id = doc.id;
+                // التأكد من عدم تكرار الإشعار في القائمة
+                if (!globalNotifications.find(n => n.id === notif.id)) {
+                    globalNotifications.push(notif);
+                }
+            });
+
+            // تشغيل صوت الإشعار لو في حاجة جديدة (بنتجاهل أول تحميل)
             snapshot.docChanges().forEach(change => {
-                if (change.type === "added" && !isFirstLoad) {
+                if (change.type === "added" && globalNotifications.length > snapshot.size) {
                     if (change.doc.data().read === false) { notificationSound.play().catch(()=>{}); }
                 }
             });
 
-            list.innerHTML = "";
-            
-            snapshot.forEach(doc => {
-                const notif = doc.data();
-                
-                // 🛑 جدار الحماية: لو مرسل الإشعار محظور، إخفاء الإشعار تماماً كأنه لم يكن
-                if (notif.senderUid && typeof isUserBlocked === 'function' && isUserBlocked(notif.senderUid)) {
-                    return; // تخطي هذا الإشعار تماماً وعدم رسمه
-                }
-
-                const id = doc.id;
-                const isOpened = notif.opened === true;
-                
-                // المتغيرات الأساسية
-                let senderName = notif.senderName || 'مستخدم نبض';
-                let senderPic = notif.senderPic || "";
-                let isVerified = notif.isVerified === true;
-                let timeAgo = notif.createdAt ? moment(notif.createdAt.toDate()).fromNow() : 'الآن';
-
-                // ============================================================
-                // 🔥🔥🔥 الحالة الخاصة: إذا كان الإشعار هدية (GIFT) 🔥🔥🔥
-                // ============================================================
-                if (notif.type === 'gift') {
-                    const div = document.createElement('div');
-                    div.className = `notif-item gift-premium ${isOpened ? 'opened' : 'unopened'}`;
-                    div.onclick = () => handleNotificationClick(id, notif);
-
-                    // استخراج اسم الهدية
-                    let giftName = "هدية مميزة";
-                    if (notif.text && notif.text.includes('هدية')) {
-                        // محاولة تنظيف النص لعرض اسم الهدية فقط
-                        giftName = notif.text; 
-                    }
-
-                    div.innerHTML = `
-                        <div class="notif-avatar gift-avatar-border" 
-                             style="${senderPic ? `background-image: url('${senderPic}')` : `background-color: #333; color:#FFD700`}">
-                             ${!senderPic ? '<i class="fa-solid fa-user"></i>' : ''}
-                        </div>
-
-                        <div class="notif-content">
-                            <div class="notif-text">
-                                <span style="color:#fff; font-weight:bold; font-size:15px;">${senderName}</span>
-                                ${isVerified ? '<i class="fa-solid fa-circle-check verified-badge" style="color:#FFD700"></i>' : ''}
-                                
-                                <span class="gold-text">
-                                    <i class="fa-solid fa-gem"></i> ${giftName}
-                                </span>
-                            </div>
-                            <div class="notif-time" style="color:#FFD700; opacity:0.7; font-size:11px; margin-top:5px;">${timeAgo}</div>
-                        </div>
-
-                        <div class="notif-icon">
-                            <div class="gift-big-icon">🎁</div>
-                        </div>
-                    `;
-                    list.appendChild(div);
-                    return; // 🛑 توقف هنا وانتقل للإشعار التالي (عشان لا يرسم الشكل العادي)
-                }
-
-                // ============================================================
-                // باقي الإشعارات العادية (تعليق، لايك، الخ)
-                // ============================================================
-                
-                let avatarHtml = '';
-                let verifiedHtml = isVerified ? '<i class="fa-solid fa-circle-check verified-badge"></i>' : '';
-                let iconHtml = '<i class="fa-solid fa-bell" style="color:var(--primary-solid)"></i>';
-                let displayText = notif.text;
-                let customClass = '';
-
-                // معالجة الروابط في النصوص
-                if (displayText && (displayText.includes('firebasestorage') || displayText.includes('http'))) {
-                    if (displayText.includes('.m4a') || displayText.includes('.webm')) displayText = "أرسل تسجيلاً صوتياً 🎙️";
-                    else if (displayText.includes('.jpg') || displayText.includes('.png')) displayText = "أرسل صورة 📷";
-                    else if (displayText.includes('.mp4')) displayText = "أرسل فيديو 🎥";
-                }
-
-                // تحديد الأيقونات
-                if (notif.type === 'system_msg') {
-                    customClass = 'system-msg';
-                    verifiedHtml = '<i class="fa-solid fa-circle-check verified-badge" style="color:#f59e0b"></i>';
-                    avatarHtml = `<div class="notif-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706); border:none;"><i class="fa-solid fa-crown" style="color:white;"></i></div>`;
-                    iconHtml = '<i class="fa-solid fa-envelope-open-text" style="color:#f59e0b"></i>';
-                } 
-                else if (notif.isGhost) {
-                    const ghost = getGhostIdentity(notif.senderUid);
-                    senderName = `مستخدم نبض #${ghost.id}`;
-                    avatarHtml = `<div class="notif-avatar" style="background: #000; border: 1px solid ${ghost.color};"><i class="fa-solid fa-user-secret" style="color: ${ghost.color};"></i></div>`;
-                } 
-                else {
-                    if (senderPic) avatarHtml = `<div class="notif-avatar" style="background-image: url('${senderPic}')"></div>`;
-                    else avatarHtml = `<div class="notif-avatar" style="background-color: #444">${senderName[0]}</div>`;
-
-                    switch (notif.type) {
-                        case 'like': iconHtml = '<i class="fa-solid fa-heart" style="color:#ff3b30"></i>'; break;
-                        case 'star': iconHtml = '<i class="fa-solid fa-star" style="color:#FFD700"></i>'; break;
-                        case 'comment': iconHtml = '<i class="fa-solid fa-comment" style="color:#009EFD"></i>'; break;
-                        case 'reply': iconHtml = '<i class="fa-solid fa-reply" style="color:#F093FB"></i>'; break;
-                        case 'share': iconHtml = '<i class="fa-solid fa-share" style="color:#2AF598"></i>'; break;
-                    }
-                }
-
-                const div = document.createElement('div');
-                div.className = `notif-item ${isOpened ? 'opened' : 'unopened'} ${customClass}`;
-                div.onclick = () => handleNotificationClick(id, notif);
-                
-                div.innerHTML = `
-                    ${avatarHtml}
-                    <div class="notif-content">
-                        <div class="notif-text">
-                            <b>${senderName}</b>${verifiedHtml} 
-                            <div style="font-size:13px; margin-top:3px; opacity:0.9; color:${isOpened ? '#888' : '#eee'}">${displayText}</div>
-                        </div>
-                        <div class="notif-time">${timeAgo}</div>
-                    </div>
-                    <div class="notif-icon">${iconHtml}</div>
-                `;
-                list.appendChild(div);
-            });
-            isFirstLoad = false;
+            renderNotifications();
         });
 }
 
+// 2. دالة تحميل الإشعارات القديمة (بدون Real-time عشان نوفر فلوس)
+async function loadOlderNotifications() {
+    if (isNotifLoading || !lastVisibleNotif) return;
+    isNotifLoading = true;
 
-                                async function handleNotificationClick(docId, notif) {
-            // تحديث حالة الإشعار لمقروء
-            await db.collection('notifications').doc(docId).update({ opened: true, read: true });
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+        // بنستخدم get() بدل onSnapshot وبنبدأ من بعد آخر إشعار
+        const snapshot = await db.collection('notifications')
+            .where('recipientId', '==', user.uid)
+            .orderBy('createdAt', 'desc')
+            .startAfter(lastVisibleNotif) // السر كله هنا!
+            .limit(10)
+            .get();
+
+        if (snapshot.empty) {
+            // مفيش إشعارات قديمة تاني
+            lastVisibleNotif = null; 
             
-            // لو إشعار نظام
-            if (notif.type === 'system_msg') {
-                if (notif.title && notif.title.includes('توثيق')) {
-                    window.location.href = 'profile.html'; 
-                }
+            // إظهار رسالة النهاية
+            const list = document.getElementById('notifList');
+            const endMsg = document.createElement('div');
+            endMsg.style.cssText = "text-align:center; padding:20px; color:var(--secondary-text); font-size:12px; font-weight:bold;";
+            endMsg.innerHTML = getT('toast_reached_end') || "نهاية الإشعارات";
+            list.appendChild(endMsg);
+            
+            isNotifLoading = false;
+            return;
+        }
+
+        // تحديث نقطة الوقوف الجديدة
+        lastVisibleNotif = snapshot.docs[snapshot.docs.length - 1];
+
+        // إضافة الإشعارات القديمة للقائمة
+        snapshot.forEach(doc => {
+            const notif = doc.data();
+            notif.id = doc.id;
+            globalNotifications.push(notif);
+        });
+
+        // إعادة رسم القائمة بالإشعارات القديمة والجديدة
+        renderNotifications();
+
+    } catch (error) {
+        console.error("Error loading older notifs:", error);
+    } finally {
+        isNotifLoading = false;
+    }
+}
+
+
+                function renderNotifications() {
+            const list = document.getElementById('notifList');
+            list.innerHTML = "";
+
+            let filtered = globalNotifications;
+            if (currentFilter !== 'all') {
+                filtered = globalNotifications.filter(n => {
+                    if (currentFilter === 'like') return n.type === 'like' || n.type === 'star';
+                    if (currentFilter === 'comment') return n.type === 'comment' || n.type === 'reply';
+                    if (currentFilter === 'mention') return n.type === 'mention';
+                    if (currentFilter === 'login_alert') return n.type === 'login_alert';
+                    return true;
+                });
+            }
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="empty-state"><i class="fa-regular fa-bell-slash"></i><p>${getT('empty_notifs')}</p></div>`;
                 return;
             }
 
-            if (notif.link) { 
-                let targetLink = notif.link;
-                if(targetLink.includes('#post-')) {
-                    targetLink = targetLink.replace('#post-', '&post=');
+            // تحديد اللغة للمكتبة الزمنية (moment.js)
+            const currentLang = localStorage.getItem('wareed_lang') || 'ar';
+            if(currentLang === 'ar') { moment.locale('ar'); } 
+            else if(currentLang === 'fr') { moment.locale('fr'); }
+            else if(currentLang === 'de') { moment.locale('de'); }
+            else { moment.locale('en'); }
+
+            const groups = {
+                today: { label: getT('time_today'), items: [] },
+                week: { label: getT('time_week'), items: [] },
+                month: { label: getT('time_month'), items: [] },
+                older: { label: getT('time_older'), items: [] }
+            };
+
+            const now = moment();
+
+// 🔥 تشغيل فلتر التجميع هنا 🔥
+const smartlyGroupedNotifs = groupNotifications(filtered);
+
+smartlyGroupedNotifs.forEach(notif => {
+    if(!notif.createdAt) return;
+    const notifTime = moment(notif.createdAt.toDate());
+    const diffDays = now.diff(notifTime, 'days');
+
+    if (diffDays === 0) groups.today.items.push(notif);
+    else if (diffDays < 7) groups.week.items.push(notif);
+    else if (diffDays < 30) groups.month.items.push(notif);
+    else groups.older.items.push(notif);
+});
+
+            // رسم الإشعارات مقسمة حسب الوقت
+            for (const key in groups) {
+                if (groups[key].items.length > 0) {
+                    const header = document.createElement('div');
+                    header.className = 'time-group-header';
+                    header.innerText = groups[key].label;
+                    list.appendChild(header);
+
+                    groups[key].items.forEach(notif => {
+                        const div = createNotifElement(notif);
+                        list.appendChild(div);
+                    });
                 }
-                window.location.href = targetLink; 
-            } 
-            // 🔥 التوجيه الذكي لصاحب البوست الأصلي 🔥
-            else if (notif.postId) {
-                try {
-                    // نروح نجيب البوست من الداتابيز عشان نعرف الـ ID بتاع صاحبه
-                    const postDoc = await db.collection('posts').doc(notif.postId).get();
-                    
-                    if (postDoc.exists) {
-                        const postOwnerId = postDoc.data().uid; // ده الـ ID بتاع صاحب البوست الحقيقي
-                        
-                        // دلوقتي نوجهه لبروفايل صاحب البوست
-                        let url = `profile.html?uid=${postOwnerId}&post=${notif.postId}`;
-                        
-                        // لو فيه كومنت معين، نبعته في الرابط
-                        if (notif.commentId) { 
-                            url += `&comment=${notif.commentId}`; 
-                        }
-                        
-                        // الانتقال الفوري للصفحة
-                        window.location.href = url;
-                    } else {
-                        alert("عذراً، هذا المنشور لم يعد موجوداً 🗑️"); // استخدمنا alert لأن showToast مش موجودة هنا
+            }
+
+             // ==============================================================
+            // 🔥 نظام التمرير اللانهائي (Infinite Scroll) المطور 🔥
+            // ==============================================================
+            // التعديل هنا: بنشيك إن الفلتر 'all' وإن في إشعار أخير نقدر نبدأ من بعده
+            if (currentFilter === 'all' && lastVisibleNotif) {
+                
+                // 1. إنشاء "مستشعر" شفاف في آخر القائمة
+                const sentinel = document.createElement('div');
+                sentinel.id = 'notifScrollSentinel';
+                sentinel.style.cssText = "text-align:center; padding:20px; color:var(--secondary-text);";
+                sentinel.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="font-size:20px; color:var(--primary-solid);"></i>';
+                list.appendChild(sentinel);
+
+                // 2. مراقب ذكي لاستدعاء الدالة الموفرة
+                if (window.notifObserver) window.notifObserver.disconnect(); 
+                
+                window.notifObserver = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting && !isNotifLoading && lastVisibleNotif) {
+                        loadOlderNotifications(); // بننده الدالة الجديدة هنا
                     }
-                } catch(e) {
-                    console.error("خطأ في التوجيه:", e);
-                    // لو حصل خطأ في الداتابيز، نوديه للرئيسية كاحتياطي
-                    window.location.href = `home.html?post=${notif.postId}`;
+                }, { rootMargin: '100px' });
+
+                window.notifObserver.observe(sentinel);
+
+            } else if (currentFilter === 'all' && filtered.length > 0 && !lastVisibleNotif) {
+                // لو الداتا خلصت ومفيش lastVisibleNotif، نعرض رسالة النهاية
+                const endMsg = document.createElement('div');
+                endMsg.style.cssText = "text-align:center; padding:20px; color:var(--secondary-text); font-size:12px; font-weight:bold;";
+                endMsg.innerHTML = getT('toast_reached_end') || "نهاية الإشعارات";
+                list.appendChild(endMsg);
+            }
+
+        }
+                function createNotifElement(notif) {
+            const isOpened = notif.opened === true;
+            let timeAgo = notif.createdAt ? moment(notif.createdAt.toDate()).fromNow() : getT('time_now');
+            
+            // =========================================================
+            // 🔥 1. هندسة الصور المتداخلة (Stacked Avatars) 🔥
+            // =========================================================
+            let senders = notif.senders || [{ name: notif.senderName, pic: notif.senderPic, uid: notif.senderUid }];
+            let senderName = getT('name_system');
+            let avatarHtml = '';
+            const defaultPic = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            let isVerified = notif.isVerified === true;
+
+            if (senders.length === 1) {
+                senderName = senders[0].name;
+                const pic = senders[0].pic || defaultPic;
+                avatarHtml = `<div class="notif-avatar" style="background-image: url('${pic}')"></div>`;
+            } else {
+                // إذا كان إشعاراً مجمعاً (شخصين أو أكثر)
+                if (senders.length === 2) {
+                    senderName = `${senders[0].name} ${getT('text_and')} ${senders[1].name}`;
+                } else {
+                    senderName = `${senders[0].name}، ${senders[1].name} ${getT('text_and')} ${senders.length - 2} ${getT('text_others')}`;
                 }
+                isVerified = false; // إخفاء علامة التوثيق للجروبات
+                
+                // رسم الصورتين المتداخلتين
+                avatarHtml = `
+                <div class="stacked-avatars">
+                    <div class="avatar-mini main" style="background-image: url('${senders[0].pic || defaultPic}')"></div>
+                    <div class="avatar-mini second" style="background-image: url('${senders[1].pic || defaultPic}')"></div>
+                </div>`;
+            }
+
+            // =========================================================
+            // 🔥 2. المعترض الذكي لترجمة النصوص (كما هو) 🔥
+            // =========================================================
+            let displayText = notif.text || '';
+            if (notif.type === 'login_alert' || notif.type === 'system_msg' || senderName === 'نظام الحماية' || senderName === 'System') {
+                senderName = getT('name_system');
+            }
+
+            if (displayText) {
+                if (displayText.includes('notif_follow') || displayText.includes('بدأ بمتابعتك')) displayText = getT('notif_follow');
+                else if (displayText.includes('أرسل لك طلب صداقة')) displayText = getT('text_sent_request');
+                else if (displayText.includes('تفاعل بـ') && displayText.includes('على قصتك')) {
+                    let emojiMatch = displayText.match(/تفاعل بـ (.*?) على قصتك/);
+                    let emoji = emojiMatch ? emojiMatch[1].trim() : '❤️';
+                    displayText = getT('notif_story_react').replace('{emoji}', emoji);
+                }
+                else if (displayText.includes('رد على تعليقك') || displayText.includes('رد على قصتك')) displayText = getT('text_reply_to_comment');
+                else if (displayText.includes('فيديو في التعليقات')) displayText = getT('notif_vid_comment');
+                else if (displayText.includes('صورة في التعليقات')) displayText = getT('notif_img_comment');
+                else if (displayText.includes('تسجيلاً صوتياً')) displayText = getT('notif_voice_comment');
+                else if (displayText.includes('مرفقاً في التعليقات')) displayText = getT('notif_media_comment');
+                else if (displayText.includes('تفاعل مع تعليقك') || displayText.includes('تفاعل مع ردك')) displayText = getT('notif_reacted_reply');
+                else if (displayText.includes('أحب منشورك')) displayText = getT('notif_loved');
+                else if (displayText.includes('تفاعل مع منشورك')) displayText = getT('notif_reacted');
+                else if (displayText.includes('بمشاركة منشورك')) displayText = getT('notif_reposted');
+                else if (displayText.includes('بمشاركة منشور')) displayText = getT('notif_shared');
+                else if (displayText.includes('ذكرك في رد')) displayText = getT('notif_mentioned_reply');
+                else if (displayText.includes('قصفك بالشبشب')) displayText = getT('notif_slipper');
+                else if (displayText.includes('هدية')) {
+                    let match = displayText.match(/\((.*?)\)/); 
+                    let transGift = match ? match[1] : '';
+                    displayText = getT('gift_sent_you') + (transGift ? ` (${transGift})` : '');
+                }
+            }
+            notif.text = displayText;
+
+            // =========================================================
+            // 🔥 3. ميزة الرد السريع (Quick Reply Inline) 🔥
+            // =========================================================
+            let quickReplyHtml = '';
+            // نظهر زر الرد السريع فقط لو كان الإشعار عبارة عن تعليق أو رد
+            if (notif.type === 'comment' || notif.type === 'reply') {
+                quickReplyHtml = `
+                <div style="width: 100%; margin-top: 5px;">
+                    <button class="quick-reply-btn" onclick="event.stopPropagation(); toggleQuickReplyBox('${notif.id}')">
+                        <i class="fa-solid fa-reply"></i> ${getT('quick_reply')}
+                    </button>
+                    <div class="quick-reply-box" id="qr-box-${notif.id}" onclick="event.stopPropagation();">
+                        <textarea class="quick-reply-input" id="qr-input-${notif.id}" placeholder="${getT('write_reply_here')}" rows="1"></textarea>
+                        <button class="quick-reply-send" onclick="executeQuickReply('${notif.id}', '${notif.postId}', '${notif.commentId || ''}', '${notif.senderUid}', '${senderName}')">${getT('btn_send')}</button>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>`;
+            }
+
+            // إعداد الأيقونات والستايلات
+            let verifiedHtml = isVerified ? '<i class="fa-solid fa-heart-circle-check nabd-badge" style="font-size:13px; margin-right:4px;"></i>' : '';
+            let iconHtml = '<i class="fa-solid fa-bell" style="color:var(--primary-solid)"></i>';
+            let customClass = '';
+
+            if (notif.type === 'like') iconHtml = '<i class="fa-solid fa-heart" style="color:#ff3b30"></i>';
+            else if (notif.type === 'comment' || notif.type === 'reply') iconHtml = '<i class="fa-solid fa-comment" style="color:#009EFD"></i>';
+            else if (notif.type === 'follow') iconHtml = '<i class="fa-solid fa-user-plus" style="color:#3897f0"></i>';
+            else if (notif.type === 'login_alert') { customClass = 'security-alert'; iconHtml = '<i class="fa-solid fa-location-dot" style="color:#ff3b30"></i>'; }
+            else if (notif.type === 'system_msg') { customClass = 'system-msg'; iconHtml = '<i class="fa-solid fa-envelope-open-text" style="color:#f59e0b"></i>'; }
+
+            const div = document.createElement('div');
+            div.className = `notif-item ${isOpened ? 'opened' : 'unopened'} ${customClass}`;
+            div.onclick = () => handleNotificationClick(notif.id, notif);
+            
+            div.innerHTML = `
+                ${avatarHtml}
+                <div class="notif-content">
+                    <div class="notif-text">
+                        <b>${senderName}</b>${verifiedHtml}
+                        <div style="font-size:13px; margin-top:3px; opacity:0.9; color:${isOpened ? '#888' : '#eee'}">${displayText}</div>
+                    </div>
+                    ${quickReplyHtml} <div class="notif-time">${timeAgo}</div>
+                </div>
+                <div class="notif-icon">${iconHtml}</div>
+            `;
+            return div;
+        }
+        // ==========================================
+        // 🤫 نظام وضع الهدوء (Quiet Mode)
+        // ==========================================
+                // ==========================================
+        // 🤫 نظام وضع الهدوء (Quiet Mode) المطور
+        // ==========================================
+        
+        // دالة لتلوين الخيار النشط وإظهار علامة الصح
+        function highlightActiveQuietOption(activeHours) {
+            document.querySelectorAll('.quiet-opt').forEach(opt => {
+                const optDuration = parseInt(opt.getAttribute('data-duration'));
+                if (optDuration === activeHours) {
+                    opt.classList.add('active-opt'); // تلوين الخيار
+                } else {
+                    opt.classList.remove('active-opt'); // إزالة التلوين من الباقي
+                }
+            });
+        }
+
+        function toggleQuietMenu() {
+            // قبل فتح القائمة، نتحقق ما هو الخيار المفعل حالياً
+            let activeDuration = 0; // الافتراضي: غير مفعل
+            const muteUntil = localStorage.getItem('nabd_mute_until');
+            
+            // هل يوجد كتم فعال ولم ينتهِ وقته بعد؟
+            if (muteUntil && Date.now() < parseInt(muteUntil)) {
+                activeDuration = parseInt(localStorage.getItem('nabd_mute_duration') || '0');
+            } else {
+                // إذا انتهى الوقت، نقوم بتنظيف الذاكرة
+                localStorage.removeItem('nabd_mute_until');
+                localStorage.removeItem('nabd_mute_duration');
+            }
+
+            // تطبيق التحديد على القائمة قبل ظهورها
+            highlightActiveQuietOption(activeDuration);
+
+            document.getElementById('quietModeSheet').classList.add('active');
+            document.getElementById('quietModeOverlay').classList.add('active');
+        }
+
+        function closeQuietMenu() {
+            document.getElementById('quietModeSheet').classList.remove('active');
+            document.getElementById('quietModeOverlay').classList.remove('active');
+        }
+
+        function setQuietMode(hours) {
+            const btn = document.getElementById('quietModeBtn');
+            const icon = btn.querySelector('i');
+            
+            if (hours === 0) {
+                // إلغاء الكتم
+                localStorage.removeItem('nabd_mute_until');
+                localStorage.removeItem('nabd_mute_duration'); // مسح نوع الخيار
+                btn.classList.remove('muted');
+                icon.className = "fa-solid fa-bell";
+                showToast(getT('toast_unmuted_success'));
+            } else {
+                // تفعيل الكتم
+                const muteUntil = Date.now() + (hours * 60 * 60 * 1000);
+                localStorage.setItem('nabd_mute_until', muteUntil.toString());
+                localStorage.setItem('nabd_mute_duration', hours.toString()); // حفظ نوع الخيار لتمييزه
+                btn.classList.add('muted');
+                icon.className = "fa-solid fa-bell-slash";
+                showToast(getT('toast_muted_success'));
+            }
+            
+            // تحديث الألوان فوراً داخل القائمة وإغلاقها
+            highlightActiveQuietOption(hours);
+            closeQuietMenu(); 
+        }
+
+        // تحديث شكل زر الهدوء عند فتح الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            const muteUntil = localStorage.getItem('nabd_mute_until');
+            // إذا كان الكتم مفعلاً ولم ينته وقته
+            if (muteUntil && Date.now() < parseInt(muteUntil)) {
+                const btn = document.getElementById('quietModeBtn');
+                if(btn) {
+                    btn.classList.add('muted');
+                    btn.querySelector('i').className = "fa-solid fa-bell-slash";
+                }
+            } else {
+                // تنظيف الذاكرة إذا انتهى الوقت
+                localStorage.removeItem('nabd_mute_until');
+                localStorage.removeItem('nabd_mute_duration');
+            }
+        });
+
+        // ==========================================
+        // 🔔 دالة التنبيهات (Toast) التي كانت مفقودة
+        // ==========================================
+        let toastTimer = null;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            if (!toast || !toastMsg) return;
+            
+            clearTimeout(toastTimer);
+            toastMsg.innerText = message;
+            
+            toast.classList.remove('show');
+            void toast.offsetWidth; // تحديث فوري (Reflow)
+            toast.classList.add('show');
+            
+            if(navigator.vibrate) navigator.vibrate(50);
+            
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+                // ==========================================
+        // 💬 نظام الرد السريع (Inline Quick Reply) - مصحح 100%
+        // ==========================================
+        
+        // 1. دالة فتح وإغلاق مربع الكتابة
+        window.toggleQuickReplyBox = function(notifId) {
+            const box = document.getElementById(`qr-box-${notifId}`);
+            if (box.style.display === 'block') {
+                box.style.display = 'none';
+            } else {
+                box.style.display = 'block';
+                // التركيز على مربع الكتابة فوراً
+                setTimeout(() => document.getElementById(`qr-input-${notifId}`).focus(), 100);
+            }
+        };
+
+        // 2. دالة الإرسال إلى قاعدة البيانات
+        window.executeQuickReply = async function(notifId, postId, commentId, targetUid, targetName) {
+            const input = document.getElementById(`qr-input-${notifId}`);
+            const text = input.value.trim();
+            const btn = input.nextElementSibling;
+
+            // حماية: التأكد أن المستخدم كتب شيئاً وأن المنشور موجود
+            if (!text) {
+                showToast("لا يمكن إرسال رد فارغ ⚠️");
+                return;
+            }
+            if (!postId || postId === 'undefined') {
+                showToast("حدث خطأ: لا يمكن العثور على المنشور ❌");
+                return;
+            }
+
+            // تحويل الزر إلى علامة تحميل
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+            btn.style.pointerEvents = 'none';
+
+            try {
+                // جلب بيانات المستخدم الحالي (أنت)
+                const uDoc = await db.collection('users').doc(auth.currentUser.uid).get();
+                const uData = uDoc.data();
+
+                // تجهيز بيانات التعليق/الرد
+                const replyData = {
+                    uid: auth.currentUser.uid,
+                    name: uData.name || "مستخدم",
+                    pic: uData.profilePic || "",
+                    isVerified: uData.isVerified || false,
+                    text: text,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // إذا كان الإشعار لـ "تعليق محدد" (هنرد عليه كـ Reply)
+                if (commentId && commentId !== '' && commentId !== 'undefined') {
+                    replyData.replyToUid = targetUid;
+                    replyData.replyToName = targetName;
+                    
+                    // الإرسال لمسار الردود الفرعية
+                    await db.collection('posts').doc(postId).collection('comments').doc(commentId).collection('replies').add(replyData);
+                    // زيادة عداد الردود داخل التعليق
+                    await db.collection('posts').doc(postId).collection('comments').doc(commentId).update({ repliesCount: firebase.firestore.FieldValue.increment(1) });
+                } 
+                // إذا كان الإشعار على البوست نفسه (هنرد كتعليق أساسي Comment)
+                else {
+                    await db.collection('posts').doc(postId).collection('comments').add(replyData);
+                }
+
+                // في كلتا الحالتين نزيد عداد تعليقات البوست الكلي
+                await db.collection('posts').doc(postId).update({ commentsCount: firebase.firestore.FieldValue.increment(1) });
+
+                // إخفاء المربع وإظهار رسالة النجاح
+                document.getElementById(`qr-box-${notifId}`).style.display = 'none';
+                input.value = ''; // تفريغ المربع
+                showToast(getT('status_done') || "تم الإرسال بنجاح ✅");
+                
+                // تشغيل صوت الإرسال إذا وجد
+                if (typeof notificationSound !== 'undefined') {
+                    const sentSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
+                    sentSound.play().catch(()=>{});
+                }
+
+            } catch (e) {
+                console.error("Quick Reply Error:", e);
+                showToast(getT('status_error') || "حدث خطأ أثناء الإرسال");
+            } finally {
+                // إرجاع الزر لحالته الطبيعية
+                btn.innerHTML = originalBtnText;
+                btn.style.pointerEvents = 'auto';
+            }
+        };
+
+        // 3. (مهم جداً) دالة لمنع الإشعار من فتح المنشور أثناء كتابة الرد
+        // قم بوضع هذا السطر للتأكد أن النقر داخل مربع الكتابة لا يفتح الصفحة
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('quick-reply-input')) {
+                e.stopPropagation();
+            }
+        });
+
+
+
+                async function handleNotificationClick(docId, notif) {
+            try {
+                // 🔥 1. تحديث حالة القراءة (دعم التجميع الذكي)
+                // إذا كان الإشعار مجمعاً، سنقوم بتحديث كل المعرفات الأصلية دفعة واحدة (Batch)
+                if (notif.originalIds && notif.originalIds.length > 0) {
+                    const batch = db.batch();
+                    notif.originalIds.forEach(id => {
+                        const ref = db.collection('notifications').doc(id);
+                        batch.update(ref, { opened: true, read: true });
+                    });
+                    await batch.commit();
+                } else {
+                    // إشعار فردي عادي
+                    await db.collection('notifications').doc(docId).update({ opened: true, read: true });
+                }
+
+                // 🔥 2. معالجة إشعارات الحماية (الأمان)
+                if (notif.type === 'login_alert') {
+                    document.getElementById('modal-loc').innerText = notif.location || getT('sec_unknown_loc');
+                    document.getElementById('modal-device').innerText = notif.device || getT('sec_unknown_dev');
+                    document.getElementById('modal-ip').innerText = notif.ip || '---';
+                    document.getElementById('modal-time').innerText = notif.createdAt ? moment(notif.createdAt.toDate()).fromNow() : getT('time_now');
+                    document.getElementById('locationModal').style.display = 'flex';
+                    return;
+                }
+
+                // 🔥 3. معالجة إشعارات النظام (دعم اللغات للتوثيق)
+                if (notif.type === 'system_msg') {
+                    const title = notif.title || "";
+                    // التحقق من كلمات التوثيق بكل اللغات المدعومة
+                    const isVerification = title.includes('توثيق') || 
+                                         title.includes('Verification') || 
+                                         title.includes('Vérification') || // فرنسي
+                                         title.includes('Verifizierung');   // ألماني
+                    
+                    if (isVerification) {
+                        window.location.href = 'profile.html'; 
+                    }
+                    return;
+                }
+
+                // 🔥 4. معالجة الروابط المباشرة (Direct Links)
+                if (notif.link) { 
+                    let targetLink = notif.link;
+                    // تحويل الـ Hash إلى Parameter لسهولة القراءة في الصفحات الأخرى
+                    if(targetLink.includes('#post-')) targetLink = targetLink.replace('#post-', '&post=');
+                    window.location.href = targetLink; 
+                    return;
+                } 
+
+                // 🔥 5. التوجه للمنشور أو التعليق (Post/Comment Navigation)
+                if (notif.postId) {
+                    try {
+                        const postDoc = await db.collection('posts').doc(notif.postId).get();
+                        if (postDoc.exists) {
+                            const postOwnerId = postDoc.data().uid;
+                            let url = `profile.html?uid=${postOwnerId}&post=${notif.postId}`;
+                            if (notif.commentId) url += `&comment=${notif.commentId}`; 
+                            window.location.href = url;
+                        } else { 
+                            alert(getT('text_post_deleted')); 
+                        }
+                    } catch(e) { 
+                        // في حال حدوث خطأ في الوصول للمنشور، نتوجه للرئيسية مع المحاولة
+                        window.location.href = `home.html?post=${notif.postId}`; 
+                    }
+                }
+            } catch (err) {
+                console.error("Error handling notification click:", err);
             }
         }
 
@@ -448,22 +1211,153 @@ function loadNotifications(uid) {
             if (!user) return;
             const btn = document.querySelector('.mark-all-btn');
             try {
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري...';
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${getT('status_loading')}`;
                 const snapshot = await db.collection('notifications').where('recipientId', '==', user.uid).get();
-                if (snapshot.empty) { btn.innerHTML = '<i class="fa-solid fa-check-double"></i> تم'; return; }
+                if (snapshot.empty) { btn.innerHTML = `<i class="fa-solid fa-check-double"></i> ${getT('status_done')}`; return; }
                 const batch = db.batch();
-                snapshot.docs.forEach(doc => {
-                    batch.update(doc.ref, { opened: true, read: true });
-                });
+                snapshot.docs.forEach(doc => { batch.update(doc.ref, { opened: true, read: true }); });
                 await batch.commit();
-                btn.innerHTML = '<i class="fa-solid fa-check-double"></i> تم';
-            } catch (error) { btn.innerHTML = 'خطأ'; }
+                btn.innerHTML = `<i class="fa-solid fa-check-double"></i> ${getT('status_done')}`;
+            } catch (error) { btn.innerHTML = getT('status_error'); }
         }
+        // ==========================================
+// 🚀 محرك الترجمة الأساسي (Translation Engine)
+// ==========================================
+
+// دالة لتطبيق الترجمة على كل العناصر الثابتة في صفحة الـ HTML
+function applyPageTranslations() {
+    const currentLang = localStorage.getItem('wareed_lang') || 'ar';
+    const translatableElements = document.querySelectorAll('[data-i18n]');
+    
+    translatableElements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const translatedText = getT(key); 
+        
+        if (translatedText) {
+            // نتحقق إذا كان العنصر يحتوي على أيقونات أم لا
+            if (el.querySelector('i')) {
+                // إذا كان داخله أيقونة، نبحث عن أول Text Node ونستبدله فقط
+                // أو الأسهل: أنك تضع دائماً الـ data-i18n على الـ <span> وليس الـ button
+                // لتجنب التعقيد، سنستخدم innerHTML بحذر:
+                
+                // حفظ الأيقونة لو كانت موجودة
+                let iconHtml = '';
+                const iconElement = el.querySelector('i');
+                if (iconElement) {
+                    iconHtml = iconElement.outerHTML;
+                }
+                
+                // لو الأيقونة في البداية (مثل زر مقروء)
+                if (el.innerHTML.trim().startsWith('<i')) {
+                    el.innerHTML = iconHtml + ' ' + translatedText;
+                } 
+                // لو الأيقونة في النهاية (مثل فلتر الحماية)
+                else {
+                    el.innerHTML = translatedText + ' ' + iconHtml;
+                }
+            } else {
+                // لو عنصر عادي (مثل <span> أو <div>)
+                el.innerText = translatedText;
+            }
+        }
+    });
+
+    if (appTranslations && appTranslations[currentLang]) {
+        document.documentElement.dir = appTranslations[currentLang].dir || 'rtl';
+        document.documentElement.lang = currentLang;
+    }
+}
+
+
+// تشغيل الدالة فور اكتمال تحميل عناصر الصفحة
+document.addEventListener('DOMContentLoaded', applyPageTranslations);
+
+setInterval(() => {
+    // نبحث عن كل عناصر الوقت في الإشعارات
+    document.querySelectorAll('.notif-item').forEach(item => {
+        // يجب أن نكون قد خزننا وقت الإشعار الأصلي في العنصر عند إنشائه
+        const timestamp = item.getAttribute('data-timestamp');
+        if (timestamp) {
+            const timeElement = item.querySelector('.notif-time');
+            if (timeElement) {
+                // استخدام moment.js لتحديث الوقت من القيمة الأصلية
+                timeElement.innerText = moment(parseInt(timestamp)).fromNow();
+            }
+        }
+    });
+}, 60000); // تحديث كل 60 ثانية
+
+// ==============================================================
+// 🔥 محرك تجميع الإشعارات الذكي (Smart Grouping Engine) 🔥
+// ==============================================================
+function groupNotifications(notifs) {
+    let grouped = [];
+    let map = {};
+
+    notifs.forEach(n => {
+        let groupKey = null;
+
+        // سنقوم بتجميع (الإعجابات والمشاركات) التي تمت على نفس المنشور
+        if ((n.type === 'like' || n.type === 'share' || n.type === 'star') && n.postId) {
+            groupKey = `${n.type}_${n.postId}`;
+        }
+
+        if (groupKey) {
+            if (!map[groupKey]) {
+                // إذا كانت هذه أول مرة نرى فيها هذا الإشعار، نجهزه ليكون "مجموعة"
+                let clonedNotif = { 
+                    ...n, 
+                    senders: [{ name: n.senderName, pic: n.senderPic, uid: n.senderUid }], 
+                    originalIds: [n.id] 
+                };
+                map[groupKey] = clonedNotif;
+                grouped.push(clonedNotif);
+            } else {
+                // إذا كان الجروب موجوداً، نضيف الشخص الجديد إليه
+                // نتأكد أولاً أن الشخص لم يقم بعمل لايك مرتين (لتجنب التكرار)
+                if (!map[groupKey].senders.some(s => s.uid === n.senderUid)) {
+                    map[groupKey].senders.push({ name: n.senderName, pic: n.senderPic, uid: n.senderUid });
+                }
+                // نحتفظ بـ ID الإشعار لنقوم بتحديده كـ "مقروء" لاحقاً
+                map[groupKey].originalIds.push(n.id);
+                
+                // إذا كان أي إشعار في المجموعة غير مقروء، نجعل المجموعة كلها غير مقروءة
+                if (n.opened === false) map[groupKey].opened = false;
+            }
+        } else {
+            // الإشعارات الفردية (تعليقات، طلبات صداقة، هدايا) لا يتم تجميعها
+            grouped.push({ 
+                ...n, 
+                senders: [{ name: n.senderName, pic: n.senderPic, uid: n.senderUid }], 
+                originalIds: [n.id] 
+            });
+        }
+    });
+
+    return grouped;
+}
+
+        // ==========================================
+        // 🔙 دالة الرجوع الذكية (Smart Go Back)
+        // ==========================================
+        function smartGoBack() {
+            if (typeof playSound === 'function') playSound('click');
+            
+            // التحقق مما إذا كانت الصفحة السابقة موجودة داخل التطبيق الخاص بك
+            if (window.history.length > 1 && document.referrer.includes(window.location.host)) {
+                window.history.back(); // العودة للمكان السابق بدقة
+            } else {
+                // إذا فتح الرابط مباشرة ولا يوجد تاريخ (History)، نرجعه للرئيسية كحماية
+                window.location.href = 'home.html';
+            }
+        }
+
     </script>
-      
-      <script src="block-manager.js"></script>
-<script src="global-call.js"></script>
-<script src="theme-manager.js"></script>
-          
+    
+    <script src="block-manager.js"></script>
+    <script src="global-call.js"></script>
+    <script src="theme-manager.js"></script>
+    <div id="toast"><span id="toast-msg"></span></div>
+
 </body>
 </html>

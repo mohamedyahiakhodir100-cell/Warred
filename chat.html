@@ -5753,6 +5753,39 @@ z-index: 2147483647 !important;
     display: none !important;
 }
 
+/* ========================================= */
+/* 🌟 شارة التوثيق الاحترافية (نبض + لمعان) 🌟 */
+/* ========================================= */
+.nabd-badge {
+    color: #38bdf8 !important; /* الأزرق السماوي */
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.5); 
+    display: inline-block;
+    margin-right: 4px;
+    vertical-align: middle;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    animation: heartbeat 2.5s infinite ease-in-out; 
+}
+
+.nabd-badge::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    animation: shineBadge 3s infinite;
+}
+
+@keyframes heartbeat {
+    0%, 30%, 60%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.4)); }
+    15%, 45% { transform: scale(1.2); filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8)); }
+}
+
+@keyframes shineBadge {
+    0% { left: -100%; }
+    20%, 100% { left: 100%; } 
+}
+
 
     </style>
 </head>
@@ -6931,9 +6964,9 @@ async function updateHeader(uid) {
     if (headerUnsubscribe) headerUnsubscribe();
 
     headerUnsubscribe = db.collection('users').doc(uid).onSnapshot(async doc => {
-                // 🔥🔥 منطقة الحظر الشامل 🔥🔥
+        
+        // 🔥🔥 منطقة الحظر الشامل 🔥🔥
         if (isUserBlocked || amIBlocked) {
-            
             // 1. مسح الاسم الحقيقي ووضع الاسم المستعار
             const headerNameEl = document.getElementById("headerName");
             if(headerNameEl) headerNameEl.innerText = "مستخدم Wareed";
@@ -6942,21 +6975,20 @@ async function updateHeader(uid) {
             const verifyEl = document.getElementById("headerVerify");
             if(verifyEl) {
                 verifyEl.style.display = "none"; 
-                verifyEl.innerHTML = ""; // زيادة تأكيد
+                verifyEl.innerHTML = ""; 
             }
 
             // 3. إخفاء حالة الاتصال (نشط الآن)
             const statusElement = document.getElementById("headerStatus");
             const onlineIndicator = document.querySelector(".online-status");
             if(statusElement) { statusElement.innerText = ""; statusElement.style.display = "none"; }
-            if(onlineIndicator) { onlineIndicator.style.backgroundColor = "transparent"; onlineIndicator.style.boxShadow = "none"; border: "none"; }
+            if(onlineIndicator) { onlineIndicator.style.backgroundColor = "transparent"; onlineIndicator.style.boxShadow = "none"; onlineIndicator.style.border = "none"; }
 
             // 4. ⚠️ تدمير الصورة الشخصية
             const hImg = document.getElementById("headerImage");
             if(hImg) {
-                hImg.style.backgroundImage = 'none'; // شيل الصورة
-                hImg.style.backgroundColor = '#1e293b'; // لون الخلفية الغامق
-                // حط أيقونة "شخص محظور" أو "مجهول"
+                hImg.style.backgroundImage = 'none'; 
+                hImg.style.backgroundColor = '#1e293b'; 
                 hImg.innerHTML = '<i class="fa-solid fa-user-slash" style="color:#64748b; font-size:20px;"></i>';
                 hImg.style.display = 'grid';
                 hImg.style.placeItems = 'center';
@@ -6966,9 +6998,8 @@ async function updateHeader(uid) {
             const avatarContainer = document.querySelector('.user-avatar-container');
             if(avatarContainer) {
                 avatarContainer.classList.remove('has-story');
-                avatarContainer.style.background = "transparent"; // شيل ألوان الستوري
+                avatarContainer.style.background = "transparent"; 
                 avatarContainer.style.padding = "0";
-                // إلغاء الضغط عشان ميفتحش حاجة
                 avatarContainer.onclick = (e) => { e.stopPropagation(); };
             }
 
@@ -6976,11 +7007,66 @@ async function updateHeader(uid) {
             const actions = document.querySelector('.header-actions');
             if(actions) actions.style.display = 'none';
 
-            // 🛑 وقف الدالة فوراً عشان متحملش أي بيانات حقيقية تحت
             return; 
         }
+
         if (!doc.exists) return;
         const u = doc.data();
+
+        // ====================================================
+        // 🔥🔥 منطقة الحساب المحذوف (التعديل الجديد) 🔥🔥
+        // ====================================================
+        const isAccountDeleted = u.accountStatus === 'deleted';
+        
+        if (isAccountDeleted) {
+            // 1. إظهار شريط التحذير فوق مربع الكتابة (مع بقاء المربع)
+            if (typeof updateDeletedAccountUI === 'function') {
+                updateDeletedAccountUI(true);
+            }
+
+            // 2. تشفير بيانات الهيدر
+            const headerNameEl = document.getElementById("headerName");
+            if(headerNameEl) headerNameEl.innerText = "حساب محذوف";
+            
+            const verifyEl = document.getElementById("headerVerify");
+            if(verifyEl) { verifyEl.style.display = "none"; verifyEl.innerHTML = ""; }
+            
+            const statusElement = document.getElementById("headerStatus");
+            const onlineIndicator = document.querySelector(".online-status");
+            if(statusElement) { statusElement.innerText = "غير متوفر"; statusElement.style.color = "#64748b"; statusElement.style.display = "block"; }
+            if(onlineIndicator) { onlineIndicator.style.backgroundColor = "transparent"; onlineIndicator.style.boxShadow = "none"; onlineIndicator.style.border = "none"; }
+            
+            const hImg = document.getElementById("headerImage");
+            if(hImg) {
+                hImg.style.backgroundImage = 'none';
+                hImg.style.backgroundColor = '#1e293b'; 
+                hImg.innerHTML = '<i class="fa-solid fa-user-xmark" style="color:#f59e0b; font-size:20px;"></i>'; // أيقونة برتقالية
+                hImg.style.display = 'grid';
+                hImg.style.placeItems = 'center';
+            }
+
+            const avatarContainer = document.querySelector('.user-avatar-container');
+            if(avatarContainer) {
+                avatarContainer.classList.remove('has-story');
+                avatarContainer.style.background = "transparent";
+                avatarContainer.style.padding = "0";
+                avatarContainer.onclick = (e) => { e.stopPropagation(); };
+            }
+            
+            // إخفاء أزرار الاتصال
+            const actions = document.querySelector('.header-actions');
+            if(actions) actions.style.display = 'none';
+            
+            return; // نوقف الدالة هنا لمنع رسم البيانات الحقيقية
+        } else {
+            // لو الحساب نشط (أو تم استرجاعه)، نخفي التنبيه ونظهر أزرار الاتصال
+            if (typeof updateDeletedAccountUI === 'function') {
+                updateDeletedAccountUI(false);
+            }
+            const actions = document.querySelector('.header-actions');
+            if(actions) actions.style.display = 'flex';
+        }
+        // ====================================================
 
         // تحديث الكاش بالبيانات الجديدة
         userCache[uid] = {
@@ -6989,7 +7075,6 @@ async function updateHeader(uid) {
             profilePic: u.profilePic || u.avatar || u.photoURL || null,
             color: u.color || "#555",
             char: (u.name || 'U')[0].toUpperCase(),
-            // 🔥 إصلاح 2: جلب حالة التوثيق
             isVerified: u.isVerified || false, 
             lastSeen: u.lastSeen,
             privacy: u.privacy || {}
@@ -6999,9 +7084,7 @@ async function updateHeader(uid) {
         let finalName = u.name || "مستخدم"; 
         if (typeof globalNicknames !== 'undefined' && globalNicknames[uid]) {
             finalName = globalNicknames[uid];
-}
-        // محاولة جلب اللقب من الكولكشن الفرعي (احتياطي)
-        else {
+        } else {
              try {
                 const nickDoc = await db.collection('users').doc(currentUserId).collection('nicknames').doc(uid).get();
                 if (nickDoc.exists && nickDoc.data().nickname) {
@@ -7009,14 +7092,13 @@ async function updateHeader(uid) {
                 }
             } catch (e) { }
         }
-const verifyEl = document.getElementById("headerVerify");
+
+        const verifyEl = document.getElementById("headerVerify");
         if (verifyEl) {
             if (u.isVerified === true) {
-                // إظهار العلامة الزرقاء
-                verifyEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#00e5ff; margin-right:5px; font-size:14px;"></i>';
+                verifyEl.innerHTML = '<i class="fa-solid fa-heart-circle-check nabd-badge" style="margin-right:5px; font-size:14px;"></i>';
                 verifyEl.style.display = "inline-block";
             } else {
-                // إخفاء العلامة
                 verifyEl.innerHTML = '';
                 verifyEl.style.display = "none";
             }
@@ -7043,6 +7125,7 @@ const verifyEl = document.getElementById("headerVerify");
                 hImg.style.backgroundImage = `url('${u.profilePic}')`;
                 hImg.innerText = ''; 
                 hImg.style.backgroundColor = 'transparent';
+                hImg.innerHTML = ''; // تنظيف أي أيقونات
             }
             if(callAvatar) callAvatar.style.backgroundImage = `url('${u.profilePic}')`;
         } else {
@@ -7050,6 +7133,8 @@ const verifyEl = document.getElementById("headerVerify");
                 hImg.style.backgroundImage = 'none';
                 hImg.style.backgroundColor = u.color || '#555';
                 hImg.innerText = (u.name || 'U')[0].toUpperCase();
+                hImg.innerHTML = '';
+                hImg.style.display = 'flex';
             }
             if(callAvatar) {
                 callAvatar.style.backgroundImage = 'none';
@@ -7057,16 +7142,14 @@ const verifyEl = document.getElementById("headerVerify");
             }
         }
 
-        // --- (2) كود القصص (Stories Logic) - الإضافة المهمة ---
+        // --- (2) كود القصص (Stories Logic) ---
         const avatarContainer = document.querySelector('.user-avatar-container');
         let hasActiveStory = false;
 
-        // فحص سريع من بروفايل المستخدم
         if (u.hasStory === true) {
             hasActiveStory = true;
         } 
         
-        // فحص دقيق من قاعدة بيانات القصص (آخر 24 ساعة)
         try {
             const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
             const storiesQuery = await db.collection('stories')
@@ -7082,17 +7165,14 @@ const verifyEl = document.getElementById("headerVerify");
             console.log("Error checking stories:", err);
         }
 
-        // تطبيق التأثير على الصورة
         if (avatarContainer) {
             if (hasActiveStory) {
-                // فيه قصة: حط الحلقة الملونة وغير الضغطة لفتح القصة
                 avatarContainer.classList.add('has-story');
                 avatarContainer.onclick = function(e) {
                     e.stopPropagation();
-                    openUserStoryViewer(uid); // استدعاء دالة العرض
+                    openUserStoryViewer(uid); 
                 };
             } else {
-                // مفيش قصة: شيل الحلقة ورجع الضغطة لفتح البروفايل
                 avatarContainer.classList.remove('has-story');
                 avatarContainer.onclick = function() {
                     openProfile();
@@ -7108,7 +7188,7 @@ const verifyEl = document.getElementById("headerVerify");
             const isHidden = u.privacy && u.privacy.hideLastSeen;
             if (isHidden) {
                 if(statusElement) { statusElement.innerText = ""; statusElement.style.display = 'none'; }
-                if(onlineIndicator) { onlineIndicator.style.backgroundColor = "transparent"; onlineIndicator.style.boxShadow = "none"; }
+                if(onlineIndicator) { onlineIndicator.style.backgroundColor = "transparent"; onlineIndicator.style.boxShadow = "none"; onlineIndicator.style.border = "none"; }
             } else {
                 if(statusElement) statusElement.style.display = 'block';
                 const statusText = formatLastSeen(u.lastSeen);
@@ -7116,18 +7196,15 @@ const verifyEl = document.getElementById("headerVerify");
 
                 if (statusText === 'نشط الآن') {
                     if(statusElement) statusElement.style.color = "#10b981";
-                    if(onlineIndicator) { onlineIndicator.style.backgroundColor = "#10b981"; onlineIndicator.style.boxShadow = "0 0 8px #10b981"; }
+                    if(onlineIndicator) { onlineIndicator.style.backgroundColor = "#10b981"; onlineIndicator.style.boxShadow = "0 0 8px #10b981"; onlineIndicator.style.border = "2px solid #0f172a"; }
                 } else {
                     if(statusElement) statusElement.style.color = "#94a3b8";
-                    if(onlineIndicator) { onlineIndicator.style.backgroundColor = "#94a3b8"; onlineIndicator.style.boxShadow = "none"; }
+                    if(onlineIndicator) { onlineIndicator.style.backgroundColor = "#94a3b8"; onlineIndicator.style.boxShadow = "none"; onlineIndicator.style.border = "2px solid #0f172a"; }
                 }
             }
-        }
-        
-        
-        else {
+        } else {
             if(statusElement) statusElement.innerText = "";
-            if(onlineIndicator) onlineIndicator.style.backgroundColor = "transparent";
+            if(onlineIndicator) { onlineIndicator.style.backgroundColor = "transparent"; onlineIndicator.style.border = "none"; }
         }
     });
 }
@@ -12676,91 +12753,63 @@ async function clearStuckCalls() {
         }
     }
 }
-function openUserPopup(uid) {
+// دالة لفتح المعاينة المصغرة (محدثة لتدعم الحظر والحساب المحذوف)
+function openProfilePreview(e, chatData) {
+    e.stopPropagation(); // منع فتح الشات
+    vibrate();
     
-    if (isUserBlocked || amIBlocked) {
-        // نملأ البيانات بـ "لا يوجد"
-        document.getElementById('popupName').innerText = "مستخدم";
-        document.getElementById('popupBio').innerText = "";
-        document.getElementById('popupAvatar').style.backgroundImage = 'none';
-        document.getElementById('popupAvatar').innerText = "?";
-        document.getElementById('popupVerify').style.display = 'none';
+    currentPreviewChatId = chatData.id;
+    
+    // 1. التحقق من حالة المستخدم (محذوف أم محظور)
+    const userData = usersCache[chatData.otherUid] || {};
+    const isAccountDeleted = userData.isDeleted || false;
+    const isBlocked = chatData.isBlocked || false;
+
+    // جلب عناصر واجهة المعاينة
+    const imgEl = document.getElementById('ppPreviewImg');
+    const nameEl = document.getElementById('ppPreviewName');
+    const actionsDiv = document.querySelector('.pp-actions');
+
+    if (isBlocked || isAccountDeleted) {
+        // ==========================================
+        // 🚫 حالة الحظر أو الحساب المحذوف
+        // ==========================================
         
-        // إخفاء أزرار المراسلة
-        document.querySelector('.popup-actions-grid').style.display = 'none';
+        // تغيير الصورة لصورة افتراضية
+        currentPreviewImage = "https://cdn-icons-png.flaticon.com/512/149/149071.png"; 
+        imgEl.src = currentPreviewImage;
         
-        // إظهار النافذة (فاضية) أو ممكن تعمل return ومتفتحش خالص
-        const overlay = document.getElementById('userPopupOverlay');
-        overlay.style.display = 'flex';
-        return;
-    }
-
-
-    // 1. منع فتح البروفايل لنفسك (اختياري)
-    /* if (uid === currentUserId) return; */
-
-    currentPopupUserId = uid;
-    
-    // 2. جلب البيانات من الكاش أو استخدام بيانات افتراضية
-    // نستخدم || {} لتجنب الأخطاء لو المستخدم مش موجود
-    const userData = userCache[uid] || { 
-        name: 'مستخدم', 
-        color: '#555', 
-        char: '?' 
-    };
-    
-    // --- إصلاح الصورة (Image Fix) ---
-    const avatarEl = document.getElementById('popupAvatar');
-    
-    // البحث عن أي رابط صورة متاح في بيانات المستخدم
-    const userImage = userData.profilePic || userData.avatar || userData.photoURL || userData.image;
-
-    // التحقق القوي: هل يوجد رابط وهل هو ليس كلمة "null" النصية
-    if (userImage && userImage !== 'null' && userImage !== '') {
-        // حالة وجود صورة
-        avatarEl.style.backgroundImage = `url('${userImage}')`;
-        avatarEl.innerText = ''; // إخفاء الحرف
-        avatarEl.style.backgroundColor = 'transparent'; // خلفية شفافة
-    } else {
-        // حالة عدم وجود صورة (عرض الحرف الأول)
-        avatarEl.style.backgroundImage = 'none';
-        // جلب الحرف الأول من الاسم أو ؟
-        const char = userData.char || (userData.name ? userData.name.charAt(0).toUpperCase() : '?');
-        avatarEl.innerText = char;
-        avatarEl.style.backgroundColor = userData.color || '#333';
-    }
-
-    // --- إصلاح الاسم والتوثيق (Verification Fix) ---
-    
-    // 1. وضع الاسم فقط
-    document.getElementById('popupName').innerText = userData.name || 'مستخدم';
-    
-    // 2. التحكم في أيقونة التوثيق الموجودة في HTML
-    const verifyIcon = document.getElementById('popupVerify');
-    if (verifyIcon) {
-        if (userData.isVerified === true) {
-            verifyIcon.style.display = 'inline-block'; // إظهار العلامة
+        // تغيير الاسم بناءً على الحالة
+        if (isAccountDeleted) {
+            nameEl.innerText = "حساب محذوف";
+            nameEl.style.color = "#f59e0b"; // لون برتقالي لتمييز الحساب المحذوف
         } else {
-            verifyIcon.style.display = 'none'; // إخفاء العلامة
+            nameEl.innerText = "مستخدم Wareed";
+            nameEl.style.color = "#fff";
         }
-    }
-
-    // تعيين النبذة التعريفية (Bio)
-    document.getElementById('popupBio').innerText = userData.bio || "مستخدم تطبيق Wareed";
-
-    // 5. إظهار النافذة
-    const overlay = document.getElementById('userPopupOverlay');
-    if (overlay) {
-        // نقل النافذة لتكون فوق كل شيء (احتياطي)
-        if(overlay.parentNode !== document.body) document.body.appendChild(overlay);
         
-        overlay.style.display = 'flex';
-        overlay.style.opacity = '0';
-        setTimeout(() => overlay.style.opacity = '1', 10);
+        // إخفاء أزرار المراسلة والاتصال تماماً
+        if (actionsDiv) actionsDiv.style.display = 'none';
+
+    } else {
+        // ==========================================
+        // ✅ الحالة الطبيعية
+        // ==========================================
+        
+        currentPreviewImage = chatData.avatar;
+        imgEl.src = chatData.avatar;
+        nameEl.innerText = chatData.name;
+        nameEl.style.color = "#fff";
+        
+        // إظهار أزرار المراسلة
+        if (actionsDiv) actionsDiv.style.display = 'flex';
     }
-    
-    if(navigator.vibrate) navigator.vibrate(10);
+
+    // إظهار النافذة
+    const modal = document.getElementById('profilePreviewModal');
+    modal.style.display = 'flex';
 }
+
 
 function closeUserPopup() {
     const overlay = document.getElementById('userPopupOverlay');
@@ -15383,6 +15432,41 @@ function removePendingMessage(tempId) {
     if (el) el.remove();
 }
 
+// ================= دالة واجهة الحساب المحذوف (تظهر التنبيه وتبقي مربع الكتابة) =================
+// ================= دالة واجهة الحساب المحذوف (تخفي مربع الكتابة تماماً) =================
+function updateDeletedAccountUI(isDeletedActive) {
+    const footer = document.querySelector('.chat-footer'); // مربع الكتابة
+    let alertDiv = document.getElementById('deletedAccountAlertDiv');
+
+    if (isDeletedActive) {
+        // 1. إخفاء مربع الكتابة تماماً 
+        if(footer) footer.style.display = 'none';
+
+        // 2. إنشاء شريط التحذير وتثبيته في أسفل الشاشة مكان مربع الكتابة
+        if(!alertDiv) {
+            alertDiv = document.createElement('div');
+            alertDiv.id = 'deletedAccountAlertDiv';
+            // التصميم: مثبت في الأسفل، بخلفية داكنة ولون برتقالي للتحذير
+            alertDiv.style.cssText = "position:fixed; bottom:0; left:0; right:0; background:#1e293b; color:#f59e0b; text-align:center; padding:20px; font-weight:bold; z-index:100; border-top:1px solid #f59e0b; font-family:'Cairo'; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);";
+            
+            alertDiv.innerHTML = "⚠️ هذا الحساب مغلق أو محذوف حالياً.";
+            
+            document.body.appendChild(alertDiv);
+        } else {
+            alertDiv.style.display = 'block';
+        }
+        
+        // 3. ضبط مساحة الشات من الأسفل
+        const chatBody = document.getElementById('chatContainer');
+        if (chatBody) chatBody.style.paddingBottom = '80px';
+
+    } else {
+        // في حالة الحساب نشط (تم استرجاعه)
+        if(footer) footer.style.display = 'flex'; // إرجاع مربع الكتابة
+        if(alertDiv) alertDiv.remove(); // إزالة التحذير
+    }
+}
+
 
     </script>
     
@@ -15766,7 +15850,7 @@ function removePendingMessage(tempId) {
     <div class="popup-name-row">
         <span id="popupName" class="popup-name">اسم المستخدم</span>
         
-        <i id="popupVerify" class="fa-solid fa-circle-check popup-verify" style="display:none;"></i>
+        <i id="popupVerify" class="fa-solid fa-heart-circle-check nabd-badge" style="display:none; font-size: 16px;"></i>
     </div>
     
     <span id="popupBio" class="popup-bio" style="margin-top:8px;">مستخدم تطبيق الوريد</span>
@@ -15881,7 +15965,7 @@ function removePendingMessage(tempId) {
         <div style="display: flex; align-items: center; gap: 5px; margin-right: 10px;">
             <span id="storyUserName" style="color: #fff; font-weight: bold; font-size: 14px; font-family: 'Cairo', sans-serif;">اسم المستخدم</span>
             
-            <i id="storyVerifyIcon" class="fa-solid fa-circle-check" style="color: #38bdf8; font-size: 14px; display: none;"></i>
+            <i id="storyVerifyIcon" class="fa-solid fa-heart-circle-check nabd-badge" style="font-size: 14px; display: none;"></i>
         </div>
         
         <span id="storyTime" style="font-size: 11px; opacity: 0.8; color: #ccc; margin-right: auto;"></span>

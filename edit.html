@@ -6,6 +6,7 @@
     <title>NABD - تعديل الملف الشخصي</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
 
     <style>
         /* الستايل الجديد المطور */
@@ -172,6 +173,19 @@
             min-height: 110px;
             resize: none;
         }
+
+        /* 🔥 ستايلات نظام اليوزر نيم (TikTok Style) 🔥 */
+        .username-feedback { font-size: 12px; margin-top: 5px; margin-bottom: 10px; text-align: right; display: none; font-weight: bold; transition: 0.3s; }
+        .username-feedback.error { color: #ff5555; display: block; }
+        .username-feedback.success { color: #10b981; display: block; }
+        .username-feedback.loading { color: var(--secondary-text); display: block; }
+
+        .form-group input.error { border-color: #ff5555; box-shadow: 0 0 8px rgba(255, 85, 85, 0.3); }
+        .form-group input.success { border-color: #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.3); }
+
+        .suggestions-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; margin-bottom: 15px; display: none; }
+        .suggestion-chip { background: rgba(255,255,255,0.05); border: 1px solid #2a2a30; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; color: #fff; transition: 0.2s; font-family: sans-serif; font-weight: bold; }
+        .suggestion-chip:hover { background: var(--primary-color); border-color: var(--primary-color); transform: scale(1.05); }
 
         /* تصميم قسم البصمة الصوتية */
         .voice-section {
@@ -361,6 +375,47 @@
             0% { opacity: 0; transform: scale(0.8); }
             100% { opacity: 1; transform: scale(1); }
         }
+        
+        /* زر تغيير الغلاف */
+.cover-edit-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px; /* مكانه فوق على الشمال */
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: 0.3s;
+    z-index: 10;
+}
+.cover-edit-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: var(--uranium-green);
+}
+
+/* --- ستايل نافذة قص الصور --- */
+.crop-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95);
+    z-index: 100000; display: none; flex-direction: column;
+    backdrop-filter: blur(10px);
+}
+.crop-image-container {
+    flex: 1; width: 100%; max-height: calc(100vh - 100px);
+    display: flex; align-items: center; justify-content: center;
+    background: #000; overflow: hidden;
+}
+.crop-image-container img { display: block; max-width: 100%; }
+.crop-actions-bar {
+    height: 100px; padding: 20px; background: #111;
+    display: flex; gap: 15px; align-items: center; border-top: 1px solid #333;
+}
+
+
     </style>
 </head>
 
@@ -372,9 +427,13 @@
 </div>
 
 <div class="container">
-    <div class="cover-area">
+    <div class="cover-area" id="coverArea">
+        <div class="cover-edit-btn" onclick="document.getElementById('coverOptionsModal').style.display='flex'">
+            <i class="fa-solid fa-camera"></i> تغيير الغلاف
+        </div>
+        
         <div class="avatar-edit" id="avatarEdit">
-            U
+            
             <i class="fa-solid fa-camera camera-icon"></i>
         </div>
     </div>
@@ -389,7 +448,9 @@
 
         <div class="form-group">
             <label>اسم المستخدم</label>
-            <input type="text" id="usernameInput" placeholder="مثال: user123" dir="ltr" style="text-align: right;">
+            <input type="text" id="usernameInput" placeholder="مثال: user_123" dir="ltr" style="text-align: right;" oninput="validateUsernameLive(this)">
+            <div id="usernameFeedback" class="username-feedback"></div>
+            <div id="usernameSuggestions" class="suggestions-box"></div>
         </div>
 
         <div class="form-group">
@@ -476,6 +537,7 @@
 </div>
 
 <input type="file" id="fileInput" hidden accept="image/*">
+<input type="file" id="coverInput" hidden accept="image/*">
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -491,6 +553,14 @@ const firebaseConfig = {
     messagingSenderId: "339799216046",
     appId: "1:339799216046:web:26e437a7b7d5c24fe9023f"
 };
+// دالة تشغيل الأصوات لمنع أخطاء ReferenceError
+function playSound(type) {
+    try {
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        audio.volume = 0.5;
+        audio.play().catch(e => {});
+    } catch(e) {}
+}
 
 firebase.initializeApp(firebaseConfig);
 
@@ -499,7 +569,7 @@ const db = firebase.firestore();
 const storage = firebase.storage();
 
 // ==========================================
-// 🌟 تعريف كل المتغيرات (مرة واحدة فقط)
+// 🌟 تعريف المتغيرات الأساسية
 // ==========================================
 const avatarEdit = document.getElementById("avatarEdit");
 const fileInput = document.getElementById("fileInput");
@@ -517,10 +587,124 @@ const webInput = document.getElementById("webInput");
 const fbInput = document.getElementById("fbInput");
 const instaInput = document.getElementById("instaInput");
 const tiktokInput = document.getElementById("tiktokInput");
+const coverInput = document.getElementById("coverInput");
+const coverArea = document.getElementById("coverArea");
 
 let currentUser = null;
 let uploadedImageUrl = null;
 let currentProfileData = null; 
+
+// متغيرات نظام اليوزر نيم
+let usernameTimer;
+let isUsernameValid = true; // يتم جعله صحيح افتراضياً حتى لا يمنع الحفظ إن لم يتم تعديله
+
+// ==========================================
+// 🔥 محرك فحص اسم المستخدم (TikTok Style) 🔥
+// ==========================================
+function validateUsernameLive(input) {
+    clearTimeout(usernameTimer);
+    const feedback = document.getElementById('usernameFeedback');
+    const suggestionsBox = document.getElementById('usernameSuggestions');
+    
+    // إزالة المسافات، تحويل لحروف صغيرة، ومنع الحروف العربية
+    let val = input.value.toLowerCase().replace(/\s/g, '');
+    val = val.replace(/[^a-z0-9._]/g, '');
+    input.value = val;
+
+    saveBtn.disabled = true;
+    isUsernameValid = false;
+    suggestionsBox.style.display = 'none';
+
+    if (val.length === 0) {
+        input.classList.remove('error', 'success');
+        feedback.style.display = 'none';
+        saveBtn.disabled = false; 
+        isUsernameValid = true; // السماح بالحفظ لو تركه فارغاً
+        return;
+    }
+
+    if (val.length < 3) {
+        input.classList.add('error');
+        input.classList.remove('success');
+        feedback.className = 'username-feedback error';
+        feedback.innerText = "يجب أن يكون 3 أحرف على الأقل";
+        return;
+    }
+
+    feedback.className = 'username-feedback loading';
+    feedback.innerText = "جاري التحقق... ⏳";
+    input.classList.remove('error', 'success');
+
+    usernameTimer = setTimeout(() => {
+        checkUsernameAvailability(val, input, feedback, suggestionsBox);
+    }, 500);
+}
+
+async function checkUsernameAvailability(username, input, feedback, suggestionsBox) {
+    if(!currentUser) return;
+
+    // إذا كان هو نفس اسم المستخدم الحالي للملف الشخصي
+    if(currentProfileData && currentProfileData.username === username) {
+        input.classList.remove('error');
+        input.classList.add('success');
+        feedback.className = 'username-feedback success';
+        feedback.innerText = "هذا هو اسم المستخدم الحالي الخاص بك ✅";
+        isUsernameValid = true; 
+        saveBtn.disabled = false;
+        return;
+    }
+
+    try {
+        const snapshot = await db.collection('users').where('username', '==', username).get();
+        
+        if(!snapshot.empty) {
+            // الاسم مأخوذ
+            input.classList.add('error');
+            input.classList.remove('success');
+            feedback.className = 'username-feedback error';
+            feedback.innerText = "اسم المستخدم غير متاح ❌";
+            generateSuggestions(username, suggestionsBox, input);
+            saveBtn.disabled = true;
+            isUsernameValid = false;
+        } else {
+            // الاسم متاح
+            input.classList.remove('error');
+            input.classList.add('success');
+            feedback.className = 'username-feedback success';
+            feedback.innerText = "اسم المستخدم متاح ✅";
+            saveBtn.disabled = false;
+            isUsernameValid = true;
+        }
+    } catch (e) {
+        console.error("Error checking username:", e);
+        feedback.className = 'username-feedback error';
+        feedback.innerText = "حدث خطأ في الاتصال";
+    }
+}
+
+function generateSuggestions(baseName, box, inputElement) {
+    box.innerHTML = '';
+    let cleanName = baseName.replace(/[0-9]/g, '');
+    if(cleanName.length < 3) cleanName = baseName; 
+
+    const suggestions = [
+        cleanName + Math.floor(Math.random() * 999),
+        cleanName + '_' + Math.floor(Math.random() * 99),
+        cleanName + '.' + Math.floor(Math.random() * 999)
+    ];
+
+    suggestions.forEach(sug => {
+        let chip = document.createElement('div');
+        chip.className = 'suggestion-chip';
+        chip.innerText = sug;
+        chip.onclick = () => {
+            inputElement.value = sug;
+            validateUsernameLive(inputElement);
+        };
+        box.appendChild(chip);
+    });
+    box.style.display = 'flex';
+}
 
 // ==========================================
 // 🌟 محرك اختيار المواهب والاهتمامات
@@ -549,12 +733,10 @@ function renderSelectedTagsUI() {
         area.innerHTML += `<div class="selected-tag-chip">${tag}</div>`;
     });
 
-    // زر إضافة المزيد سيختفي لو وصل العدد لـ 5
     if (userInterestsArray.length < 5) {
         area.innerHTML += `<button class="open-selector-btn" id="openSelectorBtn" onclick="openInterestsSelector(event)" style="padding: 6px 10px; border-radius: 50%;"><i class="fa-solid fa-plus"></i></button>`;
     }
 }
-
 
 window.openInterestsSelector = function(e) {
     if(e) e.stopPropagation();
@@ -595,9 +777,8 @@ window.toggleInterestSelection = function(tag) {
     const index = userInterestsArray.indexOf(tag);
     
     if (index > -1) {
-        userInterestsArray.splice(index, 1); // لو اختارها قبل كده هيمسحها عادي
+        userInterestsArray.splice(index, 1);
     } else {
-        // لو بيحاول يضيف ومجموعهم 5 أو أكتر، هيوقفه
         if (userInterestsArray.length >= 5) {
             showMsg("الحد الأقصى 5 اهتمامات فقط ⚠️", "error");
             return;
@@ -651,15 +832,22 @@ async function loadProfile() {
         locInput.value = data.location || "";
         webInput.value = data.website || "";
 
-        // جلب الاهتمامات ورسمها
         userInterestsArray = data.interests || [];
         renderSelectedTagsUI();
         
-        // جلب الروابط
         const links = data.socialLinks || {};
         fbInput.value = links.facebook || "";
         instaInput.value = links.instagram || "";
         tiktokInput.value = links.tiktok || "";
+
+        // تحميل الغلاف (صورة أو لون)
+        if (data.coverPic) {
+            coverArea.style.backgroundImage = `url('${data.coverPic}')`;
+            coverArea.style.backgroundSize = 'cover';
+            coverArea.style.backgroundPosition = 'center';
+        } else if (data.coverColor) {
+            coverArea.style.backgroundImage = data.coverColor;
+        }
 
         if (data.profilePic) {
             avatarEdit.style.backgroundImage = `url('${data.profilePic}')`;
@@ -685,6 +873,13 @@ async function saveProfile() {
         showMsg("يجب تسجيل الدخول ❌", "error");
         return;
     }
+
+    // 🛑 منع الحفظ إذا كان اسم المستخدم قيد التحقق أو مسروق 🛑
+    if (!isUsernameValid && usernameInput.value.trim().length > 0) {
+        showMsg("يرجى اختيار اسم مستخدم متاح أولاً", "error");
+        usernameInput.focus();
+        return;
+    }
     
     const name = nameInput.value.trim();
     const username = usernameInput.value.trim();
@@ -694,7 +889,6 @@ async function saveProfile() {
     const location = locInput.value.trim();
     const website = webInput.value.trim();
 
-    // تجميع السوشيال ميديا
     const socialLinks = {};
     const fb = fbInput.value.trim();
     const insta = instaInput.value.trim();
@@ -750,44 +944,124 @@ avatarEdit.onclick = () => {
     fileInput.click();
 };
 
-fileInput.onchange = async () => {
-    if (!currentUser) return;
-    const file = fileInput.files[0];
-    if (!file) return;
+// ==========================================
+// ✂️ محرك قص ورفع الصور (Avatar & Cover)
+// ==========================================
+let cropper = null;
+let currentCropType = ''; // 'avatar' أو 'cover'
+
+// 1. لما يختار صورة البروفايل
+fileInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) openCropModal(file, 'avatar');
+    e.target.value = ''; // تصفير عشان يقدر يختارها تاني
+};
+
+// 2. لما يختار صورة الغلاف
+coverInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) openCropModal(file, 'cover');
+    e.target.value = ''; // تصفير
+};
+
+// 3. فتح نافذة القص وتشغيل المكتبة
+function openCropModal(file, type) {
     if (!file.type.startsWith('image/')) {
         showMsg("اختر صورة فقط", "error");
         return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-        showMsg("الصورة كبيرة جداً (حد أقصى 5MB)", "error");
-        return;
-    }
+    
+    currentCropType = type;
+    const url = URL.createObjectURL(file);
+    const image = document.getElementById('imageToCrop');
+    image.src = url;
+    
+    document.getElementById('cropModal').style.display = 'flex';
 
-    showMsg("جاري الرفع...", "loading");
+    if (cropper) cropper.destroy(); // تدمير أي نسخة قديمة
+
+    // تحديد مقاس القص بناءً على النوع (البروفايل 1:1 مربع ، الغلاف مستطيل عريض)
+    const ratio = type === 'avatar' ? 1 / 1 : 16 / 7;
+
+    cropper = new Cropper(image, {
+        aspectRatio: ratio,
+        viewMode: 1, // يمنع خروج التحديد بره الصورة
+        dragMode: 'move', // يسمح بسحب الصورة نفسها بصابعك
+        autoCropArea: 1,
+        guides: true,
+        highlight: false,
+        cropBoxMovable: false, // نثبت المربع
+        cropBoxResizable: false, // نثبت حجم المربع والمستخدم يحرك الصورة من تحته
+    });
+}
+
+function closeCropModal() {
+    document.getElementById('cropModal').style.display = 'none';
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+}
+
+// 4. تنفيذ القص والرفع للفايربيز
+async function confirmCropAndUpload() {
+    if (!cropper || !currentUser) return;
+    
+    playSound('click');
+    showMsg("جاري قص ورفع الصورة... ⏳", "loading");
     saveBtn.disabled = true;
+    
+    // استخراج الصورة المقصوصة (وهيضغطها أوتوماتيك عشان يوفر مساحة)
+    const canvas = cropper.getCroppedCanvas({
+        width: currentCropType === 'avatar' ? 400 : 800,
+        height: currentCropType === 'avatar' ? 400 : 350,
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high',
+    });
 
-    try {
-        const fileName = `profile_${currentUser.uid}_${Date.now()}.jpg`;
-        const storageRef = storage.ref().child(`profile_pics/${currentUser.uid}/${fileName}`);
-        await storageRef.put(file);
-        const url = await storageRef.getDownloadURL();
-        uploadedImageUrl = url;
+    closeCropModal(); // نقفل النافذة فوراً
 
-        await db.collection("users").doc(currentUser.uid).update({
-            profilePic: url,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+    // تحويل الكانفاس لملف عشان نرفعه
+    canvas.toBlob(async (blob) => {
+        try {
+            const fileName = `${currentCropType}_${currentUser.uid}_${Date.now()}.jpg`;
+            const folder = currentCropType === 'avatar' ? 'profile_pics' : 'covers';
+            const storageRef = storage.ref().child(`${folder}/${currentUser.uid}/${fileName}`);
+            
+            await storageRef.put(blob);
+            const url = await storageRef.getDownloadURL();
 
-        avatarEdit.style.backgroundImage = `url('${url}')`;
-        avatarEdit.innerText = "";
-        showMsg("تم رفع الصورة ✅", "success");
-        saveBtn.disabled = false;
-    } catch (error) {
-        console.error("Upload error:", error);
-        showMsg("فشل الرفع: " + error.message, "error");
-        saveBtn.disabled = false;
-    }
-};
+            if (currentCropType === 'avatar') {
+                uploadedImageUrl = url;
+                await db.collection("users").doc(currentUser.uid).update({
+                    profilePic: url,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                avatarEdit.style.backgroundImage = `url('${url}')`;
+                avatarEdit.innerText = "";
+            } else {
+                await db.collection("users").doc(currentUser.uid).update({
+                    coverPic: url,
+                    coverColor: firebase.firestore.FieldValue.delete(), // حذف اللون لو كان موجود
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                coverArea.style.backgroundImage = `url('${url}')`;
+                coverArea.style.backgroundSize = 'cover';
+                coverArea.style.backgroundPosition = 'center';
+            }
+
+            showMsg("تم التحديث بنجاح ✅", "success");
+            playSound('success');
+            
+        } catch (error) {
+            console.error("Crop Upload Error:", error);
+            showMsg("فشل الرفع", "error");
+        } finally {
+            saveBtn.disabled = false;
+        }
+    }, 'image/jpeg', 0.85); // جودة 85% ممتازة جداً للموبايل
+}
+
 
 // ==================================================
 // 🎙️ محرك البصمة الصوتية ومسحها
@@ -898,28 +1172,18 @@ async function uploadVoiceBio() {
 let pendingConfirmAction = null;
 
 function showChicConfirm(title, message, iconHTML, actionCallback) {
-    document.getElementById('chicTitle').innerText = title;
-    document.getElementById('chicMessage').innerText = message;
-    document.getElementById('chicIcon').innerHTML = iconHTML;
-    pendingConfirmAction = actionCallback;
-    document.getElementById('chicConfirmModal').style.display = 'flex';
+    // لم يتم دمج مودال chicConfirmModal في الـ HTML الأساسي لأنه غير موجود بالكود المرفق
+    // كإجراء احتياطي نعمل Confirm عادي لحين إضافته
+    if (confirm(message)) {
+        actionCallback();
+    }
 }
-
-function closeChicModal() {
-    document.getElementById('chicConfirmModal').style.display = 'none';
-    pendingConfirmAction = null;
-}
-
-document.getElementById('chicConfirmBtn').onclick = function() {
-    if(pendingConfirmAction) pendingConfirmAction();
-    closeChicModal();
-};
 
 function removeExistingBio() {
     showChicConfirm(
         "حذف البصمة الصوتية؟",
         "هل أنت متأكد من مسح بصمتك الصوتية الحالية؟ لا يمكن التراجع عن هذا الإجراء.",
-        '<i class="fa-solid fa-trash-can" style="color: #ff3b30; filter: drop-shadow(0 4px 10px rgba(255, 59, 48, 0.3));"></i>',
+        '<i class="fa-solid fa-trash-can" style="color: #ff3b30;"></i>',
         async function() {
             showMsg("جاري الحذف...", "loading");
             try {
@@ -951,6 +1215,65 @@ function showMsg(msg, type) {
         setTimeout(() => statusMessage.style.display = "none", 3000);
     }
 }
+
+// ==========================================
+// 🎨 محرك ألوان وخلفيات الغلاف (Cover Colors)
+// ==========================================
+const coverGradients = [
+    "linear-gradient(45deg, #141414, #2b1055, #5D5FEF)", // الافتراضي
+    "linear-gradient(135deg, #f12711 0%, #f5af19 100%)", // ناري
+    "linear-gradient(135deg, #00C6FF 0%, #0072FF 100%)", // محيط
+    "linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%)", // وردي
+    "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)", // طبيعة
+    "linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%)", // بنفسجي
+    "linear-gradient(135deg, #000000 0%, #434343 100%)", // رمادي كلاسيك
+    "linear-gradient(135deg, #FDC830 0%, #F37335 100%)", // خريفي
+    "linear-gradient(135deg, #000000 0%, #0f9b0f 100%)", // هاكر
+    "linear-gradient(135deg, #fc00ff 0%, #00dbde 100%)"  // سايبر بانك
+];
+
+function openCoverColorsModal() {
+    playSound('click');
+    document.getElementById('coverOptionsModal').style.display = 'none';
+    const grid = document.getElementById('coverColorsGrid');
+    grid.innerHTML = '';
+    
+    coverGradients.forEach(gradient => {
+        grid.innerHTML += `
+            <div style="height: 60px; border-radius: 12px; background: ${gradient}; cursor: pointer; border: 2px solid transparent; transition: 0.2s;" 
+                 onclick="saveCoverColor('${gradient}')"
+                 onmouseover="this.style.borderColor='#fff'" 
+                 onmouseout="this.style.borderColor='transparent'">
+            </div>
+        `;
+    });
+    
+    document.getElementById('coverColorsModal').style.display = 'flex';
+}
+
+async function saveCoverColor(gradient) {
+    if (!currentUser) return;
+    playSound('click');
+    showMsg("جاري الحفظ...", "loading");
+    document.getElementById('coverColorsModal').style.display = 'none';
+
+    try {
+        // تحديث الداتابيز (وحذف الصورة لو موجودة عشان اللون يظهر)
+        await db.collection("users").doc(currentUser.uid).update({
+            coverColor: gradient,
+            coverPic: firebase.firestore.FieldValue.delete(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // تحديث الشكل فوراً
+        coverArea.style.backgroundImage = gradient;
+        showMsg("تم تغيير لون الغلاف بنجاح ✅", "success");
+    } catch (error) {
+        console.error("Cover Color error:", error);
+        showMsg("فشل الحفظ", "error");
+    }
+}
+
 </script>
 
 <div class="custom-modal" id="interestsSelectorModal" style="z-index: 70000 !important;">
@@ -969,5 +1292,40 @@ function showMsg(msg, type) {
     </div>
 </div>
 <script src="theme-manager.js"></script>
+
+<div class="custom-modal" id="coverOptionsModal" style="z-index: 80000;">
+    <div class="modal-box" style="max-width: 300px; padding: 20px;">
+        <h3 style="color: #fff; margin-bottom: 15px;">تعديل الغلاف</h3>
+        <button class="save-btn" style="margin-bottom: 10px; background: rgba(255,255,255,0.1); color: #fff;" onclick="document.getElementById('coverInput').click(); document.getElementById('coverOptionsModal').style.display='none';">
+            <i class="fa-solid fa-image"></i> تحميل صورة
+        </button>
+        <button class="save-btn" style="margin-bottom: 10px; background: linear-gradient(135deg, var(--primary-color), #5D5FEF); color: #fff;" onclick="openCoverColorsModal()">
+            <i class="fa-solid fa-palette"></i> اختيار لون / تدرج
+        </button>
+        <button style="width: 100%; padding: 12px; background: transparent; color: #aaa; border: none; font-weight: bold; cursor: pointer;" onclick="document.getElementById('coverOptionsModal').style.display='none'">إلغاء</button>
+    </div>
+</div>
+
+<div class="custom-modal" id="coverColorsModal" style="z-index: 80001;">
+    <div class="modal-box" style="max-width: 350px; padding: 20px;">
+        <h3 style="color: #fff; margin-bottom: 15px;">ألوان الغلاف</h3>
+        <div id="coverColorsGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 300px; overflow-y: auto; padding: 5px;">
+            </div>
+        <button style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); color: #fff; border: none; border-radius: 12px; margin-top: 15px; font-weight: bold; cursor: pointer;" onclick="document.getElementById('coverColorsModal').style.display='none'">إغلاق</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+<div class="crop-modal-overlay" id="cropModal">
+    <div class="crop-image-container">
+        <img id="imageToCrop" src="">
+    </div>
+    <div class="crop-actions-bar">
+        <button class="btn-ghost btn-cancel-pro" style="flex: 1; padding: 15px; border-radius: 15px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; color: #fff;" onclick="closeCropModal()">إلغاء</button>
+        <button class="btn-primary" style="flex: 2; padding: 15px; border-radius: 15px; font-weight: bold; background: var(--primary-color); border: none; color: #fff;" onclick="confirmCropAndUpload()">قص وحفظ <i class="fa-solid fa-crop-simple"></i></button>
+    </div>
+</div>
+
 </body>
 </html>

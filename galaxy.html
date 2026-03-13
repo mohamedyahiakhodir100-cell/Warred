@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مجرّة وريد</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Cairo", sans-serif; -webkit-tap-highlight-color: transparent; }
+        body {
+            background: radial-gradient(circle at center, #1b003a 0%, #050114 100%);
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* الهيدر الزجاجي */
+        .galaxy-header {
+            position: absolute; top: 0; left: 0; width: 100%;
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* شاشة التحميل الفخمة */
+        #galaxyLoader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050114; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .space-spinner {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: 4px solid transparent; border-top-color: #00C6FF; border-bottom-color: #FFD700;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        /* مساحة المجرة */
+        .galaxy-container {
+            flex: 1; position: relative;
+            display: flex; align-items: center; justify-content: center;
+            perspective: 1000px;
+            opacity: 0; /* ستظهر بعد التحميل */
+            transition: opacity 1s ease;
+        }
+
+        /* النجوم في الخلفية (تأثير متطور) */
+        .stars {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(3px 3px at 150px 150px, #00C6FF, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 250px 250px;
+            animation: twinkle 4s infinite alternate, moveStars 100s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes twinkle { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+        @keyframes moveStars { 100% { background-position: 500px 500px; } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* الشمس (المستخدم الحالي) */
+        .sun-wrapper {
+            position: absolute;
+            display: flex; flex-direction: column; align-items: center;
+            z-index: 10;
+        }
+        .sun-avatar {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background-color: #FFD700;
+            background-size: cover; background-position: center;
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 30px #FFD700, 0 0 60px #FF8C00, inset 0 0 15px rgba(255,255,255,0.5);
+            animation: pulseSun 2.5s infinite alternate;
+        }
+        .sun-name {
+            margin-top: 10px; font-weight: 900; font-size: 14px;
+            background: rgba(0,0,0,0.6); padding: 4px 12px; border-radius: 20px;
+            text-shadow: 0 0 5px #FFD700; border: 1px solid rgba(255,215,0,0.3);
+        }
+
+        @keyframes pulseSun {
+            0% { transform: scale(1); box-shadow: 0 0 20px #FFD700, 0 0 40px #FF8C00; }
+            100% { transform: scale(1.08); box-shadow: 0 0 40px #FFD700, 0 0 80px #FF8C00; }
+        }
+
+        /* المسارات (Orbits) */
+        .orbit {
+            position: absolute;
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            animation: rotate linear infinite;
+        }
+
+        /* الكواكب (الأصدقاء) */
+        .planet-wrapper {
+            position: absolute;
+            top: -18px; /* نصف حجم الكوكب ليتمركز على الخط */
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer;
+            animation: counterRotate linear infinite; /* لمنع دوران الصورة نفسها */
+            transition: transform 0.2s;
+        }
+        .planet-wrapper:active { transform: scale(0.9); }
+
+        .planet {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background-size: cover; background-position: center;
+            border: 2px solid #00C6FF;
+            box-shadow: 0 0 15px rgba(0, 198, 255, 0.6);
+        }
+        
+        .planet-name {
+            margin-top: 5px; font-size: 10px; font-weight: bold;
+            background: rgba(0,0,0,0.7); padding: 2px 6px;
+            border-radius: 10px; white-space: nowrap; pointer-events: none;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
+        @keyframes counterRotate { 100% { transform: rotate(-360deg); } }
+
+        /* رسالة عدم وجود أصدقاء */
+        .empty-space {
+            display: none; position: absolute; top: 70%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; color: #aaa; width: 80%; z-index: 20;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="galaxyLoader">
+        <div class="space-spinner"></div>
+        <h3 style="color:#00C6FF; letter-spacing: 1px;">جاري استكشاف مجرّتك...</h3>
+    </div>
+
+    <div class="galaxy-header">
+        <i class="fa-solid fa-arrow-right" style="font-size: 20px; cursor: pointer; color:#fff;" onclick="window.history.back()"></i>
+        <h3 style="font-weight: 900; color: #fff; text-shadow: 0 0 10px #00C6FF; margin:0;">مجرّة وريد 🌌</h3>
+        <i class="fa-solid fa-circle-info" style="font-size: 20px; color: #aaa;" onclick="alert('أصدقاؤك يدورون حولك! الكواكب الأقرب تتحرك بشكل أسرع.')"></i>
+    </div>
+
+    <div class="stars"></div>
+
+    <div class="galaxy-container" id="galaxySpace">
+        
+        <div class="sun-wrapper">
+            <div class="sun-avatar" id="mySun"></div>
+            <div class="sun-name" id="mySunName">أنا</div>
+        </div>
+        
+        <div class="empty-space" id="emptySpaceMsg">
+            <i class="fa-solid fa-user-astronaut" style="font-size: 40px; margin-bottom: 10px; color:#555;"></i>
+            <p>أنت وحيد في هذا الكون.<br>قم بإضافة أصدقاء ليصبحوا كواكب في مجرتك!</p>
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // 🔴 ضع إعدادات الفايربيس الخاصة بك هنا 🔴
+        const firebaseConfig = {
+            apiKey: "AIzaSyDpvqNAReChsHn5tFJSp7vV_EJHmtD2x4c",
+            authDomain: "pools-e4381.firebaseapp.com",
+            projectId: "pools-e4381",
+            storageBucket: "pools-e4381.firebasestorage.app",
+            messagingSenderId: "339799216046",
+            appId: "1:339799216046:web:26e437a7b7d5c24fe9023f"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ألوان الكواكب (نيون)
+        const planetColors = ["#00C6FF", "#FF416C", "#38ef7d", "#8A2BE2", "#FFD700", "#FF4500", "#00FFCC"];
+        const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+        // تشغيل النظام عند التأكد من تسجيل الدخول
+        auth.onAuthStateChanged(async user => {
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+
+            try {
+                // 1. جلب بياناتك (الشمس)
+                const myDoc = await db.collection('users').doc(user.uid).get();
+                const myData = myDoc.data() || {};
+                
+                document.getElementById('mySun').style.backgroundImage = `url('${myData.profilePic || defaultAvatar}')`;
+                document.getElementById('mySunName').innerText = (myData.name || "مستخدم").split(' ')[0]; // الاسم الأول فقط للشياكة
+
+                // 2. جلب أصدقائك (الكواكب)
+                const friendsSnap = await db.collection('users').doc(user.uid).collection('friends').get();
+                const friendsList = [];
+
+                // أقصى عدد للكواكب عشان الشاشة متزحمش وتلاج (نختار 12 كحد أقصى)
+                const maxPlanets = Math.min(friendsSnap.size, 12); 
+                
+                let i = 0;
+                for (const doc of friendsSnap.docs) {
+                    if (i >= maxPlanets) break;
+                    const friendUid = doc.id;
+                    const fDoc = await db.collection('users').doc(friendUid).get();
+                    
+                    if (fDoc.exists) {
+                        const fData = fDoc.data();
+                        friendsList.push({
+                            uid: friendUid,
+                            name: (fData.name || "صديق").split(' ')[0],
+                            pic: fData.profilePic || defaultAvatar
+                        });
+                        i++;
+                    }
+                }
+
+                renderGalaxy(friendsList);
+
+            } catch (error) {
+                console.error("خطأ في جلب المجرة:", error);
+                alert("حدث خطأ في تحميل المجرة.");
+            }
+        });
+
+        // دالة رسم المجرة
+        function renderGalaxy(friends) {
+            const space = document.getElementById('galaxySpace');
+            const loader = document.getElementById('galaxyLoader');
+            const emptyMsg = document.getElementById('emptySpaceMsg');
+
+            if (friends.length === 0) {
+                emptyMsg.style.display = 'block';
+            } else {
+                // حسابات الشاشة للمدارات
+                const screenWidth = window.innerWidth;
+                // نبدأ المدار الأول من قطر 120 بيكسل، ونزود مسافة بين كل مدار
+                const startOrbit = 130; 
+                const orbitSpacing = Math.min(40, (screenWidth - 150) / friends.length); 
+
+                friends.forEach((friend, index) => {
+                    const orbitSize = startOrbit + (index * orbitSpacing);
+                    // الكواكب الأقرب (index أقل) تدور أسرع
+                    const speed = 8 + (index * 4); // من 8 ثواني إلى ما فوق
+                    const color = planetColors[index % planetColors.length];
+
+                    // 1. إنشاء المدار
+                    const orbit = document.createElement('div');
+                    orbit.className = 'orbit';
+                    orbit.style.width = `${orbitSize}px`;
+                    orbit.style.height = `${orbitSize}px`;
+                    orbit.style.animationDuration = `${speed}s`;
+                    orbit.style.animationDelay = `-${Math.random() * 20}s`; // لتبدأ الكواكب من أماكن متفرقة
+
+                    // 2. إنشاء الكوكب وحاويته
+                    const planetWrapper = document.createElement('div');
+                    planetWrapper.className = 'planet-wrapper';
+                    planetWrapper.style.animationDuration = `${speed}s`; // نفس السرعة ليعكس الدوران
+
+                    const planet = document.createElement('div');
+                    planet.className = 'planet';
+                    planet.style.backgroundImage = `url('${friend.pic}')`;
+                    planet.style.borderColor = color;
+                    planet.style.boxShadow = `0 0 10px ${color}`;
+
+                    const nameTag = document.createElement('div');
+                    nameTag.className = 'planet-name';
+                    nameTag.style.color = color;
+                    nameTag.innerText = friend.name;
+
+                    // تجميع العناصر
+                    planetWrapper.appendChild(planet);
+                    planetWrapper.appendChild(nameTag);
+                    orbit.appendChild(planetWrapper);
+                    space.appendChild(orbit);
+
+                    // حدث الضغط على الكوكب (يحوله لبروفايل الصديق)
+                    planetWrapper.onclick = () => {
+                        const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3');
+                        audio.play().catch(()=>{});
+                        
+                        // هنا نستخدم نظام التوجيه الخاص بتطبيقك (سواء Location أو iframe)
+                        // استخدمنا location للسهولة، لو تستخدم openPage() غيرها
+                        window.location.href = `profile.html?uid=${friend.uid}`;
+                    };
+                });
+            }
+
+            // إخفاء اللودر وإظهار المجرة بنعومة
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+                space.style.opacity = '1';
+            }, 500);
+        }
+    </script>
+</body>
+</html>

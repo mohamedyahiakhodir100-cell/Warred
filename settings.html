@@ -3,202 +3,435 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NABD - الإعدادات</title>
+<title data-i18n="page_settings_title">NABD - الإعدادات</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
 <style>
-/* ================= CSS Styles (الوضع الليلي الافتراضي) ================= */
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Verdana,sans-serif;transition:all .2s ease-in-out}
-body{background:#0d0d0f;color:#fff}
+
+.cropper-container-box { width: 100%; max-height: 400px; margin-bottom: 15px; }
+.profile-img-wrapper { position: relative; display: inline-block; cursor: pointer; }
+.profile-img-wrapper::after { content: '\f030'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; bottom: 0; right: 0; background: var(--primary-color); color: #fff; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid var(--app-main-bg); transition: 0.2s; }
+.profile-img-wrapper:hover::after { transform: scale(1.1); }
+
+/* ================= المتغيرات الأساسية (بناءً على التصميم الجديد) ================= */
+:root {
+    --primary-color: #6d28d9; /* البنفسجي الجديد */
+    --app-main-bg: #0b0510; /* خلفية التطبيق الداكنة جداً */
+    --post-main-bg: #150a21; /* خلفية البطاقات (Cards) */
+    --post-border-color: rgba(255, 255, 255, 0.05); /* فواصل خفيفة */
+    --text-color: #ffffff;
+    --secondary-text: #8e8a95; /* لون النصوص الفرعية */
+}
+
+/* ================= CSS Styles ================= */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo', sans-serif;transition:all .2s ease-in-out; -webkit-tap-highlight-color: transparent;}
+body { background: var(--app-main-bg); color: var(--text-color); background-size: cover !important; background-position: center !important; background-attachment: fixed !important; padding-bottom: 100px; }
 a{text-decoration:none;color:inherit}
 
 /* HEADER */
 .header{
     display:flex;justify-content:flex-start;align-items:center;
     padding:18px 15px;font-size:20px;font-weight:900;
-    border-bottom:1px solid #1f1f23;position:sticky;top:0;
-    background:#0d0d0f;z-index:50;
+    position:sticky;top:0; background: var(--app-main-bg); z-index:50;
 }
-.header-btn{cursor:pointer;font-size:22px;color:#7c3aed; margin-left: 15px;}
-.header-name{font-size:20px;font-weight:700;}
+.header-btn{cursor:pointer;font-size:22px;color:var(--text-color); margin-left: 15px;}
+.header-name{font-size:18px;font-weight:700; color: var(--text-color);}
 
 /* SETTINGS CONTAINER */
-.settings-container{
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 0 15px;
+.settings-container{ width: 100%; max-width: 600px; margin: 0 auto; padding: 0 20px 20px 20px; }
+
+/* ================= رأس الملف الشخصي ================= */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+    margin-bottom: 30px;
 }
-.setting-section h2{
-    color: #7c3aed;
-    font-size: 18px;
-    padding: 10px 0;
-    margin-top: 25px;
-    border-bottom: 2px solid #1f1f23;
+.profile-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--post-border-color);
 }
+.profile-info { flex: 1; }
+.profile-info h2 { font-size: 18px; font-weight: 700; margin-bottom: 3px; color: var(--text-color); }
+.profile-info p { font-size: 13px; color: var(--secondary-text); direction: ltr; text-align: right; }
+.edit-icon { color: var(--secondary-text); font-size: 18px; cursor: pointer; padding: 10px; }
+
+/* ================= الأقسام والبطاقات ================= */
+.section-title { font-size: 14px; font-weight: 600; color: var(--secondary-text); margin-bottom: 12px; margin-right: 5px; }
+.menu-card { background-color: var(--post-main-bg); border-radius: 16px; padding: 5px 0; margin-bottom: 25px; }
 
 /* SETTING ITEM */
 .setting-item{
     display:flex;justify-content:space-between;align-items:center;
-    padding:15px 0;
-    border-bottom:1px solid #1f1f23;
-    cursor:pointer;
+    padding:14px 20px; border-bottom:1px solid var(--post-border-color); cursor:pointer;
 }
-.setting-item:last-child{
-    border-bottom:none;
-}
-.setting-info{
-    display:flex;align-items:center;gap:15px;
-}
+.setting-item:active { background: rgba(255,255,255,0.03); }
+.setting-item:last-child{ border-bottom:none; }
+
+.setting-info{ display:flex;align-items:center;gap:15px; width: 100%; }
 .setting-info i{
-    font-size: 20px;
-    width: 30px;
-    text-align: center;
-    color: #7c3aed;
+    font-size: 18px; width: 25px; text-align: center; color: var(--secondary-text);
 }
-.setting-label{
-    font-size: 16px;
-}
-.setting-action{
-    font-size: 14px;
-    opacity: 0.7;
-}
+.setting-label{ font-size: 15px; font-weight: 600; color: var(--secondary-text); }
+.setting-desc { font-size: 11px; color: var(--secondary-text); display: block; margin-top: 2px; opacity: 0.7; }
+.setting-action{ font-size: 14px; color: var(--secondary-text); white-space: nowrap; }
 
-/* Theme Toggle Switch */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 28px;
-}
+/* Switch */
+.switch { position: relative; display: inline-block; width: 45px; height: 24px; }
 .switch input {opacity: 0; width: 0; height: 0;}
-.slider {
-    position: absolute;
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 24px; border: 1px solid var(--post-border-color); }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: #aaa; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--primary-color); border-color: var(--primary-color); }
+input:checked + .slider:before { transform: translateX(21px); background-color: #fff; }
+
+.danger-zone .setting-info i { color: #ff5555; }
+.danger-zone .setting-label { color: #ff5555; }
+
+/* ================= شريط التنقل السفلي المطور (Glassmorphism) ================= */
+.fb-icons {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90% !important;
+    max-width: 400px !important;
+    height: 60px !important;
+    background: rgba(22, 22, 22, 0.95) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 50px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+    z-index: 4000 !important; 
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding: 0 5px !important;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s !important;
+}
+
+.fb-icons.hide-nav {
+    transform: translate(-50%, 150px) !important; 
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+.nav-item {
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    background: transparent !important;
+    border: none !important;
     cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 28px;
+    position: relative;
 }
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
+
+.nav-item i {
+    font-size: 22px !important;
+    color: #888 !important;
+    transition: 0.2s;
+}
+
+.nav-item.active i {
+    color: var(--primary-color) !important;
+    text-shadow: 0 0 10px rgba(109, 40, 217, 0.4);
+}
+
+.nav-avatar-small {
+    width: 28px; height: 28px;
     border-radius: 50%;
-}
-input:checked + .slider {
-    background-color: #7c3aed;
-}
-input:checked + .slider:before {
-    transform: translateX(20px);
+    background-size: cover; background-position: center;
+    background-color: #333;
+    border: 2px solid transparent;
+    transition: 0.2s;
 }
 
-/* Specific Styles */
-.danger-zone .setting-info i, .danger-zone .setting-label {
-    color: #ff5555;
+.nav-item.active .nav-avatar-small {
+    border-color: var(--primary-color);
+    transform: scale(1.1);
 }
 
-/* ================= LIGHT MODE STYLES (تمت الإضافة) ================= */
-body.light-mode {
-    background: #f0f2f5; 
-    color: #1a1a1a;     
+.nav-badge-count {
+    position: absolute; top: 10px; right: 25%;
+    background: #ff3b30; color: #fff;
+    min-width: 18px; height: 18px; border-radius: 50%;
+    font-size: 10px; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--app-main-bg);
+    z-index: 10; opacity: 0; transform: scale(0);
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-body.light-mode .header {
-    background: #fff;
-    border-bottom-color: #e0e0e0;
+
+.nav-badge-count.visible { opacity: 1; transform: scale(1); }
+
+/* Modals */
+.custom-modal { position: fixed; inset: 0; z-index: 20000; display: none; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); }
+.modal-box { background: var(--post-main-bg); width: 90%; max-width: 400px; border-radius: 24px; padding: 20px; border: 1px solid var(--post-border-color); box-shadow: 0 20px 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; animation: popIn 0.3s forwards; }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* Inputs inside modals */
+.modal-input { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.5); border: 1px solid var(--post-border-color); border-radius: 8px; color: var(--text-color); outline: none; font-family: 'Cairo', sans-serif; }
+.modal-input:focus { border-color: var(--primary-color); }
+.modal-btn-group { display: flex; gap: 10px; margin-top: 10px; }
+.modal-btn { padding: 10px; border: none; border-radius: 8px; flex: 1; font-weight: bold; cursor: pointer; font-family: 'Cairo', sans-serif; }
+.btn-cancel { background: rgba(255,255,255,0.1); color: var(--text-color); }
+.btn-save { background: var(--primary-color); color: #fff; }
+
+/* Sheet Options (لتنسيق أزرار المودال الخاص بالصورة) */
+.sheet-option {
+    padding: 15px;
+    border-bottom: 1px solid var(--post-border-color);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: 600;
 }
-body.light-mode .setting-section h2 {
-    border-bottom-color: #e0e0e0;
-}
-body.light-mode .setting-item {
-    border-bottom-color: #e0e0e0;
-}
-body.light-mode .setting-info i {
-    color: #3f51b5; 
-}
+.sheet-option:last-child { border-bottom: none; }
+.sheet-option:hover { background: rgba(255,255,255,0.03); }
+
+/* Themes & Langs */
+.lang-options-container { display: flex; flex-direction: column; gap: 10px; max-height: 50vh; overflow-y: auto; padding-right: 5px; }
+.lang-card-pro { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid var(--post-border-color); padding: 12px 15px; border-radius: 12px; cursor: pointer; color: var(--text-color); }
+#dynamicThemesGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-height: 400px; overflow-y: auto; padding: 5px; scrollbar-width: none; }
+.theme-card { cursor:pointer; border-radius:16px; overflow:hidden; border:2px solid transparent; }
+
+body.light-mode { --app-main-bg: #f0f2f5; --post-main-bg: #ffffff; --post-border-color: #dddddd; --text-color: #050505; --secondary-text: #65676b; }
+
+/* 🔥 الإشعارات الاحترافية (Toasts) 🔥 */
+#toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; pointer-events: none; }
+.toast { padding: 15px 20px; border-radius: 12px; color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.toast i { font-size: 20px; }
+.toast.success { background: #10b981; } /* أخضر */
+.toast.error { background: #ef4444; }   /* أحمر */
+.toast.info { background: var(--primary-color); } /* بنفسجي */
+@keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeOutToast { to { opacity: 0; transform: translateY(-20px); } }
+
+/* سكرول بار للأجهزة */
+.devices-list::-webkit-scrollbar { width: 5px; }
+.devices-list::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
+/* ستايلات التحقق من اسم المستخدم (Username Validation) */
+.username-feedback { font-size: 12px; margin-top: -10px; margin-bottom: 15px; text-align: right; display: none; font-weight: bold; transition: 0.3s; }
+.username-feedback.error { color: #ff5555; display: block; }
+.username-feedback.success { color: #10b981; display: block; }
+
+.modal-input.error { border-color: #ff5555; box-shadow: 0 0 8px rgba(255, 85, 85, 0.3); }
+.modal-input.success { border-color: #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.3); }
+
+.suggestions-box { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; display: none; }
+.suggestion-chip { background: rgba(255,255,255,0.05); border: 1px solid var(--post-border-color); padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; color: var(--text-color); transition: 0.2s; font-family: sans-serif; font-weight: bold; }
+.suggestion-chip:hover { background: var(--primary-color); border-color: var(--primary-color); transform: scale(1.05); }
+
 </style>
 </head>
 
 <body class="dark-mode"> 
 
-<div id="reauthModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:100; align-items:center; justify-content:center; flex-direction:column; padding:20px;">
-    <div style="background:#1c1c1c; padding:30px; border-radius:10px; max-width:350px; width:100%;">
-        <h3 style="color:#ff5555; margin-bottom:15px; text-align:center;">تأكيد حذف الحساب</h3>
-        <p style="margin-bottom:15px;">الرجاء إدخال كلمة المرور الحالية للمتابعة:</p>
-        <input type="password" id="reauthPassword" placeholder="كلمة المرور الحالية" style="width:100%; padding:10px; margin-bottom:15px; background:#0d0d0f; border:1px solid #333; border-radius:8px; color:#fff;">
-        
-        <div style="display:flex; justify-content:space-between;">
-            <button onclick="document.getElementById('reauthModal').style.display='none'" style="background:#333; color:#ccc; padding:10px; border:none; border-radius:8px; flex:1; margin-left:10px;">إلغاء</button>
-            <button onclick="reauthenticateAndDelete()" style="background:#ff5555; color:#fff; padding:10px; border:none; border-radius:8px; flex:1;">تأكيد الحذف</button>
-        </div>
-        <p id="reauthError" style="color:red; margin-top:10px; font-size:12px; display:none; text-align:center;"></p>
-    </div>
-</div>
+<div id="toast-container"></div>
+
 <div class="header">
   <i class="fa-solid fa-arrow-right header-btn" onclick="goBack()"></i>
-  <span class="header-name">الإعدادات</span>
 </div>
 
 <div class="settings-container">
-    
-    <div class="setting-section">
-        <h2><i class="fa-solid fa-paintbrush"></i> المظهر</h2>
-        
-        <div class="setting-item" style="cursor: default;">
+
+    <div class="profile-header">
+        <div class="profile-img-wrapper" onclick="openPicOptionsModal()">
+            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="ui-profilePic" class="profile-img" alt="Profile">
+        </div>
+        <div class="profile-info">
+            <h2 id="ui-headerName" data-i18n="text_loading">جاري التحميل...</h2>
+            <p id="ui-headerEmail">example@gmail.com</p>
+        </div>
+        <i class="fa-regular fa-pen-to-square edit-icon" onclick="openNameModal()"></i>
+    </div>
+
+    <h3 class="section-title" data-i18n="section_personal_info">المعلومات الشخصية</h3>
+    <div class="menu-card">
+        <div class="setting-item" onclick="openNameModal()">
             <div class="setting-info">
-                <i class="fa-solid fa-moon"></i>
-                <span class="setting-label">الوضع الليلي / الوضع الفاتح</span>
+                <i class="fa-regular fa-user"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_full_name">الاسم بالكامل</span>
+                    <span class="setting-desc" id="ui-fullName" data-i18n="text_loading">جاري التحميل...</span>
+                </div>
+            </div>
+            <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
+        </div>
+
+        <div class="setting-item" onclick="openUsernameModal()">
+            <div class="setting-info">
+                <i class="fa-solid fa-at"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_username">اسم المستخدم (Username)</span>
+                    <span class="setting-desc" id="ui-username" data-i18n="text_loading">جاري التحميل...</span>
+                </div>
+            </div>
+            <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
+        </div>
+
+        <div class="setting-item" onclick="openDobGenderModal()">
+            <div class="setting-info">
+                <i class="fa-regular fa-calendar-days"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_dob_gender">تاريخ الميلاد والجنس</span>
+                    <span class="setting-desc" id="ui-dobGender" data-i18n="text_loading">جاري التحميل...</span>
+                </div>
+            </div>
+            <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
+        </div>
+    </div>
+    
+    <h3 class="section-title" data-i18n="section_account_security">الحساب والأمان</h3>
+    <div class="menu-card">
+        <div class="setting-item" onclick="startEmailChange()">
+            <div class="setting-info">
+                <i class="fa-regular fa-envelope"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_change_email">تغيير البريد الإلكتروني</span>
+                    <span class="setting-desc" id="ui-email" data-i18n="text_loading">جاري التحميل...</span>
+                </div>
+            </div>
+            <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
+        </div>
+
+        <div class="setting-item" onclick="openPasswordModal()">
+            <div class="setting-info">
+                <i class="fa-solid fa-lock"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_change_password">تغيير كلمة المرور</span>
+                    <span class="setting-desc" data-i18n="desc_change_password">تحديث الرمز السري الخاص بك</span>
+                </div>
+            </div>
+            <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
+        </div>
+
+        <div class="setting-item" onclick="openDevicesModal()">
+            <div class="setting-info">
+                <i class="fa-solid fa-mobile-screen"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_registered_devices">الأجهزة المسجلة (الأمان)</span>
+                    <span class="setting-desc" data-i18n="desc_registered_devices">إدارة جلسات الدخول الخاصة بك</span>
+                </div>
+            </div>
+            <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
+        </div>
+    </div>
+    
+    <h3 class="section-title" data-i18n="section_appearance_language">المظهر واللغة</h3>
+    <div class="menu-card">
+        <div class="setting-item" onclick="openThemeModal()">
+            <div class="setting-info">
+                <i class="fa-solid fa-palette"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_app_theme">مظهر التطبيق (السمة)</span>
+                    <span class="setting-desc" id="currentThemeText">الكوني (ذهبي)</span>
+                </div>
+            </div>
+            <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
+        </div>
+
+        <div class="setting-item" onclick="openLanguageModal()">
+            <div class="setting-info">
+                <i class="fa-solid fa-globe"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_app_language">لغة التطبيق</span>
+                    <span class="setting-desc" id="currentLangText">العربية</span>
+                </div>
+            </div>
+            <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
+        </div>
+
+        <div class="setting-item" style="cursor: default;" onclick="toggleLightMode(event)">
+            <div class="setting-info">
+                <i class="fa-solid fa-moon" id="lightModeIcon"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_light_mode">الوضع النهاري الإجباري</span>
+                    <span class="setting-desc" data-i18n="desc_light_mode">إلغاء السمات وتفعيل الأبيض</span>
+                </div>
             </div>
             <label class="switch">
-                <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                <input type="checkbox" id="lightModeToggle">
                 <span class="slider"></span>
             </label>
         </div>
     </div>
 
-    <div class="setting-section">
-        <h2><i class="fa-solid fa-user-gear"></i> الحساب والملف الشخصي</h2>
-        
-        <div class="setting-item" onclick="location.href=getFilePath('edit.html')">
+    <h3 class="section-title" data-i18n="section_app_prefs">تفضيلات التطبيق</h3>
+    <div class="menu-card">
+        <div class="setting-item" onclick="toggleOnlineFeature(event)">
             <div class="setting-info">
-                <i class="fa-solid fa-pen-to-square"></i>
-                <span class="setting-label">تعديل الملف الشخصي</span>
+                <i class="fa-solid fa-signal" id="onlineIcon" style="color: var(--primary-color);"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_online_status">حالة النشاط (Online)</span>
+                    <span class="setting-desc" id="onlineStatusText" data-i18n="desc_online_status_on">يظهر للآخرين أنك متصل</span>
+                </div>
             </div>
-            <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
+            <label class="switch">
+                <input type="checkbox" id="onlineToggle">
+                <span class="slider"></span>
+            </label>
         </div>
-    </div>
-    
-    <div class="setting-section">
-        <h2><i class="fa-solid fa-shield-halved"></i> الخصوصية والأمان</h2>
-        
-        <div class="setting-item" onclick="location.href=getFilePath('security.html')">
-            <div class="setting-info">
-                <i class="fa-solid fa-lock"></i>
-                <span class="setting-label">تغيير كلمة المرور وإعدادات الأمان</span>
-            </div>
-            <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
-        </div>
-    </div>
-    
-    <div class="setting-section danger-zone">
-        <h2><i class="fa-solid fa-fire-extinguisher"></i> إعدادات أخرى</h2>
 
-        <div class="setting-item" onclick="logout()">
+        <div class="setting-item" onclick="toggleAppSounds(event)">
             <div class="setting-info">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span class="setting-label">تسجيل الخروج</span>
+                <i class="fa-solid fa-volume-high" id="soundIcon" style="color: var(--primary-color);"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_app_sounds">أصوات التطبيق</span>
+                    <span class="setting-desc" data-i18n="desc_app_sounds">تأثيرات النقر والإشعارات</span>
+                </div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="soundsToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-item" onclick="toggleOrbPreference(event)">
+            <div class="setting-info">
+                <i class="fa-solid fa-circle-nodes" id="orbIcon" style="color: var(--primary-color);"></i>
+                <div>
+                    <span class="setting-label" data-i18n="label_nav_orb">كرة التنقل العائمة</span>
+                    <span class="setting-desc" data-i18n="desc_nav_orb">زر الوصول السريع الجانبي</span>
+                </div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="orbToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+    
+    <h3 class="section-title danger-zone" data-i18n="section_danger_zone">منطقة الخطر</h3>
+    <div class="menu-card">
+        <div class="setting-item" onclick="location.href='blocked.html'" style="border-right: 3px solid #f59e0b;">
+            <div class="setting-info">
+                <i class="fa-solid fa-user-shield" style="color: #f59e0b;"></i>
+                <div>
+                    <span class="setting-label" style="color: #f59e0b;" data-i18n="label_block_list">قائمة المحظورين (Block List)</span>
+                    <span class="setting-desc" style="color: var(--secondary-text);" data-i18n="desc_block_list">إدارة الأشخاص الممنوعين من التواصل معك</span>
+                </div>
             </div>
             <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
         </div>
-        
+
         <div class="setting-item" onclick="confirmDeleteAccount()">
-            <div class="setting-info">
+            <div class="setting-info danger-zone">
                 <i class="fa-solid fa-trash-can"></i>
-                <span class="setting-label">حذف الحساب نهائياً</span>
+                <div>
+                    <span class="setting-label" data-i18n="label_delete_account">حذف / إغلاق الحساب</span>
+                    <span class="setting-desc" style="color: #ff5555;" data-i18n="desc_delete_account">سيتم إغلاق حسابك مع فترة سماح 30 يوم للاسترجاع</span>
+                </div>
             </div>
             <div class="setting-action"><i class="fa-solid fa-chevron-left"></i></div>
         </div>
@@ -206,135 +439,1029 @@ body.light-mode .setting-info i {
 
 </div>
 
+<div class="fb-icons" id="bottomNavBar">
+    <div class="nav-item" onclick="location.href='home.html'">
+        <i class="fa-solid fa-house"></i>
+    </div>
+
+    <div class="nav-item" onclick="location.href='Friend_requests.html'">
+        <i class="fa-solid fa-user-plus"></i>
+        <div id="topReqCount" class="nav-badge-count">0</div>
+    </div>
+
+    <div class="nav-item" onclick="location.href='messages.html'">
+        <i class="fa-solid fa-comment-dots"></i>
+        <div id="topMsgCount" class="nav-badge-count">0</div> 
+    </div>
+    
+    <div class="nav-item" onclick="location.href='videos.html'">
+        <i class="fa-solid fa-circle-play"></i>
+    </div>
+    
+    <div class="nav-item" onclick="location.href='notifications.html'">
+        <i class="fa-solid fa-bell"></i>
+        <div id="topNotifCount" class="nav-badge-count">0</div>
+    </div>
+
+    <div class="nav-item active" onclick="location.href='profile.html'">
+        <div id="bottomNavAvatar" class="nav-avatar-small" style="background-color: #333;"></div>
+    </div>
+</div>
+
+<div class="custom-modal" id="passwordModal">
+    <div class="modal-box">
+        <h3 style="color: var(--text-color); margin-bottom: 5px;" data-i18n="label_change_password">تغيير كلمة المرور</h3>
+        <p style="color: var(--secondary-text); font-size: 12px; margin-bottom: 15px;" data-i18n="desc_pass_modal">أدخل بيانات كلمة المرور القديمة والجديدة.</p>
+        
+        <input type="password" id="inp-currentPass" class="modal-input" data-i18n-placeholder="placeholder_current_pass" placeholder="كلمة السر الحالية">
+        <input type="password" id="inp-newPass" class="modal-input" data-i18n-placeholder="placeholder_new_pass" placeholder="كلمة السر الجديدة">
+        <input type="password" id="inp-confirmPass" class="modal-input" data-i18n-placeholder="placeholder_confirm_pass" placeholder="تأكيد كلمة السر الجديدة">
+        
+        <div class="modal-btn-group">
+            <button class="modal-btn btn-cancel" onclick="document.getElementById('passwordModal').style.display='none'" data-i18n="btn_cancel">إلغاء</button>
+            <button class="modal-btn btn-save" onclick="saveNewPassword()" data-i18n="btn_save_change">حفظ وتغيير</button>
+        </div>
+    </div>
+</div>
+
+<div class="custom-modal" id="devicesModal">
+    <div class="modal-box">
+        <h3 style="color: var(--text-color); margin-bottom: 15px;"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="label_registered_devices">الأجهزة المسجلة</span></h3>
+        <div id="devicesList" class="devices-list" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;"></div>
+        <div class="modal-btn-group">
+            <button class="modal-btn btn-cancel" onclick="document.getElementById('devicesModal').style.display='none'" data-i18n="btn_close">إغلاق</button>
+            <button class="modal-btn" style="background:#ff5555; color:#fff;" onclick="logoutAllDevices()" data-i18n="btn_logout_all">خروج من الجميع</button>
+        </div>
+    </div>
+</div>
+
+<div class="custom-modal" id="nameModal">
+    <div class="modal-box">
+        <h3 style="color: var(--text-color); margin-bottom: 5px;" data-i18n="title_edit_name">تعديل الاسم</h3>
+        <p style="color: var(--secondary-text); font-size: 12px; margin-bottom: 15px;" data-i18n="desc_name_modal">ملاحظة: يمكنك تغيير الاسم مرة واحدة كل 30 يوم.</p>
+        
+        <input type="text" id="inp-firstName" class="modal-input" data-i18n-placeholder="placeholder_first_name" placeholder="الاسم الأول">
+        <input type="text" id="inp-fatherName" class="modal-input" data-i18n-placeholder="placeholder_father_name" placeholder="اسم الأب (اختياري)">
+        <input type="text" id="inp-familyName" class="modal-input" data-i18n-placeholder="placeholder_family_name" placeholder="اسم العائلة (اختياري)">
+        
+        <div class="modal-btn-group">
+            <button class="modal-btn btn-cancel" onclick="document.getElementById('nameModal').style.display='none'" data-i18n="btn_cancel">إلغاء</button>
+            <button class="modal-btn btn-save" onclick="saveName()" data-i18n="btn_save">حفظ</button>
+        </div>
+    </div>
+</div>
+
+<div class="custom-modal" id="usernameModal">
+    <div class="modal-box">
+        <h3 style="color: var(--text-color); margin-bottom: 5px;" data-i18n="title_edit_username">تعديل اسم المستخدم</h3>
+        <p style="color: var(--secondary-text); font-size: 12px; margin-bottom: 15px;" data-i18n="desc_username_modal">يجب أن يكون فريداً وباللغة الإنجليزية (يُسمح بـ . و _ فقط)</p>
+        
+        <input type="text" id="inp-username" class="modal-input" data-i18n-placeholder="placeholder_username" placeholder="مثال: ahmed_123" dir="ltr" oninput="validateUsernameLive(this)">
+        
+        <div id="usernameFeedback" class="username-feedback"></div>
+        <div id="usernameSuggestions" class="suggestions-box"></div>
+        
+        <div class="modal-btn-group">
+            <button class="modal-btn btn-cancel" onclick="document.getElementById('usernameModal').style.display='none'" data-i18n="btn_cancel">إلغاء</button>
+            <button class="modal-btn btn-save" id="btnSaveUsername" onclick="saveUsername()" disabled data-i18n="btn_save">حفظ</button>
+        </div>
+    </div>
+</div>
+
+<div class="custom-modal" id="dobGenderModal">
+    <div class="modal-box">
+        <h3 style="color: var(--text-color); margin-bottom: 15px;" data-i18n="title_dob_gender">تاريخ الميلاد والجنس</h3>
+        <p style="color: var(--secondary-text); font-size: 12px; margin-bottom: 15px;" data-i18n="desc_dob_modal">ملاحظة: يمكنك التعديل مرة واحدة كل 3 شهور.</p>
+        
+        <label style="color:var(--secondary-text); font-size:13px; display:block; margin-bottom:5px;" data-i18n="label_dob">تاريخ الميلاد</label>
+        <input type="date" id="inp-dob" class="modal-input" style="color-scheme: dark;">
+        
+        <label style="color:var(--secondary-text); font-size:13px; display:block; margin-bottom:5px;" data-i18n="label_gender">الجنس</label>
+        <select id="inp-gender" class="modal-input">
+            <option value="" data-i18n="opt_choose">اختر...</option>
+            <option value="male" data-i18n="opt_male">ذكر</option>
+            <option value="female" data-i18n="opt_female">أنثى</option>
+        </select>
+        
+        <div class="modal-btn-group">
+            <button class="modal-btn btn-cancel" onclick="document.getElementById('dobGenderModal').style.display='none'" data-i18n="btn_cancel">إلغاء</button>
+            <button class="modal-btn btn-save" onclick="saveDobGender()" data-i18n="btn_save">حفظ</button>
+        </div>
+    </div>
+</div>
+
+<div class="custom-modal" id="emailAuthModal">
+    <div class="modal-box">
+        <h3 style="color: var(--text-color); margin-bottom: 5px;" data-i18n="label_change_email">تغيير البريد الإلكتروني</h3>
+        <p style="color: var(--secondary-text); font-size: 12px; margin-bottom: 15px;" data-i18n="desc_email_auth">لدواعي أمنية، يرجى إدخال كلمة المرور الحالية.</p>
+        
+        <input type="password" id="inp-emailAuthPass" class="modal-input" data-i18n-placeholder="placeholder_current_pass" placeholder="كلمة المرور">
+        
+        <div class="modal-btn-group">
+            <button class="modal-btn btn-cancel" onclick="document.getElementById('emailAuthModal').style.display='none'" data-i18n="btn_cancel">إلغاء</button>
+            <button class="modal-btn btn-save" onclick="verifyForEmailChange()" data-i18n="btn_continue">متابعة</button>
+        </div>
+    </div>
+</div>
+
+<div class="custom-modal" id="newEmailModal">
+    <div class="modal-box">
+        <h3 style="color: var(--text-color); margin-bottom: 5px;" data-i18n="title_new_email">الإيميل الجديد</h3>
+        <p style="color: var(--secondary-text); font-size: 12px; margin-bottom: 15px;" data-i18n="desc_new_email">سيتم إرسال رابط تأكيد على هذا البريد.</p>
+        
+        <input type="email" id="inp-newEmail" class="modal-input" data-i18n-placeholder="placeholder_new_email" placeholder="البريد الإلكتروني الجديد" dir="ltr">
+        
+        <div class="modal-btn-group">
+            <button class="modal-btn btn-cancel" onclick="document.getElementById('newEmailModal').style.display='none'" data-i18n="btn_cancel">إلغاء</button>
+            <button class="modal-btn btn-save" onclick="sendEmailUpdateLink()" data-i18n="btn_send_link">إرسال الرابط</button>
+        </div>
+    </div>
+</div>
+
+<div class="custom-modal" id="themeModal">
+    <div class="modal-box">
+        <h3 style="color: var(--text-color); margin-bottom: 5px; font-weight: 900;" data-i18n="title_themes">🎨 عالم السمات</h3>
+        <p style="color: var(--secondary-text); font-size: 13px; margin-bottom: 20px;" data-i18n="desc_themes">اختر المظهر الذي يعكس شخصيتك</p>
+        <div id="dynamicThemesGrid"></div>
+        <button style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); color: var(--text-color); border: 1px solid var(--post-border-color); border-radius: 12px; margin-top: 15px; font-weight: bold; cursor: pointer;" onclick="document.getElementById('themeModal').style.display='none'" data-i18n="btn_close">إغلاق</button>
+    </div>
+</div>
+
+<div class="custom-modal" id="appLanguageModal">
+    <div class="modal-box" style="border-top: 4px solid var(--primary-color);">
+        <h3 style="color: var(--text-color); margin-bottom: 15px; font-weight: 900;" data-i18n="title_languages">🌍 لغة التطبيق</h3>
+        <div class="lang-options-container">
+            <div class="lang-card-pro" onclick="setAppLanguage('ar', 'العربية')">
+                <div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 20px;">🇪🇬</span><span style="font-weight: bold;">العربية</span></div>
+                <i class="fa-solid fa-check lang-check-icon" id="check-ar" style="display: none; color: var(--primary-color);"></i>
+            </div>
+            <div class="lang-card-pro" onclick="setAppLanguage('en', 'English')">
+                <div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 20px;">🇺🇸</span><span style="font-weight: bold; font-family: sans-serif;">English</span></div>
+                <i class="fa-solid fa-check lang-check-icon" id="check-en" style="display: none; color: var(--primary-color);"></i>
+            </div>
+            <div class="lang-card-pro" onclick="setAppLanguage('fr', 'Français')">
+                <div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 20px;">🇫🇷</span><span style="font-weight: bold; font-family: sans-serif;">Français</span></div>
+                <i class="fa-solid fa-check lang-check-icon" id="check-fr" style="display: none; color: var(--primary-color);"></i>
+            </div>
+        </div>
+        <button style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); color: var(--text-color); border: 1px solid var(--post-border-color); border-radius: 12px; margin-top: 15px; font-weight: bold; cursor: pointer;" onclick="document.getElementById('appLanguageModal').style.display='none'" data-i18n="btn_cancel">إلغاء</button>
+    </div>
+</div>
+
+<div id="reauthModal" class="custom-modal">
+    <div class="modal-box">
+        <h3 style="color:#ff5555; margin-bottom:15px; text-align:center;" data-i18n="title_delete_acc">تأكيد إغلاق الحساب</h3>
+        <p style="margin-bottom:15px; color: var(--secondary-text); font-size: 13px;" data-i18n="desc_delete_acc">سيتم جدولة الحساب للحذف النهائي بعد 30 يوم. أدخل كلمة المرور:</p>
+        <input type="password" id="reauthPassword" class="modal-input" data-i18n-placeholder="placeholder_current_pass" placeholder="كلمة المرور الحالية">
+        <div class="modal-btn-group">
+            <button onclick="document.getElementById('reauthModal').style.display='none'" class="modal-btn btn-cancel" data-i18n="btn_cancel">إلغاء</button>
+            <button onclick="reauthenticateAndDelete()" class="modal-btn" style="background:#ff5555; color:#fff;" data-i18n="btn_confirm_delete">تأكيد الإغلاق</button>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="picInput" accept="image/*" style="display:none;" onchange="handlePicSelect(event)">
+
+<div class="custom-modal" id="picOptionsModal">
+    <div class="modal-box">
+        <h3 style="color: var(--text-color); margin-bottom: 15px; text-align: center;">صورة الملف الشخصي</h3>
+        
+        <div class="sheet-option" onclick="document.getElementById('picInput').click(); document.getElementById('picOptionsModal').style.display='none';">
+            <i class="fa-solid fa-image" style="color: var(--primary-color); width: 25px;"></i> اختيار صورة جديدة
+        </div>
+        
+        <div class="sheet-option" onclick="removeProfilePic()" style="color: #ff5555;">
+            <i class="fa-solid fa-trash-can" style="width: 25px;"></i> حذف الصورة الحالية
+        </div>
+        
+        <button class="modal-btn btn-cancel" style="margin-top: 15px; width: 100%;" onclick="document.getElementById('picOptionsModal').style.display='none'">إلغاء</button>
+    </div>
+</div>
+
+<div class="custom-modal" id="cropModal">
+    <div class="modal-box" style="max-width: 95%;">
+        <h3 style="color: var(--text-color); margin-bottom: 10px; text-align: center;">تعديل الصورة</h3>
+        <div class="cropper-container-box">
+            <img id="imageToCrop" src="" style="max-width: 100%; display: block;">
+        </div>
+        <div class="modal-btn-group">
+            <button class="modal-btn btn-cancel" onclick="cancelCrop()">إلغاء</button>
+            <button class="modal-btn btn-save" id="btnSaveCrop" onclick="uploadCroppedImage()">حفظ الصورة</button>
+        </div>
+    </div>
+</div>
+
+<script src="translations.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script>
-// 🚨 المسار الأساسي لملفات NABD 🚨
-const BASE_PATH = 'file:///storage/emulated/0/NABD/';
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
-function getFilePath(fileName) {
-    return BASE_PATH + fileName;
+<script>
+// === i18n System Setup ===
+function t(key) {
+    let lang = localStorage.getItem('wareed_lang') || 'ar';
+    if (typeof appTranslations !== 'undefined' && appTranslations[lang] && appTranslations[lang][key]) {
+        return appTranslations[lang][key];
+    }
+    return key; 
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    let lang = localStorage.getItem('wareed_lang') || 'ar';
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+    
+    // ترجمة العناصر الثابتة
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        let key = el.getAttribute('data-i18n');
+        if (typeof appTranslations !== 'undefined' && appTranslations[lang] && appTranslations[lang][key]) {
+            el.innerText = appTranslations[lang][key];
+        }
+    });
 
-// إعداد Firebase 
-firebase.initializeApp({
+    // ترجمة الـ Placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        let key = el.getAttribute('data-i18n-placeholder');
+        if (typeof appTranslations !== 'undefined' && appTranslations[lang] && appTranslations[lang][key]) {
+            el.placeholder = appTranslations[lang][key];
+        }
+    });
+});
+
+const BASE_PATH = 'file:///storage/emulated/0/NABD/';
+function getFilePath(fileName) { return BASE_PATH + fileName; }
+
+const firebaseConfig = {
   apiKey:"AIzaSyDpvqNAReChsHn5tFJSp7vV_EJHmtD2x4c", 
   authDomain:"pools-e4381.firebaseapp.com",
   projectId:"pools-e4381"
-});
-
+};
+if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
 const auth = firebase.auth();
-const themeToggleEl = document.getElementById('themeToggle');
-const reauthPasswordEl = document.getElementById('reauthPassword');
-const reauthErrorEl = document.getElementById('reauthError');
+const db = firebase.firestore();
 
-// التحقق من حالة المصادقة (لضمان بقاء المستخدم في settings.html إذا كان مسجل الدخول)
+let currentUserData = null;
+
+// 🔥 دالة الإشعارات الاحترافية 🔥
+function showToast(msg, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    let icon = 'fa-circle-check';
+    if(type === 'error') icon = 'fa-circle-exclamation';
+    if(type === 'info') icon = 'fa-circle-info';
+    
+    toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${msg}</span>`;
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.animation = 'fadeOutToast 0.4s forwards';
+        setTimeout(() => toast.remove(), 400);
+    }, 3000);
+}
+
 auth.onAuthStateChanged(user => {
     if (!user) {
-        // إذا لم يكن مسجل الدخول، وجهه إلى صفحة الدخول (index.html)
-        location.href = getFilePath("index.html"); 
-    } 
+        window.location.replace("index.html");
+ 
+    } else {
+        document.getElementById('ui-email').innerText = user.email;
+        document.getElementById('ui-headerEmail').innerText = user.email;
+        
+        db.collection('users').doc(user.uid).onSnapshot(doc => {
+            if(doc.exists) {
+                currentUserData = doc.data();
+                
+                let fName = currentUserData.firstName || '';
+                let father = currentUserData.fatherName || '';
+                let family = currentUserData.familyName || '';
+                let detailedName = `${fName} ${father} ${family}`.replace(/\s+/g, ' ').trim();
+                
+                let originalName = currentUserData.name || currentUserData.displayName || '';
+                let finalNameToDisplay = detailedName || originalName || t('text_not_set');
+
+                document.getElementById('ui-fullName').innerText = finalNameToDisplay;
+                document.getElementById('ui-headerName').innerText = finalNameToDisplay;
+
+                // تحديث وتطبيق الصورة بشكل صحيح على جميع الأماكن
+                let userPhotoUrl = currentUserData.profilePic || currentUserData.pic || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                updateAllProfilePictures(userPhotoUrl);
+
+                document.getElementById('ui-username').innerText = currentUserData.username ? "@" + currentUserData.username : t('text_not_set');
+                
+                let gText = currentUserData.gender === 'male' ? t('opt_male') : (currentUserData.gender === 'female' ? t('opt_female') : t('text_not_specified'));
+                let dobText = currentUserData.dob || t('text_not_specified');
+                document.getElementById('ui-dobGender').innerText = `${dobText} | ${gText}`;
+            }
+        });
+    }
 });
 
+function canUpdate(lastUpdateTimestamp, daysRequired) {
+    if (!lastUpdateTimestamp) return true;
+    const reqMs = daysRequired * 24 * 60 * 60 * 1000;
+    let lastTime = lastUpdateTimestamp.toMillis ? lastUpdateTimestamp.toMillis() : lastUpdateTimestamp;
+    return (Date.now() - lastTime) >= reqMs;
+}
 
-/* 1. وظائف التحكم في المظهر (Theme Toggle) */
-function loadTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+function getDaysLeft(lastUpdateTimestamp, daysRequired) {
+    const reqMs = daysRequired * 24 * 60 * 60 * 1000;
+    let lastTime = lastUpdateTimestamp.toMillis ? lastUpdateTimestamp.toMillis() : lastUpdateTimestamp;
+    let timePassed = Date.now() - lastTime;
+    return Math.ceil((reqMs - timePassed) / (1000 * 60 * 60 * 24));
+}
+
+function openPasswordModal() {
+    document.getElementById('inp-currentPass').value = '';
+    document.getElementById('inp-newPass').value = '';
+    document.getElementById('inp-confirmPass').value = '';
+    document.getElementById('passwordModal').style.display = 'flex';
+}
+
+function saveNewPassword() {
+    let currentPass = document.getElementById('inp-currentPass').value;
+    let newPass = document.getElementById('inp-newPass').value;
+    let confirmPass = document.getElementById('inp-confirmPass').value;
+    let user = auth.currentUser;
+
+    if(!currentPass || !newPass || !confirmPass) {
+        showToast(t('toast_fill_fields'), 'error');
+        return;
+    }
+
+    if(newPass !== confirmPass) {
+        showToast(t('toast_pass_mismatch'), 'error');
+        return;
+    }
+
+    if(newPass.length < 6) {
+        showToast(t('toast_pass_short'), 'error');
+        return;
+    }
+
+    const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPass);
     
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-mode');
-        themeToggleEl.checked = true;
-    } else {
-        document.body.classList.remove('light-mode');
-        themeToggleEl.checked = false;
-    }
-}
-
-function toggleTheme() {
-    if (themeToggleEl.checked) {
-        document.body.classList.add('light-mode');
-        localStorage.setItem('theme', 'light');
-    } else {
-        document.body.classList.remove('light-mode');
-        localStorage.setItem('theme', 'dark');
-    }
-}
-
-// تحميل المظهر عند فتح الصفحة
-window.onload = loadTheme;
-
-
-/* 2. باقي الدوال الأساسية */
-function goBack() {
-  // 🚨 تم التعديل هنا ليعود إلى الصفحة الرئيسية (home.html) 🚨
-  location.href = getFilePath("home.html"); 
-}
-
-function logout() {
-    auth.signOut().then(() => {
-        // 🚨 تم التعديل هنا ليعود إلى صفحة تسجيل الدخول (index.html) 🚨
-        location.href = getFilePath("index.html"); 
-    }).catch(error => {
-        alert("حدث خطأ في تسجيل الخروج: " + error.message);
+    user.reauthenticateWithCredential(credential).then(() => {
+        user.updatePassword(newPass).then(() => {
+            document.getElementById('passwordModal').style.display = 'none';
+            showToast(t('toast_pass_changed'), 'success');
+        }).catch((error) => {
+            showToast(t('toast_pass_change_err'), 'error');
+        });
+    }).catch((error) => {
+        showToast(t('toast_pass_incorrect'), 'error');
     });
 }
 
+function openDevicesModal() {
+    const list = document.getElementById('devicesList');
+    list.innerHTML = `<div style="text-align:center; padding: 20px;"><i class="fa-solid fa-spinner fa-spin fa-2x" style="color:var(--primary-color)"></i></div>`;
+    document.getElementById('devicesModal').style.display = 'flex';
 
-/* 3. وظائف حذف الحساب (إعادة المصادقة + الحذف) */
+    let user = auth.currentUser;
+    if(!user) return;
+
+    let currentSessionId = localStorage.getItem('nabd_current_session_id');
+
+    db.collection('users').doc(user.uid).collection('login_history')
+      .orderBy('loginTime', 'desc')
+      .get().then((snapshot) => {
+          if (snapshot.empty) {
+              list.innerHTML = `<div style="text-align:center; color:var(--secondary-text);">${t('text_no_devices')}</div>`;
+              return;
+          }
+
+          let html = '';
+          snapshot.forEach((doc) => {
+              let data = doc.data();
+              let isCurrent = (data.sessionId === currentSessionId);
+              
+              let timeString = t('text_not_specified');
+              if(data.loginTime) {
+                  let dateObj = data.loginTime.toDate();
+                  timeString = dateObj.toLocaleString(); 
+              }
+
+              html += `
+              <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; border: 1px solid ${isCurrent ? 'var(--primary-color)' : 'var(--post-border-color)'}; position: relative; margin-bottom: 10px;">
+                  ${isCurrent ? `<div style="position: absolute; top: 10px; left: 10px; font-size: 11px; background: var(--primary-color); padding: 2px 8px; border-radius: 10px; color: #fff;">${t('text_active_now')}</div>` : ''}
+                  <div style="font-weight: bold; color: var(--text-color); margin-bottom: 5px; font-size: 16px;">
+                      <i class="fa-solid ${data.deviceName.includes('هاتف') ? 'fa-mobile-screen' : 'fa-laptop'}"></i> 
+                      ${data.deviceName || t('text_unknown_device')}
+                  </div>
+                  <div style="font-size: 13px; color: var(--secondary-text); margin-bottom: 5px;">
+                      <i class="fa-solid fa-location-dot" style="width: 15px;"></i> ${t('text_location')} ${data.location || t('text_not_specified')}
+                      <span style="font-size: 10px; opacity:0.6;">(IP: ${data.ip || '---'})</span>
+                  </div>
+                  <div style="font-size: 13px; color: var(--secondary-text);">
+                      <i class="fa-solid fa-clock" style="width: 15px;"></i> ${t('text_login_time')} ${timeString}
+                  </div>
+                  ${isCurrent ? 
+                    `<button onclick="logoutCurrentDevice()" style="margin-top: 15px; padding: 8px 12px; border: none; background: rgba(255, 85, 85, 0.1); color: #ff5555; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%;">${t('btn_logout_device')}</button>` 
+                    : 
+                    `<button onclick="removeDeviceSession('${doc.id}')" style="margin-top: 15px; padding: 6px 12px; border: 1px solid #ff5555; background: transparent; color: #ff5555; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%;">${t('btn_remove_session')}</button>`
+                  }
+              </div>
+              `;
+          });
+          list.innerHTML = html;
+      }).catch(err => {
+          list.innerHTML = `<div style="text-align:center; color:#ff5555;">${t('err_fetch_data')}</div>`;
+          console.error(err);
+      });
+}
+
+function removeDeviceSession(docId) {
+    if(confirm(t('confirm_remove_session'))){
+        db.collection('users').doc(auth.currentUser.uid).collection('login_history').doc(docId).delete().then(() => {
+            showToast(t('toast_session_removed'), "success");
+            openDevicesModal();
+        });
+    }
+}
+
+function logoutCurrentDevice() {
+    auth.signOut().then(() => {
+        window.location.replace("index.html");
+    }).catch(err => {
+        showToast(t('toast_logout_err'), "error");
+    });
+}
+
+function logoutAllDevices() {
+    showToast(t('toast_logout_all_info'), "info");
+    setTimeout(() => { logoutCurrentDevice(); }, 2000);
+}
+
+function openNameModal() {
+    if(currentUserData) {
+        if(!canUpdate(currentUserData.lastNameUpdate, 30)) {
+            let msg = t('toast_wait_days_name').replace('{d}', getDaysLeft(currentUserData.lastNameUpdate, 30));
+            showToast(msg, 'info');
+            return;
+        }
+        document.getElementById('inp-firstName').value = currentUserData.firstName || currentUserData.name || currentUserData.displayName || '';
+        document.getElementById('inp-fatherName').value = currentUserData.fatherName || '';
+        document.getElementById('inp-familyName').value = currentUserData.familyName || '';
+    }
+    document.getElementById('nameModal').style.display = 'flex';
+}
+
+function saveName() {
+    let fName = document.getElementById('inp-firstName').value.trim();
+    let faName = document.getElementById('inp-fatherName').value.trim();
+    let famName = document.getElementById('inp-familyName').value.trim();
+    
+    if(!fName && !faName && !famName) {
+        showToast(t('toast_write_one_name'), 'error'); 
+        return;
+    }
+    
+    db.collection('users').doc(auth.currentUser.uid).update({
+        firstName: fName,
+        fatherName: faName,
+        familyName: famName,
+        lastNameUpdate: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        document.getElementById('nameModal').style.display = 'none';
+        showToast(t('toast_name_updated'), 'success');
+    }).catch(e => { showToast(t('toast_conn_error'), 'error'); });
+}
+
+let usernameTimer; 
+let isUsernameValid = false; 
+
+function openUsernameModal() {
+    if(currentUserData) {
+        if(!canUpdate(currentUserData.lastUsernameUpdate, 30)) {
+            let msg = t('toast_wait_days_name').replace('{d}', getDaysLeft(currentUserData.lastUsernameUpdate, 30));
+            showToast(msg, 'info');
+            return;
+        }
+        const inp = document.getElementById('inp-username');
+        inp.value = currentUserData.username || '';
+        inp.classList.remove('error', 'success');
+        document.getElementById('usernameFeedback').style.display = 'none';
+        document.getElementById('usernameSuggestions').style.display = 'none';
+        document.getElementById('btnSaveUsername').disabled = true;
+        isUsernameValid = false;
+    }
+    document.getElementById('usernameModal').style.display = 'flex';
+}
+
+function validateUsernameLive(input) {
+    clearTimeout(usernameTimer);
+    const feedback = document.getElementById('usernameFeedback');
+    const suggestionsBox = document.getElementById('usernameSuggestions');
+    const saveBtn = document.getElementById('btnSaveUsername');
+    
+    let val = input.value.toLowerCase().replace(/\s/g, '');
+    val = val.replace(/[^a-z0-9._]/g, '');
+    input.value = val;
+
+    saveBtn.disabled = true;
+    isUsernameValid = false;
+    suggestionsBox.style.display = 'none';
+
+    if (val.length === 0) {
+        input.classList.remove('error', 'success');
+        feedback.style.display = 'none';
+        return;
+    }
+
+    if (val.length < 3) {
+        input.classList.add('error');
+        input.classList.remove('success');
+        feedback.className = 'username-feedback error';
+        feedback.innerText = t('text_username_short');
+        return;
+    }
+
+    feedback.className = 'username-feedback';
+    feedback.innerText = t('text_checking');
+    feedback.style.color = "var(--secondary-text)";
+    feedback.style.display = "block";
+    input.classList.remove('error', 'success');
+
+    usernameTimer = setTimeout(() => {
+        checkUsernameAvailability(val, input, feedback, suggestionsBox, saveBtn);
+    }, 500);
+}
+
+async function checkUsernameAvailability(username, input, feedback, suggestionsBox, saveBtn) {
+    if(!auth.currentUser) return;
+
+    if(currentUserData && currentUserData.username === username) {
+        input.classList.remove('error');
+        input.classList.add('success');
+        feedback.className = 'username-feedback success';
+        feedback.innerText = t('text_current_username');
+        isUsernameValid = false; 
+        saveBtn.disabled = true;
+        return;
+    }
+
+    try {
+        const snapshot = await db.collection('users').where('username', '==', username).get();
+        
+        if(!snapshot.empty) {
+            input.classList.add('error');
+            input.classList.remove('success');
+            feedback.className = 'username-feedback error';
+            feedback.innerText = t('text_username_taken');
+            generateSuggestions(username, suggestionsBox, input);
+            saveBtn.disabled = true;
+            isUsernameValid = false;
+        } else {
+            input.classList.remove('error');
+            input.classList.add('success');
+            feedback.className = 'username-feedback success';
+            feedback.innerText = t('text_username_available');
+            saveBtn.disabled = false;
+            isUsernameValid = true;
+        }
+    } catch (e) { console.error("Error checking username:", e); }
+}
+
+function generateSuggestions(baseName, box, inputElement) {
+    box.innerHTML = '';
+    let cleanName = baseName.replace(/[0-9]/g, '');
+    if(cleanName.length < 3) cleanName = baseName; 
+
+    const suggestions = [
+        cleanName + Math.floor(Math.random() * 999),
+        cleanName + '_' + Math.floor(Math.random() * 99),
+        cleanName + '.' + Math.floor(Math.random() * 999)
+    ];
+
+    suggestions.forEach(sug => {
+        let chip = document.createElement('div');
+        chip.className = 'suggestion-chip';
+        chip.innerText = sug;
+        chip.onclick = () => {
+            inputElement.value = sug;
+            validateUsernameLive(inputElement);
+        };
+        box.appendChild(chip);
+    });
+    box.style.display = 'flex';
+}
+
+function saveUsername() {
+    if(!isUsernameValid) return; 
+    let newUsername = document.getElementById('inp-username').value.trim();
+    const saveBtn = document.getElementById('btnSaveUsername');
+    
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = `<i class='fa-solid fa-spinner fa-spin'></i> ${t('text_saving')}`;
+
+    db.collection('users').doc(auth.currentUser.uid).update({
+        username: newUsername,
+        lastUsernameUpdate: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        document.getElementById('usernameModal').style.display = 'none';
+        showToast(t('toast_username_updated'), 'success');
+        saveBtn.innerText = t('btn_save');
+    }).catch(e => { 
+        showToast(t('toast_save_err'), 'error'); 
+        saveBtn.disabled = false;
+        saveBtn.innerText = t('btn_save');
+    });
+}
+
+function openDobGenderModal() {
+    if(currentUserData) {
+        if(!canUpdate(currentUserData.lastDobUpdate, 90)) {
+            let msg = t('toast_wait_days_name').replace('{d}', getDaysLeft(currentUserData.lastDobUpdate, 90));
+            showToast(msg, 'info');
+            return;
+        }
+        document.getElementById('inp-dob').value = currentUserData.dob || '';
+        document.getElementById('inp-gender').value = currentUserData.gender || '';
+    }
+    document.getElementById('dobGenderModal').style.display = 'flex';
+}
+
+function saveDobGender() {
+    let dob = document.getElementById('inp-dob').value;
+    let gender = document.getElementById('inp-gender').value;
+    
+    if(!dob || !gender) {
+        showToast(t('toast_choose_dob_gender'), 'error');
+        return;
+    }
+
+    db.collection('users').doc(auth.currentUser.uid).update({
+        dob: dob,
+        gender: gender,
+        lastDobUpdate: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        document.getElementById('dobGenderModal').style.display = 'none';
+        showToast(t('toast_personal_info_updated'), 'success');
+    }).catch(e => { showToast(t('toast_save_err'), 'error'); });
+}
+
+function startEmailChange() {
+    document.getElementById('inp-emailAuthPass').value = '';
+    document.getElementById('emailAuthModal').style.display = 'flex';
+}
+
+function verifyForEmailChange() {
+    let pass = document.getElementById('inp-emailAuthPass').value;
+    let user = auth.currentUser;
+    
+    if(!pass) { showToast(t('toast_enter_pass'), 'error'); return; }
+    
+    const cred = firebase.auth.EmailAuthProvider.credential(user.email, pass);
+    user.reauthenticateWithCredential(cred).then(() => {
+        document.getElementById('emailAuthModal').style.display = 'none';
+        document.getElementById('inp-newEmail').value = '';
+        document.getElementById('newEmailModal').style.display = 'flex';
+    }).catch(e => { showToast(t('toast_pass_incorrect'), 'error'); });
+}
+
+function sendEmailUpdateLink() {
+    let newEmail = document.getElementById('inp-newEmail').value.trim();
+    let user = auth.currentUser;
+    
+    if(!newEmail) { showToast(t('toast_enter_email'), 'error'); return; }
+    
+    user.verifyBeforeUpdateEmail(newEmail).then(() => {
+        document.getElementById('newEmailModal').style.display = 'none';
+        showToast(t('toast_email_link_sent'), 'info');
+    }).catch(e => { showToast(t('toast_email_err'), 'error'); });
+}
+
+const appThemesConfig = {
+    'default': { primary: '#6d28d9', appBg: '#0b0510', postBg: '#150a21', postBorder: 'rgba(255,255,255,0.05)' },
+    'cosmic': { primary: '#FFD700', appBg: 'linear-gradient(to bottom, #0f0c29, #302b63, #0f0c29)', postBg: 'linear-gradient(135deg, #0f0c29 0%, #302b63 100%)', postBorder: 'rgba(255, 215, 0, 0.6)' },
+    'blood': { primary: '#ff416c', appBg: '#1a0505', postBg: 'linear-gradient(135deg, #380710 0%, #1a0505 100%)', postBorder: 'rgba(255, 65, 108, 0.5)' },
+    'ocean': { primary: '#00c6ff', appBg: '#05131f', postBg: 'linear-gradient(135deg, #001f3f 0%, #05131f 100%)', postBorder: 'rgba(0, 198, 255, 0.5)' },
+    'cyber': { primary: '#fc00ff', appBg: '#12041f', postBg: 'linear-gradient(135deg, #2b0845 0%, #12041f 100%)', postBorder: 'rgba(252, 0, 255, 0.5)' },
+    'nature': { primary: '#38ef7d', appBg: '#0a140d', postBg: 'linear-gradient(135deg, #0f2b18 0%, #0a140d 100%)', postBorder: 'rgba(56, 239, 125, 0.5)' }
+};
+
+function getThemeName(key) {
+    const keys = { 'default': 'theme_default', 'cosmic': 'theme_cosmic', 'blood': 'theme_blood', 'ocean': 'theme_ocean', 'cyber': 'theme_cyber', 'nature': 'theme_nature' };
+    return t(keys[key]) || key;
+}
+
+function renderThemesList() {
+    const grid = document.getElementById('dynamicThemesGrid');
+    let html = '';
+    for (const [key, data] of Object.entries(appThemesConfig)) {
+        html += `
+        <div class="theme-card" onclick="applyFullTheme('${key}')" onmouseover="this.style.borderColor='${data.primary}'; this.style.transform='scale(1.05)';" onmouseout="this.style.borderColor='transparent'; this.style.transform='scale(1)';">
+            <div style="height: 60px; background: ${data.appBg}; display:flex; align-items:center; justify-content:center;">
+                <div style="width: 70%; height: 30px; border-radius: 8px; background: ${data.postBg}; border: 1px solid ${data.postBorder}; box-shadow: 0 5px 10px rgba(0,0,0,0.5);"></div>
+            </div>
+            <div style="background:#222; text-align:center; padding:8px; font-size:11px; font-weight:bold; color:${data.primary}; border-top: 1px solid #333;">${getThemeName(key)}</div>
+        </div>`;
+    }
+    grid.innerHTML = html;
+}
+
+function applyFullTheme(themeKey) {
+    const theme = appThemesConfig[themeKey];
+    if (!theme) return;
+    localStorage.setItem('nabd_active_theme', themeKey);
+    localStorage.setItem('nabd_theme_mode', 'dark'); 
+    document.body.classList.remove('light-mode');
+    document.getElementById('lightModeToggle').checked = false;
+
+    const root = document.documentElement;
+    root.style.setProperty('--primary-color', theme.primary);
+    root.style.setProperty('--app-main-bg', theme.appBg);
+    root.style.setProperty('--post-main-bg', theme.postBg);
+    root.style.setProperty('--post-border-color', theme.postBorder);
+    
+    document.body.style.background = theme.appBg;
+    document.getElementById('currentThemeText').innerText = getThemeName(themeKey);
+    document.getElementById('themeModal').style.display = 'none';
+    showToast(t('toast_theme_applied'), 'success');
+}
+
+function clearCustomTheme() {
+    const root = document.documentElement;
+    root.style.removeProperty('--primary-color');
+    root.style.removeProperty('--app-main-bg');
+    root.style.removeProperty('--post-main-bg');
+    root.style.removeProperty('--post-border-color');
+    document.body.style.removeProperty('background');
+    localStorage.removeItem('nabd_active_theme');
+    document.getElementById('currentThemeText').innerText = t('theme_default');
+}
+
+function openThemeModal() {
+    renderThemesList();
+    document.getElementById('themeModal').style.display = 'flex';
+}
+
+function toggleLightMode(e) {
+    if(e && e.target.tagName !== 'INPUT') {
+        const checkbox = document.getElementById('lightModeToggle');
+        checkbox.checked = !checkbox.checked;
+    }
+    const isLight = document.getElementById('lightModeToggle').checked;
+    if (isLight) {
+        document.body.classList.add('light-mode');
+        localStorage.setItem('nabd_theme_mode', 'light');
+        clearCustomTheme();
+        document.getElementById('currentThemeText').innerText = t('theme_light_mode');
+        showToast(t('toast_light_mode_on'), 'info');
+    } else {
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('nabd_theme_mode', 'dark');
+        const savedTheme = localStorage.getItem('nabd_active_theme') || 'default';
+        applyFullTheme(savedTheme);
+    }
+}
+
+const langNames = { 'ar': 'العربية', 'en': 'English', 'fr': 'Français' };
+function openLanguageModal() {
+    document.getElementById('appLanguageModal').style.display = 'flex';
+    document.querySelectorAll('.lang-check-icon').forEach(i => i.style.display = 'none');
+    let currentLang = localStorage.getItem('wareed_lang') || 'ar';
+    let checkIcon = document.getElementById(`check-${currentLang}`);
+    if(checkIcon) checkIcon.style.display = 'block';
+}
+
+function setAppLanguage(langCode, langName) {
+    localStorage.setItem('wareed_lang', langCode);
+    document.getElementById('currentLangText').innerText = langName;
+    document.getElementById('appLanguageModal').style.display = 'none';
+    showToast(t('toast_lang_changed').replace('{lang}', langName), 'success');
+    setTimeout(() => { location.reload(); }, 1000); 
+}
+
+function toggleOnlineFeature(e) {
+    if(e && e.target.tagName !== 'INPUT') {
+        const checkbox = document.getElementById('onlineToggle');
+        checkbox.checked = !checkbox.checked;
+    }
+    const isOnline = document.getElementById('onlineToggle').checked;
+    localStorage.setItem('nabd_online_status', isOnline);
+    document.getElementById('onlineStatusText').innerText = isOnline ? t('desc_online_status_on') : t('desc_online_status_off');
+    document.getElementById('onlineIcon').style.color = isOnline ? "var(--primary-color)" : "var(--secondary-text)";
+}
+
+function toggleAppSounds(e) {
+    if(e && e.target.tagName !== 'INPUT') {
+        const checkbox = document.getElementById('soundsToggle');
+        checkbox.checked = !checkbox.checked;
+    }
+    const isSound = document.getElementById('soundsToggle').checked;
+    localStorage.setItem('nabd_app_sounds', isSound);
+    document.getElementById('soundIcon').className = isSound ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark";
+    document.getElementById('soundIcon').style.color = isSound ? "var(--primary-color)" : "var(--secondary-text)";
+}
+
+function toggleOrbPreference(e) {
+    if(e && e.target.tagName !== 'INPUT') {
+        const checkbox = document.getElementById('orbToggle');
+        checkbox.checked = !checkbox.checked;
+    }
+    const isOrbHidden = !document.getElementById('orbToggle').checked;
+    localStorage.setItem('nabd_orb_hidden', isOrbHidden.toString());
+    document.getElementById('orbIcon').style.color = !isOrbHidden ? "var(--primary-color)" : "var(--secondary-text)";
+}
+
+window.onload = () => {
+    const isLightMode = localStorage.getItem('nabd_theme_mode') === 'light';
+    const savedTheme = localStorage.getItem('nabd_active_theme') || 'default';
+    
+    if (isLightMode) {
+        document.getElementById('lightModeToggle').checked = true;
+        document.body.classList.add('light-mode');
+        document.getElementById('currentThemeText').innerText = t('theme_light_mode');
+    } else {
+        document.getElementById('lightModeToggle').checked = false;
+        applyFullTheme(savedTheme);
+    }
+
+    let currentLang = localStorage.getItem('wareed_lang') || 'ar';
+    document.getElementById('currentLangText').innerText = langNames[currentLang] || 'العربية';
+
+    let onlineStatus = localStorage.getItem('nabd_online_status') !== 'false';
+    document.getElementById('onlineToggle').checked = onlineStatus;
+    toggleOnlineFeature();
+
+    let soundStatus = localStorage.getItem('nabd_app_sounds') !== 'false';
+    document.getElementById('soundsToggle').checked = soundStatus;
+    toggleAppSounds();
+
+    let orbHidden = localStorage.getItem('nabd_orb_hidden') === 'true';
+    document.getElementById('orbToggle').checked = !orbHidden;
+    toggleOrbPreference();
+};
+
+function goBack() {
+    if (window.history.length > 1) {
+        window.history.back(); 
+    } else {
+        location.href = getFilePath("home.html");
+    }
+}
 
 function confirmDeleteAccount() {
-    // عرض نافذة المودال لطلب كلمة المرور
+    document.getElementById('reauthPassword').value = '';
     document.getElementById('reauthModal').style.display='flex';
-    reauthPasswordEl.value = '';
-    reauthErrorEl.style.display = 'none';
 }
 
 function reauthenticateAndDelete() {
-    const password = reauthPasswordEl.value;
+    const password = document.getElementById('reauthPassword').value;
     const user = auth.currentUser;
     
-    if (!user) {
-        reauthErrorEl.innerText = "لا يوجد مستخدم مسجل حالياً.";
-        reauthErrorEl.style.display = 'block';
-        return;
-    }
-    
-    if (!password) {
-        reauthErrorEl.innerText = "الرجاء إدخال كلمة المرور.";
-        reauthErrorEl.style.display = 'block';
-        return;
+    if (!user) { showToast(t('toast_no_user') || 'لا يوجد مستخدم', 'error'); return; }
+
+    const btn = document.querySelector('button[onclick="reauthenticateAndDelete()"]');
+    if(btn) { btn.innerText = "جاري التحقق..."; btn.disabled = true; }
+
+    let isPasswordUser = false;
+    if (user.providerData) {
+        isPasswordUser = user.providerData.some(p => p.providerId === 'password');
     }
 
-    const credentials = firebase.auth.EmailAuthProvider.credential(
-        user.email, 
-        password
-    );
-
-    // 1. إعادة المصادقة للتأكد من أن المستخدم الحالي هو المالك
-    user.reauthenticateWithCredential(credentials)
-        .then(() => {
-            // 2. نجحت إعادة المصادقة، الآن يمكن حذف الحساب
-            user.delete()
-                .then(() => {
-                    alert("تم حذف حسابك بنجاح. نعتذر لرؤيتك ترحل.");
-                    document.getElementById('reauthModal').style.display='none';
-                    // 3. التوجيه إلى صفحة التسجيل بعد الحذف باستخدام المسار المطلق
-                    location.href = getFilePath("index.html"); 
-                })
-                .catch(error => {
-                    // فشل الحذف
-                    reauthErrorEl.innerText = "فشل حذف الحساب: " + error.message;
-                    reauthErrorEl.style.display = 'block';
-                });
-        })
-        .catch(error => {
-            // فشل إعادة المصادقة (كلمة مرور غير صحيحة)
-            reauthErrorEl.innerText = "كلمة المرور غير صحيحة أو حسابك قديم جداً ويتطلب تسجيل دخول جديد.";
-            reauthErrorEl.style.display = 'block';
-        });
+    if (isPasswordUser) {
+        if (!password) { 
+            showToast(t('toast_enter_pass') || 'أدخل كلمة المرور', 'error'); 
+            if(btn) { btn.innerText = "تأكيد الإغلاق"; btn.disabled = false; }
+            return; 
+        }
+        
+        try {
+            const credentials = firebase.auth.EmailAuthProvider.credential(user.email, password);
+            user.reauthenticateWithCredential(credentials).then(() => {
+                executeSoftDelete(user, btn);
+            }).catch(err => {
+                console.error("Reauth Error:", err);
+                showToast(t('toast_pass_incorrect') || 'كلمة المرور غير صحيحة', 'error');
+                if(btn) { btn.innerText = "تأكيد الإغلاق"; btn.disabled = false; }
+            });
+        } catch(e) {
+            console.error("Auth System Error:", e);
+            executeSoftDelete(user, btn); 
+        }
+    } else {
+        executeSoftDelete(user, btn);
+    }
 }
-</script>
 
+function executeSoftDelete(user, btn) {
+    if(btn) btn.innerText = "جاري الحذف...";
+
+    db.collection('users').doc(user.uid).update({
+        accountStatus: 'deleted',
+        deletionDate: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        auth.signOut().then(() => {
+            document.getElementById('reauthModal').style.display = 'none';
+            showToast(t('toast_acc_deleted') || 'تم جدولة الحساب للحذف', 'info');
+            setTimeout(() => { window.location.replace("index.html"); }, 1500);
+        });
+    }).catch(err => {
+        console.error("Firestore Update Error:", err); 
+        showToast(t('toast_acc_del_err') || 'حدث خطأ في قاعدة البيانات', 'error');
+        if(btn) { btn.innerText = "تأكيد الإغلاق"; btn.disabled = false; }
+    });
+}
+
+// تعريف Storage
+const storage = firebase.storage();
+let cropper = null;
+
+// دالة تحديث الصورة
+function updateAllProfilePictures(url) {
+    const picEl = document.getElementById('ui-profilePic');
+    if (picEl) picEl.src = url;
+    
+    let bottomAvatar = document.getElementById('bottomNavAvatar');
+    if(bottomAvatar) bottomAvatar.style.backgroundImage = `url('${url}')`;
+}
+
+function openPicOptionsModal() {
+    document.getElementById('picOptionsModal').style.display = 'flex';
+}
+
+function handlePicSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('imageToCrop').src = e.target.result;
+        document.getElementById('cropModal').style.display = 'flex';
+        
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(document.getElementById('imageToCrop'), {
+            aspectRatio: 1, // مربع/دائري
+            viewMode: 1,
+            dragMode: 'move',
+            background: false,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            guides: false,
+        });
+    };
+    reader.readAsDataURL(file);
+    event.target.value = ''; // تصفير الإدخال
+}
+
+function cancelCrop() {
+    document.getElementById('cropModal').style.display = 'none';
+    if(cropper) cropper.destroy();
+}
+
+function uploadCroppedImage() {
+    if (!cropper || !auth.currentUser) return;
+    
+    const btn = document.getElementById('btnSaveCrop');
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...`;
+
+    cropper.getCroppedCanvas({ width: 400, height: 400 }).toBlob((blob) => {
+        const filePath = `profile_pics/${auth.currentUser.uid}_${Date.now()}.jpg`;
+        const storageRef = storage.ref(filePath);
+        
+        storageRef.put(blob).then((snapshot) => {
+            snapshot.ref.getDownloadURL().then((downloadURL) => {
+                // حفظ الرابط في الداتا بيز
+                db.collection('users').doc(auth.currentUser.uid).update({
+                    profilePic: downloadURL,
+                    pic: downloadURL // للضمان
+                }).then(() => {
+                    updateAllProfilePictures(downloadURL);
+                    cancelCrop();
+                    showToast('تم تحديث الصورة بنجاح', 'success');
+                    btn.disabled = false;
+                    btn.innerHTML = `حفظ الصورة`;
+                });
+            });
+        }).catch(err => {
+            showToast('حدث خطأ أثناء الرفع', 'error');
+            btn.disabled = false;
+            btn.innerHTML = `حفظ الصورة`;
+        });
+    }, 'image/jpeg', 0.8);
+}
+
+function removeProfilePic() {
+    if (!auth.currentUser) return;
+    document.getElementById('picOptionsModal').style.display = 'none';
+    
+    db.collection('users').doc(auth.currentUser.uid).update({
+        profilePic: firebase.firestore.FieldValue.delete(),
+        pic: firebase.firestore.FieldValue.delete()
+    }).then(() => {
+        const defaultPic = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        updateAllProfilePictures(defaultPic);
+        showToast('تم حذف الصورة', 'info');
+    }).catch(e => showToast('حدث خطأ', 'error'));
+}
+
+</script>
 </body>
 </html>

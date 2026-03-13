@@ -303,9 +303,29 @@
             }
         });
 
+        // دالة الرجوع الذكية (ترجعك لآخر مكان أو للإعدادات كاحتياطي)
+                // 1. دالة الرجوع الموحدة (هتشتغل للسهم ولزرار التليفون)
         function goBack() {
-            history.back();
+            // بنشوف لو المتصفح مسجل الصفحة اللي جينا منها
+            if (document.referrer) {
+                window.location.href = document.referrer;
+            } else {
+                // لو مفيش، نرجعه لصفحة الإعدادات كأمان
+                window.location.href = 'settings.html'; 
+            }
         }
+
+        // 2. الكود السحري للتحكم في زرار الرجوع الخاص بالتليفون نفسه
+        window.onload = function() {
+            // بنضيف خطوة وهمية في السجل عشان التليفون يحس إن في صفحة يقدر يرجعلها
+            window.history.pushState(null, null, window.location.href);
+            
+            // الحدث ده بيشتغل فوراً لما المستخدم يضغط على زر الرجوع في التليفون
+            window.onpopstate = function() {
+                goBack(); // بنخليه ينفذ دالة الرجوع بتاعتنا بدل ما يقفل التطبيق
+            };
+        };
+
 
         // 3. جلب المحظورين
                 async function loadBlockedUsers() {

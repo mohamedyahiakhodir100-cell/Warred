@@ -5431,14 +5431,15 @@ body:not(.light-mode) .sug-add-btn {
     min-height: 0 !important;
 }
 
-/* --- تنسيق العنصر الواحد (فيديو أو صورة) --- */
 .media-item {
     width: 100%;
-    height: auto; /* السماح للطول بالتمدد حسب المحتوى */
-    max-height: 600px; /* أقصى ارتفاع للفيديوهات الطويلة جداً عشان متقفلش الشاشة */
-    object-fit: contain; /* إظهار الفيديو بالكامل بدون قص */
+    height: auto; 
+    max-height: 380px !important; /* 🔥 تم التصغير جداً ليكون مريح للعين */
+    object-fit: contain !important; /* 🔥 يظهر الفيديو بالكامل بدون قص */
+    background-color: #000; /* خلفية سوداء لملء الفراغات */
     display: block;
     cursor: pointer;
+    border-radius: 12px;
 }
 
 /* --- تنسيق خاص للشبكات (أكثر من صورة) --- */
@@ -5449,20 +5450,19 @@ body:not(.light-mode) .sug-add-btn {
     object-fit: cover; /* قص الصور لتملأ المربع */
 }
 
-/* --- كلاسات مساعدة للفيديوهات --- */
-.video-landscape {
-    max-height: 300px !important; /* ارتفاع صغير للفيديو العريض */
+.video-portrait {
+    max-height: 400px !important; /* 🔥 حد أقصى لطول الفيديوهات الطولية */
     width: 100%;
-    object-fit: contain;
+    object-fit: contain !important; 
     background: #000;
 }
 
-.video-portrait {
-    max-height: 550px !important; /* ارتفاع كبير للفيديو الطويل */
+.video-landscape {
+    max-height: 250px !important; /* 🔥 حد أقصى للفيديوهات العريضة */
     width: 100%;
-    object-fit: cover; /* يملأ الشاشة */
+    object-fit: contain !important;
+    background: #000;
 }
-
 /* تصغير المنشور نفسه */
 .post {
     margin: 10px 0; /* تقليل الهوامش الخارجية */
@@ -8584,21 +8584,17 @@ body {
 }
 .d-btn-add:active { background: rgba(255,255,255,0.1); }
 
-/* 🚀 الحل الجذري لمنع رعشة التحميل */
+/* 🚀 الحل الجذري لمكان اللودر عشان ميغطيش عليه الشريط السفلي */
 #scrollSentinel {
-    min-height: 60px; /* يحجز مساحة ثابتة دائماً */
+    min-height: 80px; 
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     overflow: hidden;
     transition: opacity 0.3s ease;
-}
-
-/* تثبيت ارتفاع الصور والفيديوهات قبل ما تحمل عشان متزقش الشاشة */
-.media-item-wrapper {
-    min-height: 250px; 
-    background-color: #111; /* لون رمادي غامق لحد ما الميديا تظهر */
+    margin-bottom: 90px !important; /* 🔥 السر هنا: بيرفعه فوق الشريط السفلي */
+    padding-bottom: 20px;
 }
 
 /* 🌟 شكل التحميل الاحترافي أسفل الصفحة */
@@ -8607,24 +8603,106 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 25px 0;
+    padding: 15px 0;
     color: var(--primary-color);
     opacity: 1;
-    transition: opacity 0.3s ease;
+    background: rgba(255, 255, 255, 0.02); /* خلفية خفيفة جداً للتمييز */
+    border-radius: 20px;
+    width: fit-content;
+    margin: 0 auto;
+    min-width: 150px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .bottom-loader-container i {
-    font-size: 24px;
-    margin-bottom: 8px;
+    font-size: 20px;
+    margin-bottom: 5px;
     filter: drop-shadow(0 0 5px var(--primary-color));
 }
 
 .bottom-loader-container span {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     color: var(--text-color);
-    letter-spacing: 0.5px;
 }
+
+/* --- القائمة الداخلية للحسابات (إلغاء السكرول المزعج) --- */
+.account-list {
+    text-align: right;
+    max-height: 70vh; /* السماح للقائمة بالتمدد براحتها حسب حجم الشاشة */
+    overflow-y: auto; /* سكرول احتياطي فقط للشاشات الصغيرة جداً جداً */
+    background: #0d0d0f;
+    border-radius: 16px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+/* --- عنصر الحساب (تصغير الارتفاع قليلاً ليتسع لـ 10 معاً) --- */
+.acc-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px; /* 🔥 قللنا الحشو من 12 لـ 8 عشان يوفر مساحة */
+    margin: 2px 5px;   /* 🔥 قللنا الهوامش */
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    background: transparent;
+    border-bottom: 1px solid #222;
+}
+.acc-item:last-child { border-bottom: none; }
+.acc-item:hover { background: #1f1f1f; }
+
+/* --- زر المتابعة المصغر في الهيدر --- */
+.mini-follow-btn {
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 0 10px;
+    border-radius: 20px; /* شكل كبسولة */
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 26px;
+    vertical-align: middle;
+}
+
+/* شكل الزر عندما تكون متابعاً للشخص (يتحول لجرس دائري) */
+.mini-follow-btn.following {
+    background: rgba(0, 198, 255, 0.1); /* خلفية سماوي خفيفة */
+    color: var(--primary-color);
+    border: 1px solid transparent; /* إخفاء البرواز */
+    width: 26px; /* تحويله لدائرة */
+    padding: 0;
+    border-radius: 50%;
+}
+
+/* حركة اهتزاز الجرس عند الضغط */
+.mini-follow-btn.following i {
+    font-size: 14px;
+    animation: ringBell 0.4s ease;
+}
+
+.mini-follow-btn:active {
+    transform: scale(0.9);
+}
+
+@keyframes ringBell {
+    0% { transform: rotate(0); }
+    20% { transform: rotate(15deg); }
+    40% { transform: rotate(-15deg); }
+    60% { transform: rotate(10deg); }
+    80% { transform: rotate(-10deg); }
+    100% { transform: rotate(0); }
+}
+
+
 
 </style>
     
@@ -9003,39 +9081,57 @@ body {
         <i class="fa-solid fa-khanda" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_magic" style="font-size: 11px; color: #fff;">البلورة السحرية</span>
     </div>
+    
     <div class="item" onclick="playSound('click'); location.href='auction.html'" style="background: linear-gradient(135deg, #450a0a 0%, #b91c1c 100%); border:1px solid #ef4444;">
         <i class="fa-solid fa-gavel" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_auction" style="color: #fff;">صالة المزاد</span>
     </div>
+    
     <div class="item" onclick="playSound('click'); location.href='blackhole.html'" style="background: linear-gradient(135deg, #000 0%, #4b0082 100%); border:1px solid #8e44ad;">
         <i class="fa-solid fa-meteor" style="color: #cd84f1; background: transparent;"></i> 
         <span data-i18n="menu_blackhole" style="color: #fff;">الثقب الأسود</span>
     </div>
+    
+    <div class="item" onclick="playSound('click'); openPage('galaxy.html')" style="background: linear-gradient(135deg, #0b0726 0%, #3a1c71 100%); border: 1px solid #d76d77; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); animation: rotate 4s linear infinite; pointer-events: none;"></div>
+        <i class="fa-brands fa-space-awesome" style="color: #fff; font-size: 28px; filter: drop-shadow(0 0 10px #d76d77); z-index: 1;"></i> 
+        <span style="color: #fff; font-weight: 900; z-index: 1; text-shadow: 0 2px 5px rgba(0,0,0,0.8);">مجرّة وريد</span>
+    </div>
+<div class="item" onclick="playSound('click'); openPage('compass.html')" style="background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%); border: 1px solid #ff9a9e; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.3) 100%); animation: rotate 3s linear infinite; pointer-events: none;"></div>
+    
+    <i class="fa-regular fa-compass" style="color: #fff; font-size: 28px; filter: drop-shadow(0 0 10px #FFD700); z-index: 1;"></i> 
+    <span data-i18n="menu_compass" style="color: #fff; font-weight: 900; z-index: 1; text-shadow: 0 2px 5px rgba(0,0,0,0.8);">البوصلة العاطفية</span>
+</div>
+
     <div class="item" onclick="playSound('click'); location.href='stockmarket.html'" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border:1px solid #2979ff;">
         <i class="fa-solid fa-arrow-trend-up" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_stock" style="color: #fff;">البورصة</span>
     </div>
+    
     <div class="item" onclick="playSound('click'); location.href='pulse.html'" style="background: linear-gradient(135deg, #000 0%, #1a0005 100%); border:1px solid #ff0055;">
         <i class="fa-solid fa-heart-pulse" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_pulse" style="color: #fff;">غرفة الإنعاش</span>
     </div>
+    
     <div class="item" onclick="playSound('click'); location.href='voicetwin.html'" style="background: linear-gradient(135deg, #18181b 0%, #3f3f46 100%); border:1px solid #f43f5e;">
         <i class="fa-solid fa-microphone-lines" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_voice" style="color: #fff;">توأم الصوت</span>
     </div>
+    
     <div class="item" onclick="playSound('click'); location.href='capsules.html'" style="background: linear-gradient(135deg, #f12711 0%, #f5af19 100%); border:1px solid #f5af19;">
         <i class="fa-solid fa-hourglass-half" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_capsule" style="color: #fff;">كبسولة الزمن</span>
     </div>
-    <div class="item c-radar" onclick="playSound('click'); location.href='radar.html'" style="background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%); border:1px solid #8E2DE2;">
+    
+    <div class="item" onclick="playSound('click'); location.href='radar.html'" style="background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%); border:1px solid #8E2DE2;">
         <i class="fa-solid fa-satellite-dish" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_radar" style="color: #fff;">الرادار</span>
     </div>
     
-    <div class="sheet-option" onclick="window.location.href='qr-text.html'">
-        <i class="fa-solid fa-qrcode" style="color: var(--primary-color); font-size: 20px; width: 30px; text-align: center;"></i>
-        <span data-i18n="menu_qr_messages" style="flex: 1; text-align: right; font-weight: bold; color: var(--text-color);">رسائل QR مشفرة</span>
-        <i class="fa-solid fa-chevron-left" style="font-size: 14px; color: #888;"></i>
+    <div class="item" onclick="playSound('click'); window.location.href='qr-text.html'" style="background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); border:1px solid #2c5364;">
+        <i class="fa-solid fa-qrcode" style="color: #fff; background: transparent;"></i>
+        <span data-i18n="menu_qr_messages" style="color: #fff; font-size: 11px;">رسائل QR</span>
     </div>
 
     <div class="menu-separator" data-i18n="menu_entertainment" style="margin-top: 15px;">الترفيه</div>
@@ -9044,6 +9140,7 @@ body {
         <i class="fa-solid fa-gamepad" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_games" style="color: #fff;">العب واربح</span>
     </div>
+    
     <div class="item" onclick="playSound('click'); location.href='gifts.html'" style="background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%); border:1px solid #FF416C;">
         <i class="fa-solid fa-gift" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_gifts" style="color: #fff;">الهدايا اليومية</span>
@@ -9055,19 +9152,22 @@ body {
         <i class="fa-solid fa-comment-dots" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_msg" style="color: #fff;">الرسائل</span>
     </div>
+    
     <div class="item" onclick="playSound('click'); location.href='friend_requests.html'" style="background: linear-gradient(135deg, #F2994A 0%, #F2C94C 100%); border:1px solid #F2C94C;">
         <i class="fa-solid fa-user-plus" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_req" style="color: #fff;">الطلبات</span>
-        <span id="requestsBadge" class="badge-count" style="background:#fff; color:#F2994A; border:none;">0</span>
+        <span id="requestsBadge" class="badge-count" style="background:#fff; color:#F2994A; border:none; display: none;">0</span>
     </div>
+    
     <div class="item" onclick="playSound('click'); location.href='friends.html'" style="background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%); border:1px solid #8E54E9;">
         <i class="fa-solid fa-users" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_friends" style="color: #fff;">الأصدقاء</span>
     </div>
+    
     <div class="item" onclick="playSound('click'); location.href='notifications.html'" style="background: linear-gradient(135deg, #e52d27 0%, #b31217 100%); border:1px solid #e52d27;">
         <i class="fa-solid fa-bell" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_notif" style="color: #fff;">الإشعارات</span>
-        <span id="mainNotifBadge" class="badge-count" style="background:#fff; color:#e52d27; border:none;">0</span>
+        <span id="mainNotifBadge" class="badge-count" style="background:#fff; color:#e52d27; border:none; display: none;">0</span>
     </div>
 
     <div class="menu-separator" data-i18n="menu_tools" style="margin-top: 15px;">أدواتي</div>
@@ -9076,18 +9176,18 @@ body {
         <i class="fa-solid fa-bookmark" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_saved" style="color: #fff;">المحفوظات</span>
     </div>
+    
     <div class="item" onclick="playSound('click'); location.href='settings.html'" style="background: linear-gradient(135deg, #232526 0%, #414345 100%); border:1px solid #555;">
         <i class="fa-solid fa-gear" style="color: #fff; background: transparent;"></i> 
         <span data-i18n="menu_settings" style="color: #fff;">الإعدادات</span>
     </div>
 
-    <div class="sheet-option" onclick="openThemeModal()">
-        <i class="fa-solid fa-palette" style="color: var(--primary-color); font-size: 20px; width: 30px; text-align: center;"></i>
-        <span data-i18n="menu_theme" style="flex: 1; text-align: right; font-weight: bold; color: var(--text-color);">مظهر التطبيق</span>
-        <i class="fa-solid fa-chevron-left" style="font-size: 14px; color: #888;"></i>
+    <div class="item" onclick="openThemeModal()" style="background: linear-gradient(135deg, #8A2387 0%, #E94057 50%, #F27121 100%); border:1px solid #F27121;">
+        <i class="fa-solid fa-palette" style="color: #fff; background: transparent;"></i>
+        <span data-i18n="menu_theme" style="color: #fff;">المظهر</span>
     </div>
 
-    <div class="item" onclick="openLanguageModal()" style="background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">
+    <div class="item" onclick="openLanguageModal()" style="background: linear-gradient(135deg, #141E30 0%, #243B55 100%); border:1px solid #243B55;">
         <i class="fa-solid fa-earth-americas" style="color: #00C6FF; background: transparent;"></i> 
         <span data-i18n="settings_lang" style="color: #fff;">لغة التطبيق</span>
     </div>
@@ -9102,38 +9202,38 @@ body {
         <span data-i18n="menu_admin" style="color: #fff;">المشرف</span>
     </div>
     
-    <div class="item" onclick="openAccountSwitcher()" style="grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; height: 50px; background: rgba(255,255,255,0.05);">
+    <div style="height: 10px; grid-column: 1 / -1;"></div> <div class="item" onclick="openAccountSwitcher()" style="grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; height: 50px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
         <i class="fa-solid fa-repeat" style="margin: 0; color: #00C6FF; background: transparent; font-size: 16px;"></i> 
-        <span data-i18n="menu_switch_acc" style="font-size: 13px;">تبديل الحساب</span>
+        <span data-i18n="menu_switch_acc" style="font-size: 13px; font-weight: bold;">تبديل الحساب</span>
     </div>
 
-    <div class="item" onclick="toggleOrbPreference()" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-between; height: 50px; background: rgba(255,255,255,0.05); padding: 0 15px;">
+    <div class="item" onclick="toggleOrbPreference()" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-between; height: 50px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.2); padding: 0 15px;">
         <div style="display:flex; align-items:center; gap:10px;">
             <i class="fa-solid fa-circle-nodes" style="margin: 0; color: #aaa; background: transparent; font-size: 16px;"></i> 
-            <span data-i18n="menu_orb" style="font-size: 13px; color: #aaa;">كرة التنقل</span>
+            <span data-i18n="menu_orb" style="font-size: 13px; color: #aaa; font-weight: bold;">كرة التنقل</span>
         </div>
         <div id="orbToggleSwitch" class="toggle-switch active">
             <div class="toggle-knob"></div>
         </div>
     </div>
 
-    <div class="item" onclick="toggleAppSounds()" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-between; height: 50px; background: rgba(255,255,255,0.05); padding: 0 15px;">
+    <div class="item" onclick="toggleAppSounds()" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-between; height: 50px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 10px rgba(0,0,0,0.2); padding: 0 15px;">
         <div style="display:flex; align-items:center; gap:10px;">
             <i id="soundIcon" class="fa-solid fa-volume-high" style="margin: 0; color: #aaa; background: transparent; font-size: 16px;"></i> 
-            <span data-i18n="menu_sounds" style="font-size: 13px; color: #aaa;">الأصوات</span>
+            <span data-i18n="menu_sounds" style="font-size: 13px; color: #aaa; font-weight: bold;">الأصوات</span>
         </div>
         <div id="soundToggle" class="toggle-switch active">
             <div class="toggle-knob"></div>
         </div>
     </div>
 
-    <div class="item danger" onclick="openLogoutModal()">
+    <div class="item danger" onclick="openLogoutModal()" style="border-radius: 14px; box-shadow: 0 4px 15px rgba(255, 59, 48, 0.2);">
         <i class="fa-solid fa-right-from-bracket"></i> 
-        <span data-i18n="menu_logout">تسجيل الخروج</span>
+        <span data-i18n="menu_logout" style="font-weight: 900;">تسجيل الخروج</span>
     </div>
-</div>
-</div>
 
+</div>
+</div>
     <div class="fb-header">
       <div class="fb-top">
     <i class="fa-solid fa-bars icon-btn" onclick="toggleMenu(true)"></i>
@@ -9173,7 +9273,7 @@ body {
                            
         </div>
         <div id="postsList"></div>
-        <div id="scrollSentinel" style="display: none; text-align: center; padding: 20px;"></div>
+        <div id="scrollSentinel" style="opacity: 0; min-height: 60px; text-align: center; padding: 20px; transition: opacity 0.3s;"></div>
     </div>
 <div id="top-progress-bar"></div>
 
@@ -9300,6 +9400,7 @@ let lastSuggestedDoc = null; // متغير لحفظ مكان الوقوف في �
 let discoveryFullList = []; // سيحفظ كل المستخدمين بعد ترتيبهم
 let discoveryCurrentIndex = 0; // لنتتبع أين وصلنا في العرض (10 بـ 10)
 let isFetchingDiscovery = false; // لمنع التكرار
+window.myFriendsList = []; // لحفظ الأصدقاء
 
         const ghostColors = ["#ff0000", "#00ff00", "#0099ff", "#ffff00", "#ff00ff", "#00ffff", "#ff9900", "#9900ff", "#ffffff", "#00ff99"];
         const stickerCollection = ["🤣", "😂", "😅", "🥹", "😍", "🥰", "😘", "🤪", "😎", "😭", "😢", "😤", "😡", "🤬", "🤯", "😳", "😱", "😴", "🤮", "🤡", "💀", "👻", "👽", "💩", "👍", "👎", "👌", "✌️", "❤️", "💔", "🔥", "✨"];
@@ -9423,12 +9524,55 @@ if(lgBanner) lgBanner.classList.remove('show');
 auth.onAuthStateChanged(async user => {
     if(!user) { location.href="index.html"; return; }
     currentUser = user;
+
+    // 👇👇 ضيف الكود ده هنا لرفع التوكن المتأخر 👇👇
+    let savedToken = localStorage.getItem('pending_fcm_token');
+    if (savedToken) {
+        db.collection('users').doc(user.uid).update({
+            fcmToken: savedToken
+        }).then(() => {
+            localStorage.removeItem('pending_fcm_token');
+            console.log("تم رفع التوكن المؤجل بنجاح!");
+        }).catch(e => console.log(e));
+    }
+    // 👆👆 نهاية الكود الجديد 👆👆
+
+    // 🔥 الحارس الأول: لو أنا اللي فاتح وحسابي محذوف، اطردني لصفحة الدخول فوراً
+    try {
+        const myCheckDoc = await db.collection('users').doc(user.uid).get();
+        // ... باقي الكود
+
+        if (myCheckDoc.exists && myCheckDoc.data().accountStatus === 'deleted') {
+            window.location.replace("index.html"); // هيرجعه للدخول عشان يشوف شاشة الاسترجاع
+            return; // 🛑 إيقاف تحميل أي شيء في الصفحة الرئيسية
+        }
+    } catch(e) { console.error(e); }
+
+    // --- تحديث ترتيب الحسابات ليكون حسابك الحالي في القمة دائماً ---
+    let localAccs = JSON.parse(localStorage.getItem('nabd_accounts') || '[]');
+    const myAccIndex = localAccs.findIndex(a => a.uid === user.uid);
+    if (myAccIndex > 0) { 
+        const myAcc = localAccs.splice(myAccIndex, 1)[0];
+        localAccs.unshift(myAcc);
+        localStorage.setItem('nabd_accounts', JSON.stringify(localAccs));
+    }
+    // -----------------------------------------------------------------
+
+    
+    // ... (باقي كود الدالة زي ما هو عندك بدون تغيير)
+
+// -----------------------------------------------------------------
+
     fetchMySavedPostsInit(); // أضفها هنا بدون await
 
-    await fetchMyFollowing();
+    await fetchMyConnections();
+
     const doc = await db.collection('users').doc(user.uid).get();
     const d = doc.data() || {};
     
+        // 🔥 تعريف موقع المستخدم عالمياً عشان خوارزمية الاقتراحات تستخدمه فوراً
+    window.currentUserLocation = d.location || "";
+
     // ✅✅✅ (1) ضيف السطور دي هنا لاسترجاع حالة الشبح ✅✅✅
     isGhost = d.isGhost || false; 
     const ghostBtn = document.getElementById('ghostBtn');
@@ -10262,10 +10406,14 @@ function getSkeletonHTML() {
         let u = { name: t('text_user_fallback'), pic: defaultAvatar, isVerified: false, isOnline: false, totalViews: 0 };
         let specialBadgeHtml = ""; // 🔥 متغير اللقب الجديد
 
-        try {
+             try {
             const ud = await db.collection('users').doc(p.uid).get();
             if(ud.exists) { 
                 const d = ud.data(); 
+                
+                // 🔥 الحارس الثاني: لو صاحب البوست حسابه محذوف، متطبعش البوست أصلاً
+                if (d.accountStatus === 'deleted') return; 
+
                 u.name = d.name; 
                 u.pic = d.profilePic || defaultAvatar; 
                 u.isVerified = d.isVerified; 
@@ -10292,8 +10440,11 @@ function getSkeletonHTML() {
                         `;
                     }
                 }
+            } else {
+                return; // لو الحساب مش موجود في الداتابيز نهائياً، متطبعش البوست
             }
         } catch(e){}
+
     
         // 1. فحص هل المنشور موجود في قائمة المحفوظات الخاصة بي؟
         const isPostSaved = window.mySavedPostsSet && window.mySavedPostsSet.has(p.id);
@@ -10656,10 +10807,24 @@ function getSkeletonHTML() {
         }
     
         const safeTextForBtn = encodeURIComponent(p.text || '');
-        let followBtnHtml = "";
-        if (currentUser && p.uid !== currentUser.uid) {
-            followBtnHtml = `<button class="mini-follow-btn" onclick="toggleMiniFollow(this, '${p.uid}', event)">${t('btn_follow')} <i class="fa-solid fa-plus"></i></button>`;
+           let followBtnHtml = "";
+    if (currentUser && p.uid !== currentUser.uid) {
+        const isFriend = window.myFriendsList && window.myFriendsList.includes(p.uid);
+        const isFollowing = typeof myFollowingList !== 'undefined' && myFollowingList.includes(p.uid);
+
+        // لو مش صديق، نبدأ نفحص حالة المتابعة
+        if (!isFriend) {
+            if (isFollowing) {
+                // حالة المتابع: زر الجرس الدائري
+                followBtnHtml = `<button class="mini-follow-btn following" onclick="toggleMiniFollow(this, '${p.uid}', event)" title="إلغاء المتابعة"><i class="fa-solid fa-bell"></i></button>`;
+            } else {
+                // حالة غير متابع: الزر العادي
+                const followText = typeof t === 'function' ? t('btn_follow') : 'متابعة';
+                followBtnHtml = `<button class="mini-follow-btn" onclick="toggleMiniFollow(this, '${p.uid}', event)">${followText} <i class="fa-solid fa-plus"></i></button>`;
+            }
         }
+    }
+
     
         const wrapper = document.createElement('div');
         wrapper.className = 'feed-unit'; 
@@ -13988,10 +14153,6 @@ function updateHeaderBadges() {
 
 })();
 
-/* === دوال تبديل الحسابات (نسخة البروفايل الأصلية) === */
-
-// باقي الدوال (الإضافة والحذف) زي ما بعتهالك في الرد اللي فات، ضيفهم لو مش موجودين
-
 function openAccountSwitcher() {
     playSound('click');
     toggleMenu(false); 
@@ -14016,36 +14177,48 @@ function openAccountSwitcher() {
         }
     }
 
-   if (accounts.length === 0) {
-    list.innerHTML = `<div style='text-align:center;color:#777;padding:20px'>${t('err_no_data')}</div>`;
-}
+    if (accounts.length === 0) {
+        list.innerHTML = `<div style='text-align:center;color:#777;padding:20px'>لا توجد حسابات مسجلة</div>`;
+    }
 
-    
-
+    // رسم الحسابات
     accounts.forEach((acc, idx) => {
         const isCurrent = (currentUser && acc.uid === currentUser.uid);
-        
-        // تجهيز الصورة (لو مفيش صورة نستخدم لون)
         const bgStyle = acc.pic ? `background-image:url('${acc.pic}')` : `background:${generateColor(acc.uid)}`;
         const content = acc.pic ? '' : (acc.name ? acc.name[0] : 'U');
 
         list.innerHTML += `
         <div class="acc-item" onclick="${isCurrent?'':`switchAccount(${idx})`}" style="${isCurrent?'opacity:0.5; cursor:default;':''}">
-            <div style="width:40px; height:40px; border-radius:50%; ${bgStyle}; background-size:cover; background-position:center; display:grid; place-items:center; font-weight:bold; border:1px solid #333; flex-shrink:0;">
+            <div style="width:36px; height:36px; border-radius:50%; ${bgStyle}; background-size:cover; background-position:center; display:grid; place-items:center; font-weight:bold; border:1px solid #333; flex-shrink:0;">
                 ${content}
             </div>
             
             <div style="flex:1; text-align:right;">
-                <div style="font-weight:bold; font-size:14px; color:#fff;">
+                <div style="font-weight:bold; font-size:13px; color:#fff;">
                     ${acc.name} ${acc.isVerified ? '<i class="fa-solid fa-circle-check" style="color:#1da1f2; font-size:12px;"></i>' : ''}
                 </div>
-                <div style="font-size:11px; color:#aaa;">${acc.email}</div>
+                <div style="font-size:10px; color:#aaa;">${acc.email}</div>
             </div>
 
             ${!isCurrent ? `<i class="fa-solid fa-trash-can" style="color:#ff3b30; padding:10px; font-size:14px;" onclick="removeAccount(event, ${idx})"></i>` : ''}
         </div>`;
     });
+
+    // 🔥 اللوجيك الذكي للحد الأقصى (10 حسابات) 🔥
+    const addBtn = document.querySelector('#addAccBtnContainer .btn-purple');
+    if (accounts.length >= 10) {
+        addBtn.style.opacity = '0.5';
+        addBtn.style.background = '#333';
+        addBtn.onclick = function() { showToast("الحد الأقصى هو 10 حسابات! احذف حساباً لإضافة جديد ⛔"); };
+        addBtn.innerHTML = '<i class="fa-solid fa-ban"></i> <span>الحد الأقصى مكتمل</span>';
+    } else {
+        addBtn.style.opacity = '1';
+        addBtn.style.background = 'linear-gradient(135deg, #5D5FEF, #7879F1)';
+        addBtn.onclick = showAddAccountForm;
+        addBtn.innerHTML = '<i class="fa-solid fa-plus"></i> <span data-i18n="btn_add_acc">إضافة حساب</span>';
+    }
 }
+
 
 function closeAccountSwitcher() {
     document.getElementById('accountSwitcherModal').style.display = 'none';
@@ -14066,74 +14239,118 @@ function closeAccountSwitcher() {
         }
 
         async function addNewAccountAction() {
-            playSound('click');
-            const e = document.getElementById('newAccEmail').value;
-            const p = document.getElementById('newAccPass').value;
-            
-            if(!e || !p) return showToast(t('toast_missing_data'));
-            
-            try { 
-                // 1. تسجيل الدخول للتأكد من الصحة
-                const cred = await auth.signInWithEmailAndPassword(e, p); 
-                const uid = cred.user.uid;
+    playSound('click');
+    
+    // 🔥 حماية إضافية قوية قبل البدء بأي شيء 🔥
+    let currentAccs = JSON.parse(localStorage.getItem('nabd_accounts') || '[]'); 
+    if (currentAccs.length >= 10) {
+        return showToast("لا يمكن إضافة أكثر من 10 حسابات ⛔");
+    }
 
-                // 2. جلب بيانات المستخدم (عشان نخزن الاسم والصورة)
-                const userDoc = await db.collection('users').doc(uid).get();
-                const userData = userDoc.data() || {};
-                const realName = userData.name || e.split('@')[0];
-                const isVerified = userData.isVerified || false;
-                const pic = userData.profilePic || "";
+    const e = document.getElementById('newAccEmail').value;
+    const p = document.getElementById('newAccPass').value;
+    
+    if(!e || !p) return showToast(typeof t === 'function' ? t('toast_missing_data') : "أدخل البيانات");
+    
+    const btn = document.querySelector('#addAccountForm .btn-purple');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري الدخول...';
+    btn.style.pointerEvents = 'none';
+    
+    try { 
+        const cred = await auth.signInWithEmailAndPassword(e, p); 
+        const uid = cred.user.uid;
 
-                // 3. التخزين في LocalStorage
-                let accs = JSON.parse(localStorage.getItem('nabd_accounts') || '[]'); 
-                
-                // التأكد إنه مش متضاف قبل كده
-                if(!accs.find(a => a.uid === uid)) {
-                    accs.push({
-                        uid: uid, 
-                        email: e, 
-                        token: btoa(p), // تشفير بسيط للباسورد
-                        name: realName, 
-                        isVerified: isVerified, 
-                        pic: pic
-                    }); 
-                    localStorage.setItem('nabd_accounts', JSON.stringify(accs)); 
-                }
-                
-                // 4. إعادة تحميل الصفحة (هيدخل بالحساب الجديد أوتوماتيك)
-                location.reload(); 
+        const userDoc = await db.collection('users').doc(uid).get();
+        const userData = userDoc.data() || {};
+        const realName = userData.name || e.split('@')[0];
+        const isVerified = userData.isVerified || false;
+        const pic = userData.profilePic || "";
 
-            } catch(er) { 
-                console.error(er); 
-                showToast(t('toast_login_error')); 
-            }
-        }
+        let accs = JSON.parse(localStorage.getItem('nabd_accounts') || '[]'); 
+        
+        accs = accs.filter(a => a.uid !== uid);
+        
+        // يضاف في الأعلى
+        accs.unshift({
+            uid: uid, 
+            email: e, 
+            token: btoa(p), 
+            name: realName, 
+            isVerified: isVerified, 
+            pic: pic
+        }); 
+        
+        localStorage.setItem('nabd_accounts', JSON.stringify(accs)); 
+        location.reload(); 
+
+    } catch(er) { 
+        console.error(er); 
+        showToast(typeof t === 'function' ? t('toast_login_error') : "خطأ في تسجيل الدخول"); 
+        btn.innerHTML = originalText;
+        btn.style.pointerEvents = 'auto';
+    }
+}
+
 
         // تم تعديل حرف F الكبير إلى f صغير لتعريف الدالة بشكل صحيح
 function switchAccount(idx) { 
     playSound('click');
     let accs = JSON.parse(localStorage.getItem('nabd_accounts')); 
+    
     if(accs[idx]) {
-        // تسجيل الدخول باستخدام البيانات المخزنة
-        auth.signInWithEmailAndPassword(accs[idx].email, atob(accs[idx].token))
-            .then(() => location.reload())
-            // استبدال النص الثابت بمفتاح فشل التبديل من القاموس
-            .catch(() => showToast(t('err_switch_account')));
+        const targetAcc = accs[idx];
+        showToast("جاري التبديل... ⏳");
+        
+        auth.signInWithEmailAndPassword(targetAcc.email, atob(targetAcc.token))
+            .then(() => {
+                // 🔥 سحب الحساب المختار من مكانه ووضعه في أول القائمة 🔥
+                accs.splice(idx, 1);
+                accs.unshift(targetAcc);
+                localStorage.setItem('nabd_accounts', JSON.stringify(accs));
+                
+                location.reload();
+            })
+            .catch((error) => {
+                console.error("Switch Error:", error);
+                // 🔥 نظام التنظيف الذكي للحسابات المعطلة أو المحذوفة 🔥
+                if (error.code === 'auth/user-disabled' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                    showToast("⚠️ هذا الحساب معطل أو تم تغيير بياناته. سيتم حذفه من القائمة.");
+                    accs.splice(idx, 1); // إزالة الحساب التالف
+                    localStorage.setItem('nabd_accounts', JSON.stringify(accs));
+                    setTimeout(() => openAccountSwitcher(), 1000); // تحديث القائمة أمام المستخدم
+                } else {
+                    showToast(typeof t === 'function' ? t('err_switch_account') : "خطأ في التبديل");
+                }
+            });
     }
 }
 
 
+
         function removeAccount(e, idx) { 
-            e.stopPropagation(); // عشان ميعملش Switch بالغلط لما تدوس حذف
-            if(!confirm(t('confirm_remove_acc'))) return;
-            
-            let accs = JSON.parse(localStorage.getItem('nabd_accounts')); 
-            accs.splice(idx, 1); // حذف العنصر
+    e.stopPropagation(); // عشان ميعملش Switch بالغلط لما تدوس حذف
+    playSound('click');
+    
+    let accs = JSON.parse(localStorage.getItem('nabd_accounts')); 
+    let accName = accs[idx].name || accs[idx].email;
+    
+    // 🔥 استخدام المودال الاحترافي الخاص بك بدلاً من نظام المتصفح التقليدي 🔥
+    showChicConfirm(
+        "إزالة الحساب", 
+        `هل تريد بالتأكيد إزالة حساب "${accName}" من القائمة؟ (لن يتم حذفه نهائياً)`, 
+        '<i class="fa-solid fa-user-xmark" style="color:var(--danger-color)"></i>', 
+        () => { 
+            accs.splice(idx, 1); // حذف العنصر من المصفوفة
             localStorage.setItem('nabd_accounts', JSON.stringify(accs)); 
             
             openAccountSwitcher(); // تحديث القائمة فوراً
-            showToast("تمت الإزالة");
+            showToast("تمت إزالة الحساب من القائمة 🗑️");
+            playSound('success');
         }
+    );
+}
+
 
 // --- دالة الحفظ المباشر من الشريط ---
 // --- دالة الحفظ المباشر (المضادة للأرقام الوهمية) ---
@@ -14711,7 +14928,20 @@ function renderUserCardInSearch(doc) {
     const safeTextForBtn = encodeURIComponent(p.text || '');
     let followBtnHtml = "";
     if (currentUser && p.uid !== currentUser.uid) {
-        followBtnHtml = `<button class="mini-follow-btn" onclick="toggleMiniFollow(this, '${p.uid}', event)">${t('btn_follow') || 'متابعة'} <i class="fa-solid fa-plus"></i></button>`;
+        const isFriend = window.myFriendsList && window.myFriendsList.includes(p.uid);
+        const isFollowing = typeof myFollowingList !== 'undefined' && myFollowingList.includes(p.uid);
+
+        // لو مش صديق، نبدأ نفحص حالة المتابعة
+        if (!isFriend) {
+            if (isFollowing) {
+                // حالة المتابع: زر الجرس الدائري
+                followBtnHtml = `<button class="mini-follow-btn following" onclick="toggleMiniFollow(this, '${p.uid}', event)" title="إلغاء المتابعة"><i class="fa-solid fa-bell"></i></button>`;
+            } else {
+                // حالة غير متابع: الزر العادي
+                const followText = typeof t === 'function' ? t('btn_follow') : 'متابعة';
+                followBtnHtml = `<button class="mini-follow-btn" onclick="toggleMiniFollow(this, '${p.uid}', event)">${followText} <i class="fa-solid fa-plus"></i></button>`;
+            }
+        }
     }
 
     // 3. بناء الكارت النهائي (نسخة طبق الأصل من الرئيسية)
@@ -14957,9 +15187,13 @@ async function performSuperSearch(isNewSearch = true) {
                 let usersAdded = 0; // عداد لمعرفة هل تم إضافة أشخاص فعلاً أم تم فلترتهم كلهم
                 let tempHTML = '<div style="padding:10px;font-weight:bold;color:var(--secondary-text)">أشخاص</div>';
                 
-                userSnap.forEach(doc => {
+                                userSnap.forEach(doc => {
+                    const userData = doc.data();
+
+                    // 🔥 الحارس الخامس: إخفاء الحسابات المحذوفة من نتائج البحث
+                    if (userData.accountStatus === 'deleted') return;
+
                     // 🛑 حماية ذكية: اخفي الشخص من البحث *فقط* لو هو اللي حاظرني!
-                    // لكن لو أنا اللي حاظره، هسيبه يظهر عشان أقدر أدخل بروفايله وأفك الحظر.
                     if (window.theyBlockedMeSet && window.theyBlockedMeSet.has(doc.id)) return;
                     
                     // لو عدى من الفلتر، ارسمه
@@ -15742,12 +15976,10 @@ document.addEventListener('touchend', e => {
     const diff = pCurrent.y - pStart.y;
     
     // لو سحبت مسافة كافية (80 بكسل) والاتجاه لتحت
-    if(window.scrollY === 0 && diff > 80) {
-        playSound('tab');
-        if(navigator.vibrate) navigator.vibrate(50);
-        
-        loadPosts(); // تحديث الصفحة
-    }
+    if (typeof FeedEngine !== 'undefined') {
+    FeedEngine.reset();
+    FeedEngine.loadFeed();
+}
     
     // تصفير المتغيرات
     pStart = {x:0, y:0}; 
@@ -16273,35 +16505,36 @@ window.addEventListener('offline', updateConnectionStatus);
 /* --- منطق زر الصعود للأعلى (المعدل لإخفائه وقت التعليقات) --- */
 let isScrollScheduled = false; 
 
+// 🚀 الحارس الاحتياطي للسحب اللانهائي (متوافق مع المحرك الجديد V3)
+/* ==========================================
+   🚀 حارس السحب اللانهائي (Infinite Scroll) - لجلب المنشورات السابقة
+   ========================================== */
 window.addEventListener('scroll', () => {
-    if (isScrollScheduled) return;
-
-    isScrollScheduled = true;
-    
-    window.requestAnimationFrame(() => {
-        const btn = document.getElementById('scrollTopBtn');
+    // نتحقق إذا كان المستخدم وصل قبل نهاية الصفحة بـ 800 بيكسل
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
+        const sentinel = document.getElementById('scrollSentinel');
         
-        // 🔥 السر هنا: بنتحقق هل المتصفح في وضع "عدم التمرير" (يعني فاتحين تعليقات أو قائمة)
-        const isAnySheetOpen = document.body.classList.contains('no-scroll');
+        // نتأكد إن عنصر اللودر السفلي موجود ومتاح
+        if (sentinel && sentinel.style.display !== 'none') {
 
-        if (btn) {
-            // لو مفيش قوايم مفتوحة وعدينا 800 بيكسل نزول -> أظهر الزرار
-            if (!isAnySheetOpen && window.scrollY > 800) { 
-                if (!btn.classList.contains('visible')) btn.classList.add('visible');
+            // 1. لو أنت بتستخدم المحرك الجديد (FeedEngine)
+            if (typeof FeedEngine !== 'undefined' && !FeedEngine.isLoading && FeedEngine.currentMode !== 'end') {
+                console.log("جاري تحميل المزيد عبر FeedEngine...");
+                FeedEngine.loadFeed(true);
             } 
-            // لو رجعنا لفوق أو فاتحين قائمة التعليقات -> اخفي الزرار فوراً
-            else {
-                if (btn.classList.contains('visible')) btn.classList.remove('visible');
+            // 2. لو أنت لسه بتعتمد على الدالة القديمة (loadPosts)
+            else if (typeof loadPosts === 'function') {
+                // المتغير isLoading يمنع تكرار التحميل لو هو بيحمل أصلاً
+                if (typeof isLoading !== 'undefined' && !isLoading) {
+                    console.log("جاري تحميل المزيد عبر loadPosts...");
+                    loadPosts(true);
+                }
             }
-        }
-        isScrollScheduled = false; 
-    });
-}, { passive: true }); 
 
-function scrollToTop() {
-    if(typeof playSound === 'function') playSound('click'); 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+        }
+    }
+}, {passive: true}); // passive تجعل السكرول ناعم جداً ولا يعلق الشاشة
+
 
 /* --- متغيرات التسجيل --- */
 let mediaRecorder = null;
@@ -17061,41 +17294,63 @@ function getRankHTML(views) {
 }
 
 // --- دالة تشغيل زر المتابعة المصغر ---
+// --- دالة تشغيل زر المتابعة المصغر (النسخة الذكية والمربوطة بالخوارزمية) ---
+// --- دالة تشغيل زر المتابعة المصغر (النسخة المتوافقة مع V5.0) ---
 async function toggleMiniFollow(btn, targetUid, event) {
-    event.stopPropagation(); // عشان ميفتحش البروفايل
+    event.stopPropagation();
     if(navigator.vibrate) navigator.vibrate(30);
 
     const isFollowing = btn.classList.contains('following');
+    btn.style.pointerEvents = 'none'; // حماية من الضغط المتكرر
 
-    if (isFollowing) {
-        // إلغاء المتابعة
-        btn.classList.remove('following');
-        btn.innerHTML = `متابعة <i class="fa-solid fa-plus"></i>`;
-        // حذف من الداتابيز
-        await db.collection("users").doc(currentUser.uid).collection("following").doc(targetUid).delete();
-        await db.collection("users").doc(targetUid).collection("followers").doc(currentUser.uid).delete();
-        showToast(t('toast_unfollowed'));
-    } else {
-        // بدء المتابعة
-        btn.classList.add('following');
-        btn.innerHTML = `متابع <i class="fa-solid fa-check"></i>`;
-        
-        // إضافة للداتابيز
-        const batch = db.batch();
-        const followingRef = db.collection("users").doc(currentUser.uid).collection("following").doc(targetUid);
-        const followersRef = db.collection("users").doc(targetUid).collection("followers").doc(currentUser.uid);
-        
-        batch.set(followingRef, { at: firebase.firestore.FieldValue.serverTimestamp() });
-        batch.set(followersRef, { at: firebase.firestore.FieldValue.serverTimestamp() });
-        await batch.commit();
+    try {
+        if (isFollowing) {
+            // إلغاء المتابعة
+            btn.classList.remove('following');
+            btn.innerHTML = `متابعة <i class="fa-solid fa-plus"></i>`;
+            
+            await db.collection("users").doc(currentUser.uid).collection("following").doc(targetUid).delete();
+            await db.collection("users").doc(targetUid).collection("followers").doc(currentUser.uid).delete();
+            
+            // 🔥 تحديث الذاكرة المحلية للخوارزمية
+            if (typeof myFollowingList !== 'undefined') {
+                myFollowingList = myFollowingList.filter(id => id !== targetUid);
+            }
+            showToast(t('toast_unfollowed'));
+        } else {
+            // بدء المتابعة
+            btn.classList.add('following');
+            btn.innerHTML = `متابع <i class="fa-solid fa-check"></i>`;
+            
+            const batch = db.batch();
+            const followingRef = db.collection("users").doc(currentUser.uid).collection("following").doc(targetUid);
+            const followersRef = db.collection("users").doc(targetUid).collection("followers").doc(currentUser.uid);
+            
+            batch.set(followingRef, { at: firebase.firestore.FieldValue.serverTimestamp() });
+            batch.set(followersRef, { at: firebase.firestore.FieldValue.serverTimestamp() });
+            await batch.commit();
 
-                // استخدام المفتاح المترجم بدلاً من النص الثابت
-        // لاحظ تعديل حرف P ليكون p صغير لتجنب أخطاء الجافاسكريبت
-        pushNotification(targetUid, 'follow', t('notif_follow'), null);
-        showToast(t('toast_followed'));
+            if (typeof pushNotification === 'function') pushNotification(targetUid, 'follow', t('notif_follow'), null);
+            
+            // 🔥 تحديث الذاكرة المحلية للخوارزمية
+            if (typeof myFollowingList !== 'undefined' && !myFollowingList.includes(targetUid)) {
+                myFollowingList.push(targetUid);
+            }
+            showToast(t('toast_followed'));
+
+            // 🔥 إعادة تشغيل الخوارزمية فوراً لتجلب منشورات الشخص الجديد
+            if (typeof FeedEngine !== 'undefined') {
+                FeedEngine.init(); 
+            }
+        }
+    } catch (error) {
+        console.error("Follow Error:", error);
+        showToast("خطأ، تأكد من الاتصال");
+        if (isFollowing) btn.classList.add('following'); else btn.classList.remove('following');
+    } finally {
+        btn.style.pointerEvents = 'auto';
     }
 }
-
 
 // استبدل دالة showTopBanner القديمة بدي 👇
 
@@ -18687,82 +18942,72 @@ function toggleRepostSound(e, videoId, btn) {
         vid.play().catch(()=>{});
     }
 }
-
 /* ==========================================
-   🔄 منطق السحب للتحديث (Pull to Refresh) - محصن بالكامل
+   🔄 منطق السحب للتحديث (Pull to Refresh) - الإصدار المستقر
    ========================================== */
 let ptrStart = 0;
 let ptrCurrent = 0;
 let isPullingToRefresh = false;
-let isRefreshingNow = false; // 🔥 حارس يمنع السحب المتكرر أثناء التحميل
+let isRefreshingNow = false;
 
+// 1. بداية اللمس
 document.addEventListener('touchstart', function(e) {
-    // 1. لو هو بيحمل أصلاً، متعملش حاجة
-    if (isRefreshingNow) return;
+    if (isRefreshingNow) return; // لو بيحمل متعملش حاجة
 
-    // 🚀 الحارس الجديد: لو صفحة البحث أو القائمة الجانبية مفتوحين، نوقف السحب نهائياً في الموقع كله
-    const isSearchOpen = document.getElementById('fullSearchPage') && document.getElementById('fullSearchPage').classList.contains('active');
-    const isSideMenuOpen = document.getElementById('sideMenu') && document.getElementById('sideMenu').classList.contains('open');
-    
-    if (isSearchOpen || isSideMenuOpen) return;
+    // منع تفعيل السحب لو المستخدم فاتح قايمة أو بيبحث
+    if (document.querySelector('.search-page-overlay.active') || 
+        document.querySelector('.side-menu.open') || 
+        e.target.closest('.bottom-sheet.active') || 
+        e.target.closest('.custom-modal[style*="flex"]') ||
+        e.target.closest('#uraniumOrb')) {
+        return;
+    }
 
-    // 2. نتأكد إننا في أعلى الصفحة تماماً
-    if (window.scrollY <= 5) {
-        // حماية إضافية: لو لمس أي قائمة، صورة، كرة، أو شاشات فوقية، نوقف السحب
-        if (e.target.closest('#uraniumOrb') || 
-            e.target.closest('.bottom-sheet.active') || 
-            e.target.closest('.custom-modal[style*="flex"]') ||
-            e.target.closest('.lightbox.active') ||
-            e.target.closest('.search-page-overlay') || // يمنع السحب داخل البحث
-            e.target.closest('.side-menu')              // يمنع السحب داخل القائمة الجانبية
-        ) {
-            return;
-        }
-
+    // نتأكد إننا في أعلى الصفحة (زودنا السماحية لـ 15 بيكسل بدل 5 عشان الموبايلات)
+    if (window.scrollY <= 15) {
         ptrStart = e.touches[0].clientY;
+        ptrCurrent = ptrStart; // تصفير البداية
         isPullingToRefresh = true;
     }
 }, {passive: true});
 
+// 2. حركة اللمس
 document.addEventListener('touchmove', function(e) {
+    // لو إحنا مش في وضع السحب، اخرج
     if (!isPullingToRefresh || isRefreshingNow) return;
 
     ptrCurrent = e.touches[0].clientY;
     let diff = ptrCurrent - ptrStart;
 
-    // لو السحب لتحت (diff > 0)
-    if (diff > 0 && window.scrollY <= 5) {
-        // تحريك اللودر لأسفل مع السحب (مقاومة ناعمة)
-        let move = Math.min(diff / 2.5, 100); 
+    // لو بيسحب لتحت
+    if (diff > 0) {
+        let move = Math.min(diff / 2.5, 100); // أقصى نزول للودر 100 بيكسل
         
         const loader = document.getElementById('pullToRefresh');
         if (loader) {
-            // تحريك اللودر
             loader.style.transform = `translateX(-50%) translateY(${move - 50}px)`; 
             loader.style.opacity = '1';
             
-            // تدوير الأيقونة حسب السحب (مؤثر بصري)
             const icon = loader.querySelector('i');
             if(icon) icon.style.transform = `rotate(${diff * 2}deg)`;
         }
-    } else {
-        // لو رفعنا صباعنا لفوق، نلغي السحب
-        isPullingToRefresh = false;
     }
-}, {passive: true});
+}, {passive: true}); // سبناها passive عشان السكرول يفضل ناعم
 
+// 3. نهاية اللمس (تنفيذ الأمر)
 document.addEventListener('touchend', async function(e) {
     if (!isPullingToRefresh || isRefreshingNow) return;
-
-    const loader = document.getElementById('pullToRefresh');
+    
+    isPullingToRefresh = false; // قفل السحب فوراً
+    
     const diff = ptrCurrent - ptrStart;
+    const loader = document.getElementById('pullToRefresh');
 
-    // لو سحب مسافة كافية (أكبر من 100 بكسل)
-    if (diff > 100 && window.scrollY <= 5) {
+    // لو سحب مسافة محترمة (أكبر من 90 بيكسل)
+    if (diff > 90 && ptrCurrent > 0) {
         
-        isRefreshingNow = true; // نقفل السحب عشان ميكررش
+        isRefreshingNow = true; // تفعيل وضع التحميل
         
-        // 1. تثبيت اللودر وتشغيل الدوران
         if (loader) {
             loader.style.transform = `translateX(-50%) translateY(20px)`; 
             loader.classList.add('loading');
@@ -18771,47 +19016,48 @@ document.addEventListener('touchend', async function(e) {
         if(navigator.vibrate) navigator.vibrate(50);
         if(typeof playSound === 'function') playSound('tab'); 
 
-        // 2. 🔥 السحر هنا: ننتظر تحميل المنشورات بالكامل 🔥
         try {
-            // لو إحنا في صفحة البروفايل ممكن يكون اسمها loadProfile() ثم loadPosts()
-            // نستخدم loadPosts() كدالة أساسية لأنها مشتركة
+            // تنفيذ تحديث المنشورات
             if (typeof FeedEngine !== 'undefined') {
-    FeedEngine.reset();
-    await FeedEngine.loadFeed(); 
-}
-  } catch (error) {
+                FeedEngine.reset();
+                // حماية إضافية لو loadFeed مش بترجع Promise
+                const loadResult = FeedEngine.loadFeed();
+                if (loadResult && typeof loadResult.then === 'function') {
+                    await loadResult;
+                }
+            }
+        } catch (error) {
             console.error("Refresh Error:", error);
         } finally {
-            // 3. 🔥 الـ finally بتضمن إن اللودر يختفي دايماً سواء نجح أو فشل
+            // 🔥 أهم سطر: إخفاء اللودر إجبارياً سواء التحميل نجح أو فشل
             setTimeout(() => {
                 resetPullLoader();
-                isRefreshingNow = false; // نفتح السحب تاني
-            }, 500); // تأخير نص ثانية عشان المستخدم يلحق يشوف إنه حدث
+                isRefreshingNow = false;
+            }, 800); // استنى أقل من ثانية عشان المستخدم يشوف إنه بيحمل
         }
 
     } else {
-        // لو السحبة ضعيفة (أقل من 100 بيكسل)، رجع اللودر مكانه فوراً
+        // لو سحب سحبة خفيفة ومكملش، رجع اللودر مكانه يختفي
         resetPullLoader();
     }
 
-    isPullingToRefresh = false;
+    // تصفير المتغيرات لضمان عدم التعليق في المرة القادمة
     ptrStart = 0;
     ptrCurrent = 0;
 });
 
-// دالة إخفاء اللودر (آمنة)
+// 4. دالة التنظيف
 function resetPullLoader() {
-    const loader = document.getElementById('pullToRefresh') || document.getElementById('pullIndicator');
+    const loader = document.getElementById('pullToRefresh');
     if (loader) {
-        // يرجع يختفي فوق
         loader.style.transform = `translateX(-50%) translateY(-150px)`; 
         loader.classList.remove('loading');
-        
-        // إعادة الأيقونة لوضعها الطبيعي
         const icon = loader.querySelector('i');
         if(icon) icon.style.transform = 'rotate(0deg)';
     }
 }
+
+
 // دالة لتحديد اتجاه النص بناءً على الحروف العربية
 function getTextDirection(text) {
     if (!text) return 'ltr';
@@ -19344,12 +19590,23 @@ function updateMuteBtnState() {
 if (typeof usersCache === 'undefined') var usersCache = {};
 
 async function fetchAndCacheUser(uid) {
-    if (usersCache[uid]) return usersCache[uid];
+    if (usersCache[uid]) {
+        // لو متكيش إنه محذوف، رجع null فوراً
+        if (usersCache[uid].isDeleted) return null; 
+        return usersCache[uid];
+    }
     
     try {
         const doc = await db.collection("users").doc(uid).get();
         if (doc.exists) {
             const d = doc.data();
+            
+            // 🔥 الحارس الثالث: كاش الحسابات المحذوفة
+            if (d.accountStatus === 'deleted') {
+                usersCache[uid] = { isDeleted: true };
+                return null;
+            }
+
             const userData = { 
                 uid: uid, 
                 name: d.name || "مستخدم", 
@@ -19363,6 +19620,7 @@ async function fetchAndCacheUser(uid) {
     
     return { uid, name: "مستخدم", avatar: "https://cdn-icons-png.flaticon.com/512/149/149071.png", isVerified: false };
 }
+
 
   function openStoryOptions(e) {
             if(e) e.stopPropagation();
@@ -20350,85 +20608,185 @@ async function loadLiveTrends() {
         container.innerHTML = "<div style='color:red; font-size:12px; text-align:center;'>فشل التحميل</div>";
     }
 }
-
-// ⚠️ مهم: ضيف استدعاء الدالة دي جوه openFullSearch() عشان تشتغل لما تفتح البحث
-
-// 1. قائمة المتابعين (عشان نستبعدهم من الاقتراحات)
-
-// دالة لجلب قائمة من أتابعهم
-async function fetchMyFollowing() {
+// دالة لجلب قائمة من أتابعهم (أساسية للخوارزمية)
+// دالة لجلب قائمة من أتابعهم وقائمة الأصدقاء
+async function fetchMyConnections() {
     if(!currentUser) return;
-    const snap = await db.collection('users').doc(currentUser.uid).collection('following').get();
-    myFollowingList = snap.docs.map(doc => doc.id);
-    myFollowingList.push(currentUser.uid); // ضيف نفسك عشان متشوفش اقتراح لنفسك
+    try {
+        // جلب المتابعين
+        const folSnap = await db.collection('users').doc(currentUser.uid).collection('following').get();
+        myFollowingList = folSnap.docs.map(doc => doc.id);
+        if (!myFollowingList.includes(currentUser.uid)) myFollowingList.push(currentUser.uid);
+
+        // جلب الأصدقاء
+        const friSnap = await db.collection('users').doc(currentUser.uid).collection('friends').get();
+        window.myFriendsList = friSnap.docs.map(doc => doc.id);
+
+    } catch (e) {
+        console.error("Error fetching connections:", e);
+        myFollowingList = [currentUser.uid];
+        window.myFriendsList = [];
+    }
 }
 
 // دالة لجلب وعرض الاقتراحات
 // دالة لجلب وعرض الاقتراحات
 // دالة لجلب وعرض الاقتراحات (الكود الناقص)
 // دالة رسم كروت الاقتراحات
-async function renderSuggestedFriendsSection() {
-    let suggestions = [];
-    
-    try {
-        // هنجيب أول 10 فقط مبدئياً عشان السرعة
-        const snap = await db.collection('users').limit(10).get();
+// متغير لحفظ موقع المستخدم الحالي
+window.currentUserLocation = ""; 
 
-        // نحفظ آخر مستخدم وصلنا له عشان لما نضغط "المزيد" نكمل من بعده
-        if (!snap.empty) {
-            lastSuggestedDoc = snap.docs[snap.docs.length - 1];
+async function renderSuggestedFriendsSection() {
+    try {
+        // 1. جلب موقع المستخدم وتقسيمه (للحصول على البلد والمحافظة)
+        let myFullLocation = window.currentUserLocation || "";
+        let myBroadLocation = ""; // البلد أو المحافظة
+        if (myFullLocation) {
+            let parts = myFullLocation.split('،');
+            myBroadLocation = parts[parts.length - 1].trim(); // عادة آخر كلمة هي البلد (مثل: مصر)
         }
 
-        snap.forEach(doc => {
-            const userData = doc.data();
-            const uid = doc.id;
+        let potentialUsersMap = new Map(); // نستخدم Map لمنع تكرار نفس الشخص
 
-            // فلترة: نستبعد نفسك والناس اللي متابعهم والمحظورين
+        // 2. استعلام أ: جلب الأشخاص من نفس المنطقة بالضبط (إن وجدوا)
+        if (myFullLocation) {
+            const exactSnap = await db.collection('users').where('location', '==', myFullLocation).limit(10).get();
+            exactSnap.forEach(doc => potentialUsersMap.set(doc.id, doc));
+        }
+
+        // 3. استعلام ب: الاستعلام الاحتياطي (نجلب أحدث أو عشوائي 30 شخص لضمان عدم فراغ القائمة)
+        // هذا الاستعلام يضمن أن القائمة لن تكون فارغة أبداً
+        if (potentialUsersMap.size < 15) {
+            const fallbackSnap = await db.collection('users').limit(30).get();
+            // نحفظ آخر مستند لزر عرض المزيد
+            if (!fallbackSnap.empty) lastSuggestedDoc = fallbackSnap.docs[fallbackSnap.docs.length - 1];
+            
+            fallbackSnap.forEach(doc => {
+                if (!potentialUsersMap.has(doc.id)) potentialUsersMap.set(doc.id, doc);
+            });
+        }
+
+        let potentialUsers = [];
+        
+        // 4. الفلترة الأساسية (استبعاد النفس، الأصدقاء، المتابَعين، المحظورين)
+                // 4. الفلترة الأساسية (استبعاد النفس، الأصدقاء، المتابَعين، المحظورين، والمحذوفين)
+        potentialUsersMap.forEach((doc, uid) => {
+            const d = doc.data();
+            
+            // 🔥 الحارس الرابع: استبعاد الحسابات المحذوفة
+            if (d.accountStatus === 'deleted') return;
+
             if (uid !== currentUser.uid && 
+               (!window.myFriendsList || !window.myFriendsList.includes(uid)) &&
                (typeof myFollowingList === 'undefined' || !myFollowingList.includes(uid)) &&
                (typeof blockedUsersSet === 'undefined' || !blockedUsersSet.has(uid))) {
                 
-                suggestions.push({ id: uid, ...userData });
+                potentialUsers.push({ id: uid, ...d });
             }
         });
 
-        if (suggestions.length === 0) return ""; 
 
+        // 5. 🔥 نظام التقييم الذكي وحساب الأصدقاء المشتركين 🔥
+                // 5. حساب الأصدقاء المشتركين والنقاط
+        await Promise.all(potentialUsers.map(async (user) => {
+            let score = 0;
+            let mutualCount = 0;
+            let targetLocation = user.location || "";
+
+            // 🔥 1. الأولوية لأصحاب الصور الشخصية 🔥
+            // نتحقق أن لديه صورة، وأنها ليست الصورة الافتراضية الرمادية للتطبيق
+            const hasRealPic = user.profilePic && 
+                               user.profilePic.trim() !== "" && 
+                               !user.profilePic.includes("149071.png") && 
+                               !user.profilePic.includes("847969.png");
+            
+            if (hasRealPic) {
+                score += 30; // منح 30 نقطة إضافية ليرتفع فوق من لا يملك صورة
+            }
+
+            // 🌍 2. تقييم الموقع الجغرافي
+            if (myFullLocation && targetLocation === myFullLocation) {
+                score += 100; // جيران في نفس المنطقة
+            } else if (myBroadLocation && targetLocation.includes(myBroadLocation)) {
+                score += 50;  // نفس المحافظة أو البلد
+            }
+
+            // 🤝 3. تقييم الأصدقاء المشتركين
+            try {
+                const targetFriendsSnap = await db.collection('users').doc(user.id).collection('friends').get();
+                const targetFriendsList = targetFriendsSnap.docs.map(d => d.id);
+                
+                // في صفحة الهوم نستخدم window.myFriendsList، وفي صفحة الطلبات نستخدم myFriendsSet
+                let myCurrentFriends = window.myFriendsList || (typeof myFriendsSet !== 'undefined' ? Array.from(myFriendsSet) : []);
+
+                if (myCurrentFriends.length > 0) {
+                    const mutuals = targetFriendsList.filter(id => myCurrentFriends.includes(id));
+                    mutualCount = mutuals.length;
+                    score += (mutualCount * 20); // 20 نقطة لكل صديق مشترك
+                }
+            } catch(e) {}
+            
+            user.mutualCount = mutualCount;
+            user.smartScore = score;
+        }));
+
+        // 6. الترتيب بناءً على أعلى النقاط (الأقرب ثم المشتركين ثم الباقي)
+        potentialUsers.sort((a, b) => b.smartScore - a.smartScore);
+        
+        // نأخذ أفضل 15 شخص لعرضهم
+        potentialUsers = potentialUsers.slice(0, 15);
+
+        if (potentialUsers.length === 0) return ""; 
+
+        // 7. رسم الكروت والنصوص الذكية
         let cardsHTML = "";
         
-        suggestions.forEach(u => {
+        potentialUsers.forEach(u => {
             const pic = u.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-            const mutualCount = Math.floor(Math.random() * 20) + 1; 
+            
+            // تحديد النص الذي سيظهر بذكاء
+            let hintText = "";
+            let hintColor = "var(--secondary-text)";
+
+            if (u.mutualCount > 0) {
+                hintText = `${u.mutualCount} ${typeof t === 'function' ? t('text_mutual_friends') : 'أصدقاء مشتركين'}`;
+                hintColor = "var(--primary-color)";
+            } else if (myFullLocation && u.location === myFullLocation) {
+                hintText = `بالقرب منك 📍`;
+                hintColor = "#34c759"; // أخضر
+            } else if (myBroadLocation && u.location && u.location.includes(myBroadLocation)) {
+                hintText = `من ${myBroadLocation}`;
+            } else {
+                hintText = "مقترح لك ✨"; // الاحتياطي لأي شخص آخر
+            }
 
             cardsHTML += `
             <div class="sug-card" id="sug-card-${u.id}">
                 <img src="${pic}" class="sug-img" onclick="openPage('profile.html?uid=${u.id}')">
                 <div class="sug-info">
                     <div class="sug-name">${u.name}</div>
-                 <div class="sug-mutual">${mutualCount} ${t('text_mutual_friends')}</div>
-<button class="sug-add-btn" onclick="toggleFriendRequest(this, '${u.id}')">
-    <i class="fa-solid fa-user-plus"></i> ${t('btn_add')}
-</button>
-
+                    <div class="sug-mutual" style="color: ${hintColor}; font-weight: bold;">${hintText}</div>
+                    <button class="sug-add-btn" onclick="toggleFriendRequest(this, '${u.id}')">
+                        <i class="fa-solid fa-user-plus"></i> إضافة
+                    </button>
                 </div>
             </div>`;
         });
 
-        // 🔥 إضافة كارت "عرض المزيد" في نهاية الشريط
         cardsHTML += `
             <div class="sug-card show-more-card" id="btnLoadMoreSug" onclick="loadMoreSuggestions(this)">
                 <div class="more-icon-circle">
                     <i class="fa-solid fa-arrow-left"></i>
                 </div>
-                <span style="font-size:13px; font-weight:bold; color:var(--text-color);">${t('text_view_replies')}</span>
+                <span style="font-size:13px; font-weight:bold; color:var(--text-color);">${typeof t === 'function' ? t('text_view_more') : 'عرض المزيد'}</span>
             </div>
         `;
 
         return `
         <div class="suggestions-section">
             <div class="suggestions-header">
-                <span data-i18n="text_people_you_may_know">${t('text_people_you_may_know')}</span>
-                <i class="fa-solid fa-ellipsis" style="color:var(--secondary-text)"></i>
+                <span data-i18n="text_people_you_may_know">${typeof t === 'function' ? t('text_people_you_may_know') : 'أشخاص قد تعرفهم'}</span>
+                <i class="fa-solid fa-user-group" style="color:var(--primary-color)"></i>
             </div>
             <div class="suggestions-scroll-container" id="suggestionsContainer">
                 ${cardsHTML}
@@ -20437,84 +20795,105 @@ async function renderSuggestedFriendsSection() {
         `;
 
     } catch (e) {
-        console.error(e);
+        console.error("Suggestions Error:", e);
         return "";
     }
 }
 
 
-
 async function loadMoreSuggestions(btnElement) {
-    // 1. تشغيل أنيميشن التحميل مكان السهم
     const iconDiv = btnElement.querySelector('.more-icon-circle');
     const originalIcon = iconDiv.innerHTML;
     iconDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
     
     if (!lastSuggestedDoc) {
-        btnElement.remove(); // لو مفيش داتا تانية، شيل الزرار
-        showToast(t('toast_no_more_sug'));
+        btnElement.remove();
         return;
     }
 
     try {
-        // 2. جلب الدفعة التالية (Next Batch)
-        const snap = await db.collection('users')
-            .startAfter(lastSuggestedDoc) // ابدأ من بعد آخر واحد وقفنا عنده
-            .limit(10) // هات 10 كمان
-            .get();
+        let myFullLocation = window.currentUserLocation || "";
+        let myBroadLocation = "";
+        if (myFullLocation) {
+            let parts = myFullLocation.split('،');
+            myBroadLocation = parts[parts.length - 1].trim();
+        }
+
+        // في عرض المزيد، نجلب الناس من الداتابيز بشكل عام عشان القائمة متخلصش
+        const snap = await db.collection('users').startAfter(lastSuggestedDoc).limit(15).get();
 
         if (snap.empty) {
-            btnElement.remove(); // مفيش حاجة تانية، شيل الزرار
-            showToast(t('toast_reached_end'));
+            btnElement.remove(); 
+            showToast('لا توجد اقتراحات أخرى حالياً');
             return;
         }
 
-        // تحديث المؤشر
         lastSuggestedDoc = snap.docs[snap.docs.length - 1];
 
-        // 3. معالجة البيانات
+        let newUsers = [];
         snap.forEach(doc => {
-            const u = doc.data();
             const uid = doc.id;
-
-            // نفس الفلترة (عشان ميعرضش ناس متابعهم)
             if (uid !== currentUser.uid && 
+               (!window.myFriendsList || !window.myFriendsList.includes(uid)) &&
                (typeof myFollowingList === 'undefined' || !myFollowingList.includes(uid)) &&
                (typeof blockedUsersSet === 'undefined' || !blockedUsersSet.has(uid))) {
-                
-                const pic = u.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-                const mutualCount = Math.floor(Math.random() * 20) + 1; 
-
-                // HTML الكارت الجديد
-                const newCardHTML = `
-                <div class="sug-card" id="sug-card-${uid}">
-                    <img src="${pic}" class="sug-img" onclick="openPage('profile.html?uid=${uid}')">
-                    <div class="sug-info">
-                        <div class="sug-name">${u.name}</div>
-                        <div class="sug-mutual">${mutualCount} صديق مشترك</div>
-                        <button class="sug-add-btn" onclick="toggleFriendRequest(this, '${uid}')">
-                            <i class="fa-solid fa-user-plus"></i> إضافة
-                        </button>
-                    </div>
-                </div>`;
-
-                // إضافة الكارت *قبل* زرار "عرض المزيد"
-                btnElement.insertAdjacentHTML('beforebegin', newCardHTML);
+                newUsers.push({ id: uid, ...doc.data() });
             }
         });
 
-        // 4. إرجاع أيقونة الزرار لطبيعتها
+        await Promise.all(newUsers.map(async (user) => {
+            let mutualCount = 0;
+            try {
+                const targetFriendsSnap = await db.collection('users').doc(user.id).collection('friends').get();
+                const targetFriendsList = targetFriendsSnap.docs.map(d => d.id);
+                if (window.myFriendsList && window.myFriendsList.length > 0) {
+                    const mutuals = targetFriendsList.filter(id => window.myFriendsList.includes(id));
+                    mutualCount = mutuals.length;
+                }
+            } catch(e) {}
+            user.mutualCount = mutualCount;
+        }));
+
+        newUsers.forEach(u => {
+            const pic = u.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            
+            let hintText = "";
+            let hintColor = "var(--secondary-text)";
+
+            if (u.mutualCount > 0) {
+                hintText = `${u.mutualCount} أصدقاء مشتركين`;
+                hintColor = "var(--primary-color)";
+            } else if (myFullLocation && u.location === myFullLocation) {
+                hintText = `بالقرب منك 📍`;
+                hintColor = "#34c759";
+            } else if (myBroadLocation && u.location && u.location.includes(myBroadLocation)) {
+                hintText = `من ${myBroadLocation}`;
+            } else {
+                hintText = "مقترح لك ✨";
+            }
+
+            const newCardHTML = `
+            <div class="sug-card" id="sug-card-${u.id}">
+                <img src="${pic}" class="sug-img" onclick="openPage('profile.html?uid=${u.id}')">
+                <div class="sug-info">
+                    <div class="sug-name">${u.name}</div>
+                    <div class="sug-mutual" style="color: ${hintColor}; font-weight: bold;">${hintText}</div>
+                    <button class="sug-add-btn" onclick="toggleFriendRequest(this, '${u.id}')">
+                        <i class="fa-solid fa-user-plus"></i> إضافة
+                    </button>
+                </div>
+            </div>`;
+
+            btnElement.insertAdjacentHTML('beforebegin', newCardHTML);
+        });
+
         iconDiv.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
-        
-        // تحريك الشريط قليلاً لليسار عشان يلاحظ الجديد
         const container = document.getElementById('suggestionsContainer');
-        container.scrollBy({ left: -100, behavior: 'smooth' });
+        container.scrollBy({ left: -150, behavior: 'smooth' });
 
     } catch (e) {
         console.error("Error loading more suggestions:", e);
-        showToast(t('toast_load_failed'));
-
-        iconDiv.innerHTML = originalIcon; // استرجاع الأيقونة عند الخطأ
+        iconDiv.innerHTML = originalIcon;
     }
 }
 
@@ -23202,12 +23581,9 @@ function handleSliderScroll(postId, totalSlides) {
     }
 }
 
-
 // ==================================================
-// 🚀 نظام الاستكشاف الذكي (ترحيب المستخدمين الجدد)
+// 🚀 نظام الاستكشاف الذكي (يعرض صناع المحتوى فقط) 🌟
 // ==================================================
-
-// 1. الدالة الأساسية لجلب كل المستخدمين وترتيبهم ذكياً
 async function initDiscoverySystem() {
     if (isFetchingDiscovery) return;
     isFetchingDiscovery = true;
@@ -23217,16 +23593,23 @@ async function initDiscoverySystem() {
     const carousel = document.getElementById('discoveryCarousel');
     if (!carousel) return;
 
-    carousel.innerHTML = '<div...><i...></i> ' + t('text_finding_creators') + '</div>';
+    carousel.innerHTML = '<div style="width:100%; text-align:center; padding:20px; color:#777;"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري البحث عن صناع محتوى...</div>';
+    
     try {
-        // نأخذ عينة كبيرة (مثلاً 50 مستخدم) لترتيبهم محلياً
-        const snap = await db.collection('users').limit(50).get();
+        // 🔥 السر هنا: بنطلب من الداتابيز تجيب "فقط" الناس اللي مفعلين وضع المبدع 🔥
+        const snap = await db.collection('users')
+            .where('isCreatorMode', '==', true) 
+            .limit(50)
+            .get();
         
         let usersArray = [];
 
         snap.forEach(doc => {
             const u = doc.data();
             const uid = doc.id;
+
+            // حماية إضافية: لو القيمة مش true نتجاهله
+            if (u.isCreatorMode !== true) return;
 
             // استبعاد: نفسي + المحظورين + الأشخاص اللي متابعهم أصلاً
             if (uid !== currentUser.uid && 
@@ -23237,38 +23620,23 @@ async function initDiscoverySystem() {
             }
         });
 
-        // 🔥 خوارزمية الترتيب الذكية 🔥
+        // خوارزمية الترتيب (الأولوية للموثقين واللي عندهم تفاعل أعلى)
         usersArray.sort((a, b) => {
-            // حساب نقاط (Score) لكل مستخدم
-            let scoreA = 0;
-            let scoreB = 0;
-
-            // 1. الأولوية للموثقين
+            let scoreA = 0; let scoreB = 0;
             if (a.isVerified) scoreA += 10000;
             if (b.isVerified) scoreB += 10000;
-
-            // 2. عدد المتابعين (لو الحقل موجود)
-            let followersA = a.followersCount || (a.followers ? a.followers.length : 0);
-            let followersB = b.followersCount || (b.followers ? b.followers.length : 0);
-            scoreA += followersA * 10;
-            scoreB += followersB * 10;
-
-            // 3. التفاعل (المشاهدات الكلية كمؤشر للنشاط)
-            scoreA += (a.totalViews || 0);
-            scoreB += (b.totalViews || 0);
-
-            // الترتيب التنازلي (الأعلى نقاطاً أولاً)
+            scoreA += (a.followersCount || 0) * 10 + (a.totalViews || 0);
+            scoreB += (b.followersCount || 0) * 10 + (b.totalViews || 0);
             return scoreB - scoreA;
         });
 
         discoveryFullList = usersArray;
-        carousel.innerHTML = ''; // تنظيف اللودر
+        carousel.innerHTML = ''; 
 
         if (discoveryFullList.length === 0) {
-            carousel.innerHTML = '<div style="width:100%; text-align:center; color:#777;">لا يوجد مستخدمين لاقتراحهم حالياً</div>';
+            carousel.innerHTML = '<div style="width:100%; text-align:center; color:#777; font-size:13px;">لا يوجد صناع محتوى لاقتراحهم حالياً</div>';
         } else {
-            // عرض أول 10 أشخاص
-            renderNextDiscoveryBatch();
+            renderNextDiscoveryBatch(); // رسم الكروت
         }
 
     } catch (e) {
@@ -23381,10 +23749,26 @@ window.addEventListener('scroll', () => {
         // نتأكد إننا مش بنحمل أصلاً، وإن الداتابيز لسه فيها بوستات (يعني اللودر مش مخفي)
         if (!isLoading && sentinel && sentinel.style.display !== 'none') {
             console.log("استدعاء التحميل بواسطة حارس السحب الاحتياطي!");
-            loadPosts(true);
+            
         }
     }
 }, {passive: true});
+
+// --- كود معالجة التوكن المتوافق مع WebView ---
+window.saveAndroidToken = function(androidToken) {
+    // نحفظ التوكن في الذاكرة فوراً لضمان عدم ضياعه
+    localStorage.setItem('pending_fcm_token', androidToken);
+
+    // إذا كان الفايربيز جاهزاً والمستخدم مسجل دخوله، نرفع التوكن فوراً
+    if (typeof auth !== 'undefined' && auth.currentUser) {
+        db.collection('users').doc(auth.currentUser.uid).update({
+            fcmToken: androidToken
+        }).then(() => {
+            console.log("تم حفظ توكن الأندرويد بنجاح!");
+            localStorage.removeItem('pending_fcm_token'); // تنظيف بعد الرفع
+        }).catch((err) => console.log("خطأ في حفظ التوكن:", err));
+    }
+};
 
     </script>
        <div class="custom-modal" id="accountSwitcherModal">

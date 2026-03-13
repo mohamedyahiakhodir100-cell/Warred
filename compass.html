@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>البوصلة العاطفية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Cairo", sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        /* خلفية متحركة احترافية */
+        body {
+            background: linear-gradient(45deg, #0d0d0f, #1a1025, #0d0d0f);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            display: flex; flex-direction: column; align-items: center;
+            height: 100vh; overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            width: 100%; padding: 20px; display: flex; justify-content: space-between;
+            align-items: center; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 100;
+        }
+
+        /* اختيار المزاج (Glassmorphism) */
+        .mood-selector {
+            display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;
+            margin-top: 20px; padding: 10px; width: 100%; max-width: 400px;
+        }
+
+        .mood-btn {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 20px 25px; font-size: 30px; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            width: calc(33.33% - 10px); box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .mood-btn span { font-size: 13px; font-weight: 900; color: #888; }
+        
+        .mood-btn.active {
+            background: rgba(0, 198, 255, 0.15); border-color: #00C6FF;
+            transform: scale(1.1) translateY(-5px); box-shadow: 0 10px 25px rgba(0, 198, 255, 0.4);
+        }
+        .mood-btn.active span { color: #fff; text-shadow: 0 0 5px #00C6FF; }
+
+        /* زر البدء السحري */
+        .start-btn {
+            background: linear-gradient(135deg, #00C6FF, #5D5FEF); color: #fff;
+            border: none; padding: 15px 40px; border-radius: 30px; font-weight: 900;
+            font-size: 16px; cursor: pointer; box-shadow: 0 10px 30px rgba(0, 198, 255, 0.4);
+            margin-top: 30px; display: none; transition: 0.3s;
+            animation: pulseBtn 2s infinite;
+        }
+        .start-btn:active { transform: scale(0.95); }
+
+        @keyframes pulseBtn {
+            0% { box-shadow: 0 0 0 0 rgba(0, 198, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 198, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 198, 255, 0); }
+        }
+
+        /* الرادار الاحترافي */
+        .radar-container {
+            display: none; position: relative;
+            width: 280px; height: 280px; margin-top: 40px;
+            border-radius: 50%; border: 2px solid rgba(0, 198, 255, 0.4);
+            box-shadow: 0 0 50px rgba(0, 198, 255, 0.2), inset 0 0 50px rgba(0, 198, 255, 0.2);
+            overflow: hidden; background: rgba(0,0,0,0.5);
+        }
+
+        /* دوائر الرادار الداخلية */
+        .radar-container::before {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 140px; height: 140px; transform: translate(-50%, -50%);
+            border: 1px dashed rgba(0, 198, 255, 0.3); border-radius: 50%;
+        }
+
+        .radar-sweep {
+            position: absolute; top: 0; left: 0; width: 50%; height: 50%;
+            background: conic-gradient(from 90deg at bottom right, transparent 0deg, rgba(0, 198, 255, 0.8) 90deg);
+            transform-origin: bottom right;
+            animation: radarSpin 1.5s linear infinite;
+        }
+
+        .radar-center {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 50px; text-shadow: 0 0 30px #00C6FF; z-index: 10;
+        }
+
+        @keyframes radarSpin { 100% { transform: rotate(360deg); } }
+
+        /* نتيجة البحث (كارت الشخص) */
+        .match-card {
+            display: none; flex-direction: column; align-items: center; text-align: center;
+            background: rgba(20, 20, 25, 0.8); backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 198, 255, 0.3);
+            padding: 30px 20px; border-radius: 24px; margin-top: 20px; width: 90%; max-width: 320px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        .match-avatar-wrapper { position: relative; margin-bottom: 15px; }
+        .match-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #00C6FF; object-fit: cover; box-shadow: 0 0 20px rgba(0, 198, 255, 0.5); }
+        .match-mood-icon { position: absolute; bottom: -5px; right: -5px; font-size: 24px; background: #1a1a1a; border-radius: 50%; padding: 2px; }
+
+        .match-name { color: #fff; font-size: 20px; font-weight: 900; margin-bottom: 5px; }
+        .match-desc { color: #aaa; font-size: 13px; margin-bottom: 25px; line-height: 1.5; }
+        
+        .chat-btn {
+            background: linear-gradient(135deg, #00C6FF, #0072FF); color: #fff; width: 100%;
+            border: none; padding: 12px; border-radius: 15px; font-weight: bold;
+            font-size: 15px; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 198, 255, 0.4);
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+
+        /* شاشة الخطأ (لم نجد أحداً) */
+        .no-match-card {
+            display: none; flex-direction: column; align-items: center; text-align: center;
+            margin-top: 50px; animation: popIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <i class="fa-solid fa-arrow-right" style="font-size: 20px; cursor: pointer;" onclick="history.back()"></i>
+        <h3 style="font-weight: 900; margin: 0; text-shadow: 0 0 10px rgba(255,255,255,0.5);">البوصلة العاطفية 🧭</h3>
+        <div style="width: 20px;"></div>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px; width: 100%;" id="step1">
+        <p style="color: #aaa; font-size: 14px;">بم تشعر الآن؟ دعنا نجد من يشاركك الشعور.</p>
+        <div class="mood-selector">
+            <div class="mood-btn" onclick="selectMood(this, 'حزين', '😢')">😢 <span>حزين</span></div>
+            <div class="mood-btn" onclick="selectMood(this, 'سعيد', '😂')">😂 <span>سعيد</span></div>
+            <div class="mood-btn" onclick="selectMood(this, 'مهموم', '😔')">😔 <span>مهموم</span></div>
+            <div class="mood-btn" onclick="selectMood(this, 'رومانسي', '🥰')">🥰 <span>رومانسي</span></div>
+            <div class="mood-btn" onclick="selectMood(this, 'غاضب', '😡')">😡 <span>غاضب</span></div>
+            <div class="mood-btn" onclick="selectMood(this, 'ملل', '🥱')">🥱 <span>ملل</span></div>
+        </div>
+        <button id="startScanBtn" class="start-btn" onclick="startRadar()">تشغيل الرادار 📡</button>
+    </div>
+
+    <div class="radar-container" id="radarScreen">
+        <div class="radar-sweep"></div>
+        <div class="radar-center" id="radarEmoji">🧭</div>
+    </div>
+    <div id="radarText" style="display:none; color: #00C6FF; font-weight: bold; margin-top: 20px; animation: pulse 1s infinite;">جاري البحث في المجرة...</div>
+
+    <div class="match-card" id="matchScreen">
+        <div class="match-avatar-wrapper">
+            <img src="" id="matchPic" class="match-avatar">
+            <div class="match-mood-icon" id="matchMiniEmoji">😍</div>
+        </div>
+        <h3 class="match-name" id="matchName">اسم الشخص</h3>
+        <p class="match-desc">هذا الشخص يشعر بـ <strong id="matchMoodText" style="color:#00C6FF;"></strong> الآن، انطلق وشاركه أطراف الحديث!</p>
+        <button class="chat-btn" onclick="startChatWithMatch()"><i class="fa-solid fa-comment-dots"></i> بدء المحادثة</button>
+        <button style="background:transparent; border:none; color:#777; margin-top:15px; font-weight:bold; cursor:pointer;" onclick="resetCompass()"><i class="fa-solid fa-rotate-right"></i> بحث مجدداً</button>
+    </div>
+
+    <div class="no-match-card" id="noMatchScreen">
+        <i class="fa-solid fa-ghost" style="font-size: 60px; color: #555; margin-bottom: 15px;"></i>
+        <h3 style="color: #fff; margin-bottom: 5px;">أنت وحيد في هذا الشعور</h3>
+        <p style="color: #aaa; font-size: 13px;">لا يوجد أحد يشعر بنفس شعورك في الوقت الحالي، حاول لاحقاً.</p>
+        <button style="background:rgba(255,255,255,0.1); border:1px solid #333; color:#fff; margin-top:20px; padding:10px 25px; border-radius:20px; cursor:pointer;" onclick="resetCompass()">رجوع</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // 🔴 ضع إعدادات الفايربيس الخاصة بك هنا 🔴
+        const firebaseConfig = {
+            apiKey: "AIzaSyDpvqNAReChsHn5tFJSp7vV_EJHmtD2x4c",
+            authDomain: "pools-e4381.firebaseapp.com",
+            projectId: "pools-e4381",
+            storageBucket: "pools-e4381.firebasestorage.app",
+            messagingSenderId: "339799216046",
+            appId: "1:339799216046:web:26e437a7b7d5c24fe9023f"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let currentMood = "";
+        let currentEmoji = "";
+        let matchedUserUid = null; // لتخزين ID الشخص اللي لقيناه
+
+        // التأكد من تسجيل الدخول
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = "index.html";
+            } else {
+                currentUser = user;
+            }
+        });
+
+        // 1. اختيار المزاج
+        function selectMood(element, mood, emoji) {
+            document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            currentMood = mood;
+            currentEmoji = emoji;
+            document.getElementById('startScanBtn').style.display = 'block';
+        }
+
+        // 2. تشغيل الرادار والبحث في الفايربيس
+        async function startRadar() {
+            if (!currentUser) return;
+
+            // إخفاء الشاشة الأولى وإظهار الرادار
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('radarScreen').style.display = 'block';
+            document.getElementById('radarText').style.display = 'block';
+            document.getElementById('radarEmoji').innerText = currentEmoji;
+
+            try {
+                // أ) تحديث حالتي أنا في الداتابيز عشان الناس التانية تلاقيني
+                await db.collection('users').doc(currentUser.uid).update({
+                    compassMood: currentMood,
+                    compassTime: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // ب) البحث عن أشخاص آخرين لديهم نفس المزاج
+                const usersRef = db.collection('users');
+                const snapshot = await usersRef.where('compassMood', '==', currentMood).limit(20).get();
+
+                let possibleMatches = [];
+                
+                snapshot.forEach(doc => {
+                    // لا تضف نفسك لقائمة التطابق
+                    if (doc.id !== currentUser.uid) {
+                        possibleMatches.push({ id: doc.id, ...doc.data() });
+                    }
+                });
+
+                // محاكاة وقت البحث لإعطاء إحساس الرادار (ثانيتين)
+                setTimeout(() => {
+                    document.getElementById('radarScreen').style.display = 'none';
+                    document.getElementById('radarText').style.display = 'none';
+
+                    if (possibleMatches.length > 0) {
+                        // اختيار شخص عشوائي من القائمة
+                        const randomMatch = possibleMatches[Math.floor(Math.random() * possibleMatches.length)];
+                        showMatchSuccess(randomMatch);
+                    } else {
+                        // لم نجد أحداً
+                        document.getElementById('noMatchScreen').style.display = 'flex';
+                    }
+                }, 2500);
+
+            } catch (error) {
+                console.error("خطأ في البوصلة:", error);
+                alert("حدث خطأ في الاتصال بالرادار.");
+                resetCompass();
+            }
+        }
+
+        // 3. إظهار كارت النجاح
+        function showMatchSuccess(matchData) {
+            matchedUserUid = matchData.id;
+            
+            document.getElementById('matchPic').src = matchData.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            document.getElementById('matchName').innerText = (matchData.name || "مستخدم").split(' ')[0]; // الاسم الأول
+            document.getElementById('matchMoodText').innerText = currentEmoji + " " + currentMood;
+            document.getElementById('matchMiniEmoji').innerText = currentEmoji;
+            
+            document.getElementById('matchScreen').style.display = 'flex';
+        }
+
+        // 4. فتح المحادثة (تجهيز الشات والانتقال)
+        async function startChatWithMatch() {
+            if (!matchedUserUid || !currentUser) return;
+
+            // توليد كود الشات الموحد (نفس المستخدم في صفحة الرسائل)
+            const chatId = [currentUser.uid, matchedUserUid].sort().join("_");
+
+            try {
+                // التأكد من وجود الشات في الداتابيز
+                await db.collection('chats').doc(chatId).set({
+                    users: [currentUser.uid, matchedUserUid],
+                    lastMessage: `مرحباً! يبدو أننا نشعر بـ ${currentMood} ${currentEmoji}`,
+                    lastMessageTime: firebase.firestore.FieldValue.serverTimestamp(),
+                    read: false
+                }, { merge: true });
+
+                // إرسال رسالة تلقائية نيابة عنك لكسر الجليد
+                await db.collection('chats').doc(chatId).collection('messages').add({
+                    uid: currentUser.uid,
+                    text: `مرحباً! جئتك عبر البوصلة العاطفية 🧭، يبدو أن كلانا يشعر بـ ${currentMood} ${currentEmoji} اليوم.`,
+                    type: 'text',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // الانتقال لصفحة الرسائل
+                window.location.href = "messages.html";
+
+            } catch (e) {
+                console.error("خطأ في فتح الشات:", e);
+                alert("لم نتمكن من فتح المحادثة الآن.");
+            }
+        }
+
+        // 5. إعادة الضبط والمحاولة مرة أخرى
+        function resetCompass() {
+            document.getElementById('matchScreen').style.display = 'none';
+            document.getElementById('noMatchScreen').style.display = 'none';
+            document.getElementById('radarScreen').style.display = 'none';
+            document.getElementById('radarText').style.display = 'none';
+            
+            document.getElementById('step1').style.display = 'block';
+            document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('startScanBtn').style.display = 'none';
+            matchedUserUid = null;
+        }
+    </script>
+</body>
+</html>

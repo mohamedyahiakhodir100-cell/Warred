@@ -184,13 +184,7 @@ video { width: 100%; height: 100%; object-fit: cover; display: block; }
 }
 .action-text { font-size: 12px; font-weight: 600; text-shadow: 0 1px 2px #000; }
 
-/* منطقة معلومات الفيديو واليوزر */
-.video-info {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 20px 20px 80px 20px; /* مساحة من تحت عشان شريط التقدم */
-    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.95) 100%);
-    z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end;
-}
+
 .info-inner { pointer-events: auto; width: 100%; max-width: 80%; }
 
 .user-header-row {
@@ -265,7 +259,6 @@ video { width: 100%; height: 100%; object-fit: cover; display: block; }
     font-size: 11px; font-weight: 800; font-family: monospace; opacity: 0;
     transition: opacity 0.2s; pointer-events: none; white-space: nowrap;
 }
-.floating-seeker-container:active .seeker-time-bubble, .video-slide.is-paused .seeker-time-bubble { opacity: 1; }
 
 /* =========================================
    6. القوائم السفلية (Bottom Sheets)
@@ -2931,7 +2924,8 @@ video.is-landscape {
     opacity: 0.8;
 }
 
-/* تنسيق إضافي لعارض القصص للتأكد من ظ#archiveFullViewer {
+/* تنسيق إضافي لعارض القصص للتأكد من ظهوره */
+#archiveFullViewer {
     display: none; /* مخفي افتراضياً */
     position: fixed !important;
     inset: 0 !important; /* يغطي الشاشة كلها */
@@ -2945,6 +2939,79 @@ video.is-landscape {
 
 #archiveFullViewer[style*="display: flex"] {
     display: flex !important; /* تأكيد الظهور لما الجافاسكريبت يغيره */
+}
+/* =========================================
+   تعديل مساحة المعلومات وشريط الفيديو الجديد
+   ========================================= */
+.video-info {
+    position: absolute; 
+    bottom: 105px; /* 🔥 رفعنا الصورة والاسم والنصوص لفوق خالص 🔥 */
+    left: 0; right: 0;
+    padding: 10px 15px 10px 15px; 
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.95) 100%);
+    z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end;
+}
+
+/* شريط الفيديو تم تحريره ليكون في المنتصف تماماً */
+.floating-seeker-container {
+    position: absolute; 
+    bottom: 85px; /* 🔥 مكانه تحت النصوص وفوق الشريط الزجاجي 🔥 */
+    left: 50%; 
+    transform: translateX(-50%); /* توسيط بالمللي */
+    width: 92%; /* عرض الشريط */
+    z-index: 60;
+    display: flex; 
+    flex-direction: column; /* عشان العداد ينزل تحت الشريط */
+    align-items: flex-start; /* محاذاة العداد */
+    direction: ltr !important; 
+    pointer-events: auto;
+}
+
+.seeker-track {
+    width: 100%; height: 4px; background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px; position: relative; overflow: visible; backdrop-filter: blur(2px);
+}
+
+.seeker-fill {
+    height: 100%; background: #F72585; width: 0%; border-radius: 10px;
+    position: relative; box-shadow: 0 0 10px rgba(247, 37, 133, 0.8);
+}
+
+.seeker-timer {
+    margin-top: 4px; /* 🔥 العداد نزل تحت الشريط 🔥 */
+    color: rgba(255,255,255,0.9);
+    font-size: 11px; font-weight: bold; font-family: monospace;
+    text-shadow: 0 1px 2px #000; pointer-events: none;
+}
+
+
+/* ================= شريط التنقل الزجاجي (الجديد) ================= */
+.fb-icons {
+    position: fixed !important; bottom: 20px !important; left: 50% !important;
+    transform: translateX(-50%) !important; width: 90% !important; max-width: 400px !important;
+    height: 60px !important; background: rgba(22, 22, 22, 0.95) !important;
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    border-radius: 50px !important; border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important; z-index: 4000 !important; 
+    display: flex !important; justify-content: space-around !important;
+    align-items: center !important; padding: 0 5px !important;
+}
+.nav-item {
+    flex: 1 !important; display: flex !important; align-items: center !important;
+    justify-content: center !important; height: 100% !important;
+    background: transparent !important; border: none !important; cursor: pointer; position: relative;
+}
+.nav-item i { font-size: 22px !important; color: #888 !important; transition: 0.2s; }
+.nav-item.active i { color: var(--primary-solid) !important; text-shadow: 0 0 10px rgba(93, 95, 239, 0.4); transform: translateY(-2px); }
+.nav-avatar-small {
+    width: 28px; height: 28px; border-radius: 50%; background-size: cover; background-position: center;
+    background-color: #333; border: 2px solid transparent; transition: 0.2s;
+}
+.nav-item.active .nav-avatar-small { border-color: var(--primary-solid); transform: scale(1.1); }
+.nav-badge-count {
+    position: absolute; top: 10px; right: 25%; background: var(--danger-color); color: #fff;
+    min-width: 18px; height: 18px; border-radius: 50%; font-size: 10px; font-weight: bold;
+    display: none; align-items: center; justify-content: center; border: 2px solid var(--bg-color); z-index: 10;
 }
 
 
@@ -3081,6 +3148,35 @@ video.is-landscape {
             </div>
 
         </div>
+    </div>
+</div>
+
+<div class="fb-icons" id="bottomNavBar">
+    <div class="nav-item" onclick="window.location.href='home.html'">
+        <i class="fa-solid fa-house"></i>
+    </div>
+
+    <div class="nav-item" onclick="window.location.href='Friend_requests.html'">
+        <i class="fa-solid fa-user-plus"></i>
+        <div id="topReqCount" class="nav-badge-count">0</div>
+    </div>
+
+    <div class="nav-item" onclick="window.location.href='messages.html'">
+        <i class="fa-solid fa-comment-dots"></i>
+        <div id="topMsgCount" class="nav-badge-count">0</div> 
+    </div>
+    
+    <div class="nav-item active" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fa-solid fa-circle-play"></i>
+    </div>
+    
+    <div class="nav-item" onclick="window.location.href='notifications.html'">
+        <i class="fa-solid fa-bell"></i>
+        <div id="topNotifCount" class="nav-badge-count">0</div>
+    </div>
+
+    <div class="nav-item" onclick="window.location.href='profile.html'">
+        <div id="navProfileImg" class="nav-avatar-small" style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png');"></div>
     </div>
 </div>
 
@@ -3285,6 +3381,7 @@ auth.onAuthStateChanged(async user => {
     if (user) {
         currentUser = user;
         
+        
         // 1. جلب بيانات المستخدم
         const uDoc = await db.collection('users').doc(user.uid).get();
         if(uDoc.exists) {
@@ -3292,6 +3389,11 @@ auth.onAuthStateChanged(async user => {
             if(currentUserData.isGhost) isGhost = true;
         }
         
+        const bottomAvatar = document.getElementById('navProfileImg');
+if(bottomAvatar && currentUserData.profilePic) {
+    bottomAvatar.style.backgroundImage = `url('${currentUserData.profilePic}')`;
+}
+
         // 2. التحضيرات الأساسية
         await fetchBlockedUsersList();
         listenToUnreadNotifications();
@@ -3588,7 +3690,7 @@ const rawText = data.text || '';
         `;
     }
 
-    return `
+         return `
     <div class="video-slide ${mutedClass}" id="slide-${id}" 
          data-id="${id}" 
          data-uid="${ownerUid}" 
@@ -3683,24 +3785,25 @@ const rawText = data.text || '';
                     <span class="action-text" id="comment-count-${id}">${data.commentsCount || 0}</span>
                 </div>
 
-          <div class="action-btn" onclick="toggleSave('${id}')">
-    <div class="icon-circle">
-        <i class="fa-solid fa-bookmark" id="save-icon-${id}" 
-           style="color: ${isSaved ? '#FFD700' : '#fff'}"></i> </div>
-    <span class="action-text" id="save-count-${id}">${formatNumber(data.savesCount || 0)}</span>
-</div>
+                <div class="action-btn" onclick="toggleSave('${id}')">
+                    <div class="icon-circle">
+                        <i class="fa-solid fa-bookmark" id="save-icon-${id}" style="color: ${isSaved ? '#FFD700' : '#fff'}"></i> 
+                    </div>
+                    <span class="action-text" id="save-count-${id}">${formatNumber(data.savesCount || 0)}</span>
+                </div>
 
 
-<div class="action-btn" onclick="shareVideo('${id}', '${data.text || ''}', '${ownerUid}')">
-    <div class="icon-circle"><i class="fa-solid fa-share"></i></div>
-    <span class="action-text" id="share-count-${id}">${formatNumber(data.sharesCount || 0)}</span>
-</div>
+                <div class="action-btn" onclick="shareVideo('${id}', '${data.text || ''}', '${ownerUid}')">
+                    <div class="icon-circle"><i class="fa-solid fa-share"></i></div>
+                    <span class="action-text" id="share-count-${id}">${formatNumber(data.sharesCount || 0)}</span>
+                </div>
+                
                 <div class="action-btn" onclick="openVideoOptions('${id}', '${ownerUid}')">
                      <div class="icon-circle" style="background:none; border:none; box-shadow:none;">
                         <i class="fa-solid fa-ellipsis" style="font-size:25px;"></i>
                      </div>
                 </div>
-                </div>
+            </div>
 
             <div class="video-info">
                 <div class="info-inner">
@@ -3710,54 +3813,37 @@ const rawText = data.text || '';
                             ${onlineDotHTML}
                         </div>
                         <div class="header-name-block" onclick="openProfileOverlay('${ownerUid}')">
-    <div style="display:flex; flex-direction:column; justify-content:center;">
-        <div style="display:flex; align-items:center;">
-            <span class="header-username" dir="auto">${displayName}</span> ${verifiedBadgeHTML}
-        </div>
-        <span style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: -2px;">
-            ${timeAgo} <i class="fa-solid fa-clock" style="font-size:8px; margin-right:2px;"></i>
-        </span>
-    </div>
-</div>
-
+                            <div style="display:flex; flex-direction:column; justify-content:center;">
+                                <div style="display:flex; align-items:center;">
+                                    <span class="header-username" dir="auto">${displayName}</span> ${verifiedBadgeHTML}
+                                </div>
+                                <span style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: -2px;">
+                                    ${timeAgo} <i class="fa-solid fa-clock" style="font-size:8px; margin-right:2px;"></i>
+                                </span>
+                            </div>
+                        </div>
                         ${followButtonHTML}
                     </div>
                     
                     ${descHTML}
-                    
-                    <div class="music-row" onclick="event.stopPropagation(); openSoundPage('${safeMusicName}', '${safeAuthorName}', '${safeVinylImage}', '${finalSoundUrl}')">
-                        
-                        <div class="music-marquee-container">
-                            <marquee scrollamount="4" style="direction: ltr; width:100%;">${displayMusicName} &nbsp;&nbsp;&nbsp; ${displayMusicName}</marquee>
-                            <i class="fa-solid fa-music"></i> 
-                        </div>
-
-                        <div class="music-disc-area">
-                            <div class="music-disc-bg">
-                               <img src="${vinylImage}" 
-                                    onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'"
-                                    class="vinyl-img">
-                            </div>
-                            <div class="music-notes">
-                                <i class="fa-solid fa-music"></i>
-                                <i class="fa-solid fa-music"></i>
-                            </div>
-                        </div>
-
-                    </div>
 
                 </div>
             </div>
             
             <div class="floating-seeker-container" ontouchstart="startSeeking(event, '${id}')" ontouchmove="moveSeeking(event, '${id}')" ontouchend="endSeeking(event, '${id}')">
-                <div class="seeker-track" id="track-${id}"><div class="seeker-fill" id="fill-${id}"></div></div>
-                 <span id="timer-${id}" class="seeker-timer">-00:00</span>
+                <div class="seeker-track" id="track-${id}">
+                    <div class="seeker-fill" id="fill-${id}"></div>
+                </div>
+                <span id="timer-${id}" class="seeker-timer">-00:00</span>
             </div>
+
         </div>
         
         ${hasSound ? `<audio id="audio-${id}" src="${soundUrl}" preload="auto" loop></audio>` : ''}
     </div>`;
+
 }
+
 
 
 
@@ -3907,7 +3993,9 @@ function updateFloatingSeeker(vid, id) {
 
 
 // 2. بداية السحب
+// 2. بداية السحب
 function startSeeking(e, id) {
+    if(e) e.stopPropagation(); // 🔥 منع تداخل الأحداث
     isDraggingSeeker = true;
     const vid = document.getElementById(`vid-${id}`);
     if(vid) vid.pause(); // نوقف الفيديو لحظياً عشان السحب يكون ناعم
@@ -3916,6 +4004,7 @@ function startSeeking(e, id) {
 
 // 3. أثناء السحب
 function moveSeeking(e, id) {
+    if(e) e.stopPropagation(); // 🔥 منع تداخل الأحداث أثناء التحريك
     const track = document.getElementById(`track-${id}`);
     const fill = document.getElementById(`fill-${id}`);
     const bubble = document.getElementById(`time-bubble-${id}`);
@@ -3926,7 +4015,6 @@ function moveSeeking(e, id) {
     const rect = track.getBoundingClientRect();
     const touchX = e.touches[0].clientX;
     
-    // الحساب ده دلوقتى هيشتغل صح لأننا عملنا direction: ltr في الـ CSS
     let percent = ((touchX - rect.left) / rect.width) * 100;
     
     // حدود الأمان
@@ -3939,10 +4027,8 @@ function moveSeeking(e, id) {
     // تحديث الوقت
     if (vid.duration) {
         const newTime = (percent / 100) * vid.duration;
-        // تحديث الفيديو لحظياً
         vid.currentTime = newTime;
         
-        // تحديث الفقاعة
         if(bubble) {
             const m = Math.floor(newTime / 60).toString().padStart(2, '0');
             const s = Math.floor(newTime % 60).toString().padStart(2, '0');
@@ -3953,6 +4039,7 @@ function moveSeeking(e, id) {
 
 // 4. نهاية السحب
 function endSeeking(e, id) {
+    if(e) e.stopPropagation(); // 🔥 منع تداخل الأحداث
     isDraggingSeeker = false;
     const vid = document.getElementById(`vid-${id}`);
     
@@ -4260,6 +4347,10 @@ if(blockedMsg) list.appendChild(blockedMsg);
     // 🔥🔥🔥 بداية الإضافة الجديدة (فحص الخصوصية) 🔥🔥🔥
     // ============================================================
     
+        // ============================================================
+    // 🔥🔥🔥 بداية الإضافة الجديدة (فحص الخصوصية وحالة الحساب) 🔥🔥🔥
+    // ============================================================
+    
     const footer = document.getElementById('commentFooter');
     
     // 1. تنظيف أي رسالة حظر قديمة
@@ -4270,10 +4361,20 @@ if(blockedMsg) list.appendChild(blockedMsg);
     footer.style.display = 'none';
 
     try {
+        // جلب بيانات صاحب البوست للتحقق من حالة حسابه
+        const ownerUserDoc = await db.collection('users').doc(ownerUid).get();
+        let isAccountDeleted = false;
+        let ownerData = {};
+        
+        if (ownerUserDoc.exists) {
+            ownerData = ownerUserDoc.data();
+            isAccountDeleted = ownerData.accountStatus === 'deleted';
+        }
+
         // جلب إعدادات البوست
         const postDoc = await db.collection('posts').doc(pid).get();
         const postData = postDoc.data();
-        const privacy = postData.commentPrivacy || 'public'; // الافتراضي عام
+        const privacy = postData.commentPrivacy || 'public';
 
         // هل أنا المالك؟
         const isOwner = (currentUser && currentUser.uid === ownerUid);
@@ -4281,7 +4382,12 @@ if(blockedMsg) list.appendChild(blockedMsg);
         let isAllowed = false;
         let blockText = "";
 
-        if (isOwner) {
+        // 🔥 فحص حالة الحساب المحذوف أولاً 🔥
+        if (isAccountDeleted) {
+             isAllowed = false;
+             blockText = "هذا الحساب مغلق، لا يمكن إضافة تعليقات ⚠️";
+        }
+        else if (isOwner) {
             isAllowed = true; 
         } else if (privacy === 'public') {
             isAllowed = true;
@@ -4289,12 +4395,7 @@ if(blockedMsg) list.appendChild(blockedMsg);
             isAllowed = false;
             blockText = "تم إيقاف التعليقات لهذا المنشور 🔒";
         } else {
-            // محتاجين بيانات صاحب البوست عشان نفحص المتابعة
-            const ownerUserDoc = await db.collection('users').doc(ownerUid).get();
-            const ownerData = ownerUserDoc.data();
-
             if (privacy === 'followers') {
-                // لازم أكون بتابع المالك (يعني الـ uid بتاعي في قائمة followers عند المالك)
                 const followers = ownerData.followers || [];
                 if (followers.includes(currentUser.uid)) {
                     isAllowed = true;
@@ -4303,7 +4404,6 @@ if(blockedMsg) list.appendChild(blockedMsg);
                 }
             } 
             else if (privacy === 'following') {
-                // لازم المالك يكون متابعني (يعني الـ uid بتاعي في قائمة following عند المالك)
                 const following = ownerData.following || [];
                 if (following.includes(currentUser.uid)) {
                     isAllowed = true;
@@ -4328,8 +4428,12 @@ if(blockedMsg) list.appendChild(blockedMsg);
 
     } catch (err) {
         console.error("Privacy check error:", err);
-        footer.style.display = 'flex'; // لو حصل خطأ في الفحص، اسمح بالتعليق احتياطياً
+        footer.style.display = 'flex'; 
     }
+    // ============================================================
+    // 🔥🔥🔥 نهاية الإضافة 🔥🔥🔥
+    // ============================================================
+
     // ============================================================
     // 🔥🔥🔥 نهاية الإضافة 🔥🔥🔥
     // ============================================================
@@ -8787,20 +8891,37 @@ let touchEndX = 0;
 let touchEndY = 0;
 
 // 1. تفعيل مراقبة السحب على العنصر
+// 1. تفعيل مراقبة السحب على العنصر
 function enableSwipeForProfile(element, uid) {
     if (!element) return;
 
     element.addEventListener('touchstart', function(e) {
+        // 🔥 حماية: لو المستخدم حط صباعه على شريط الفيديو أو زراير التفاعل، تجاهل السحب
+        if (e.target.closest('.floating-seeker-container') || e.target.closest('.side-bar') || e.target.closest('.user-header-row')) {
+            return; 
+        }
         touchStartX = e.changedTouches[0].screenX;
         touchStartY = e.changedTouches[0].screenY;
     }, {passive: true});
 
     element.addEventListener('touchend', function(e) {
+        // 🔥 حماية: تجاهل السحب لو كان على الشريط
+        if (e.target.closest('.floating-seeker-container') || e.target.closest('.side-bar') || e.target.closest('.user-header-row')) {
+            return; 
+        }
         touchEndX = e.changedTouches[0].screenX;
         touchEndY = e.changedTouches[0].screenY;
-        handleSwipeGesture(uid);
+        
+        // لو في حركة فعلية، نفذ الدالة
+        if (touchStartX !== 0 && touchEndX !== 0) {
+            handleSwipeGesture(uid);
+        }
+        
+        // تصفير الإحداثيات
+        touchStartX = 0; touchEndX = 0;
     }, {passive: true});
 }
+
 
 // 2. معالجة الحركة واتخاذ القرار
 function handleSwipeGesture(uid) {
@@ -8833,8 +8954,8 @@ let currentOverlayProfileUid = null;
 // دالة فتح البروفايل (محدثة: صورة قابلة للفتح + نسخ اليوزر)
 // دالة فتح البروفايل (المعدلة للتعرف على المالك)
 // دالة فتح البروفايل (مع إضافة عدد اللايكات)
+// دالة فتح البروفايل (محدثة: إخفاء أزرار التفاعل للحساب المحذوف)
 async function openProfileOverlay(uid) {
-    // 1. التحقق من وجود المعرف
     if (!uid || uid === 'undefined' || uid === 'null') {
         showToast("⚠️ تعذر العثور على المستخدم");
         return;
@@ -8843,33 +8964,28 @@ async function openProfileOverlay(uid) {
     closeAllSheets();
     currentOverlayProfileUid = uid;
 
-    // 2. تجهيز عناصر الواجهة
     const overlay = document.getElementById('profileOverlay');
     const content = document.getElementById('profileContent');
     const headerTitle = document.getElementById('profileOverlayTitle');
-    
     const menuBtn = document.getElementById('profileHeaderMenuBtn');
+    
     if (menuBtn) {
         menuBtn.innerHTML = `<i class="fa-solid fa-ellipsis-vertical" style="font-size:20px; color:#fff;" onclick="openProfileOptionsMenu()"></i>`;
     }
 
-    // إيقاف أي فيديو يعمل في الخلفية
     document.querySelectorAll('video').forEach(vid => vid.pause());
 
-    // إظهار الشاشة الجانبية
     overlay.classList.add('active');
     overlay.style.transform = "translateX(0)";
     
     if(headerTitle) headerTitle.innerText = "جاري التحميل...";
 
-    // وضع علامة التحميل
     content.innerHTML = `
     <div class="loading-state" style="padding:100px 0; display:flex; flex-direction:column; align-items:center;">
         <i class="fa-solid fa-heart-pulse brand-pulse-icon" style="font-size: 60px; color: #F72585;"></i>
     </div>`;
 
     try {
-        // 3. جلب بيانات المستخدم من فايربيس
         const doc = await db.collection('users').doc(uid).get();
         
         if (!doc.exists) {
@@ -8880,26 +8996,43 @@ async function openProfileOverlay(uid) {
         
         const u = doc.data();
 
-        // 4. تعريف المتغيرات (هنا كان الخطأ، قمنا بتقديم هذه الخطوة للأعلى)
+        // 🔥 فحص هل الحساب محذوف؟ 🔥
+        const isAccountDeleted = u.accountStatus === 'deleted';
+
+        if (isAccountDeleted || blockedUsersSet.has(uid) || (window.theyBlockedMeSet && window.theyBlockedMeSet.has(uid))) {
+            // --- حالة: الحساب محذوف أو محظور ---
+            if(headerTitle) headerTitle.innerText = isAccountDeleted ? "حساب محذوف" : "مستخدم محظور";
+            
+            let iconHtml = isAccountDeleted ? '<i class="fa-solid fa-user-xmark" style="font-size: 50px; color: #f59e0b;"></i>' : '<i class="fa-solid fa-user-slash" style="font-size: 50px; color: #ff3b30;"></i>';
+            let msgHtml = isAccountDeleted ? "هذا الحساب مغلق أو محذوف حالياً." : "لا يمكنك رؤية تفاصيل هذا المستخدم.";
+
+            content.innerHTML = `
+                <div class="pro-header" style="justify-content: center; min-height: 50vh;">
+                    <div style="width: 100px; height: 100px; background: #1e293b; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                        ${iconHtml}
+                    </div>
+                    <div style="color: #aaa; font-size: 14px;">${msgHtml}</div>
+                </div>
+            `;
+            // نوقف التنفيذ هنا عشان ميرسمش زراير أو فيديوهات
+            return; 
+        }
+
+        // --- الحالة الطبيعية (الكود القديم) ---
         const userImg = u.profilePic || 'https://cdn-icons-png.flaticon.com/512/847/847969.png';
         const isVerifiedHTML = u.isVerified ? `<i class="fa-solid fa-circle-check" style="color:#20D5EC; font-size:18px;"></i>` : '';
         const userHandle = u.username ? `@${u.username}` : `@${uid.substring(0,8)}`;
         const textToCopy = u.username || uid;
         
-        // حساب المتابعين بأمان
         let totalFollowers = (u.followers ? u.followers.length : 0) + (u.fakeFollowersCount || 0);
-        
-        // التحقق مما إذا كنت أنا المتابع
         const amIFollowing = u.followers && u.followers.includes(currentUser.uid);
         const isOwner = (currentUser.uid === uid);
 
-        // فحص حالة الأونلاين
         const isProfileOnline = typeof checkFriendOnlineStatus === 'function' ? checkFriendOnlineStatus(u, uid) : false;
         const profileDotHTML = isProfileOnline ? 
             `<div style="position: absolute; bottom: 5px; right: 5px; width: 20px; height: 20px; background-color: #4cd964; border: 3px solid #000; border-radius: 50%; z-index: 10;"></div>` 
             : '';
 
-        // 5. تحديد الأزرار (تعديل أو متابعة)
         let actionButtonsHTML = '';
         if (isOwner) {
             actionButtonsHTML = `
@@ -8916,10 +9049,8 @@ async function openProfileOverlay(uid) {
             `;
         }
 
-        // تحديث العنوان بالاسم الحقيقي
         if(headerTitle) headerTitle.innerText = u.name;
 
-        // 6. بناء الـ HTML النهائي (الآن كل المتغيرات معرفة وجاهزة)
         content.innerHTML = `
             <div class="pro-header">
                 <div class="pro-avatar-container" style="position: relative; display: inline-block;">
@@ -8953,7 +9084,6 @@ async function openProfileOverlay(uid) {
             <div id="repostProfileGrid" class="pro-grid"></div>
         `;
 
-        // 7. استدعاء دوال تحميل الفيديوهات
         loadUserVideosInProfile(uid, u);
         loadUserReposts(uid, u);
         fetchUserTotalLikes(uid, 'overlay-likes-count');
